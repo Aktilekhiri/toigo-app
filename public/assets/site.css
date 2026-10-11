@@ -1,3 +1,4 @@
+[hidden]{display:none!important}
 /* Toigo site — white editorial look: ink black, warm gold accent, Kyrgyz ornament as the one decorative motif.
    Layout: centered 1160px column, generous whitespace, arch-shaped photo frame as the signature shape. */
 :root{
@@ -149,7 +150,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .crumbs{font-size:13px;color:var(--muted);margin-bottom:18px}
 .crumbs a{color:var(--muted)}
 .page-h{padding-block:56px 24px}
-.page-h h1{font-size:clamp(34px,5vw,56px);margin:14px 0 18px;max-width:20ch}
+.page-h h1{font-size:clamp(32px,5vw,56px);margin:14px 0 18px;max-width:20ch;overflow-wrap:break-word;hyphens:auto}
 
 /* support */
 .support{border-top:1px solid var(--line);background:var(--paper)}

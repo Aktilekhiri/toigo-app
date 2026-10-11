@@ -1,5 +1,5 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js";
+import { DEFAULTS, TYPES, TYPE_TEXT, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js";
 import { startLive, tick, stopMusic } from "/assets/invite-live.js";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
@@ -19,6 +19,17 @@ const store = {
 };
 
 let d = { ...DEFAULTS, ...(LANG === "ru" ? RU_DEFAULTS : {}) };
+
+// Sample texts follow the type and language until the person edits them.
+const HOSTS = { ky: DEFAULTS.hosts, ru: RU_DEFAULTS.hosts };
+const isSample = (f, v) => !v || Object.values(TYPE_TEXT).some(o => o.ky[f] === v || o.ru[f] === v);
+function applyType(type) {
+  d.type = type;
+  const L = d.lang === "ru" ? "ru" : "ky", t = TYPE_TEXT[type][L];
+  ["n1", "n2", "msg", "prog"].forEach(f => { if (isSample(f, d[f])) d[f] = t[f]; });
+  if (!d.hosts || Object.values(HOSTS).includes(d.hosts)) d.hosts = HOSTS[L];
+}
+applyType("uylonuu");
 let edit = null;                 // { slug, key } when editing
 const local = new Map();         // photo id -> blob URL (just uploaded)
 let uploading = 0;
@@ -40,11 +51,8 @@ async function init() {
   } else {
     const draft = store.get("toigo-draft-" + LANG);
     if (draft && draft.n1) d = clean({ ...d, ...draft });
-    if (TYPES[params.get("type")]) d.type = params.get("type");
+    if (TYPES[params.get("type")]) applyType(params.get("type"));
     if (params.get("tpl")) d.tpl = params.get("tpl");
-    if (params.get("type") === "tushoo" || params.get("type") === "sunnot") {
-      if (!draft) { d.n1 = params.get("type") === "tushoo" ? "Айсулуу" : "Нурислам"; d.n2 = ""; }
-    }
     d = clean(d);
   }
   fill(); render();
@@ -92,9 +100,9 @@ form.addEventListener("input", e => {
 });
 form.addEventListener("change", e => {
   const t = e.target;
-  if (t.name === "type") { d.type = t.value; names(); changed(); }
+  if (t.name === "type") { applyType(t.value); fill(); changed(); }
   else if (t.name === "tpl") { d.tpl = t.value; changed(); }
-  else if (t.name === "lang") { d.lang = t.value; changed(); }
+  else if (t.name === "lang") { d.lang = t.value; applyType(d.type); fill(); changed(); }
   else if (t.name === "music") { d.music = t.checked; if (!d.music) stopMusic(); changed(); }
 });
 

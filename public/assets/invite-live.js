@@ -15,33 +15,24 @@ function tick() {
   });
 }
 
-// Small komuz-like plucked melody made with WebAudio (no audio file needed).
-const MUS = { on: false, ctx: null, timer: null, step: 0 };
-const NOTES = [293.66, 349.23, 392, 440, 523.25, 587.33];
-const PAT = [0, 2, 3, 2, 4, 3, 2, 1, 0, 2, 3, 5, 4, 3, 2, 0];
-function pluck(f, at, vol = .16) {
-  const c = MUS.ctx, o = c.createOscillator(), g = c.createGain(), fl = c.createBiquadFilter();
-  o.type = "triangle"; o.frequency.value = f; fl.type = "lowpass"; fl.frequency.value = 2400;
-  g.gain.setValueAtTime(.0001, at); g.gain.exponentialRampToValueAtTime(vol, at + .008); g.gain.exponentialRampToValueAtTime(.0001, at + 1.1);
-  o.connect(fl).connect(g).connect(c.destination); o.start(at); o.stop(at + 1.2);
-}
+// Background music: one shared <audio>, loaded only after the guest taps the music button.
+const MUS = { on: false, el: null };
 function toggleMusic() {
-  try {
-    if (!MUS.ctx) MUS.ctx = new (window.AudioContext || window.webkitAudioContext)();
-    MUS.on = !MUS.on;
-    if (MUS.on) {
-      MUS.ctx.resume();
-      MUS.timer = setInterval(() => {
-        const t = MUS.ctx.currentTime + .02;
-        pluck(NOTES[PAT[MUS.step % PAT.length]], t);
-        if (MUS.step % 4 === 0) pluck(NOTES[0] / 2, t, .12);
-        MUS.step++;
-      }, 290);
-    } else clearInterval(MUS.timer);
-  } catch (e) { MUS.on = false; }
-  document.querySelectorAll(".inv .mus").forEach(b => b.setAttribute("aria-pressed", String(MUS.on)));
+  if (!MUS.el) {
+    MUS.el = new Audio();
+    // AAC for Safari/iPhone, Opus for browsers without AAC.
+    MUS.el.src = MUS.el.canPlayType('audio/mp4; codecs="mp4a.40.2"') ? "/assets/audio/toi-music.m4a" : "/assets/audio/toi-music.webm";
+    MUS.el.loop = true; MUS.el.preload = "auto"; MUS.el.volume = 0.8;
+    MUS.el.addEventListener("pause", () => sync(false));
+    MUS.el.addEventListener("play", () => sync(true));
+  }
+  if (MUS.el.paused) MUS.el.play().catch(() => sync(false)); else MUS.el.pause();
 }
-export function stopMusic() { if (MUS.on) toggleMusic(); }
+function sync(on) {
+  MUS.on = on;
+  document.querySelectorAll(".inv .mus").forEach(b => b.setAttribute("aria-pressed", String(on)));
+}
+export function stopMusic() { if (MUS.el && !MUS.el.paused) MUS.el.pause(); }
 export function musicOn() { return MUS.on; }
 
 async function submitRsvp(form) {

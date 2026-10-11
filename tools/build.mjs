@@ -1,7 +1,7 @@
 // Static site generator for Chakyr. Run: node tools/build.mjs (from project root)
 import fs from "node:fs";
 import path from "node:path";
-import { TYPES, TPL, DEFAULTS, coverHTML, renderInvitation, esc } from "../public/assets/invite-core.js";
+import { TYPES, TPL, DEFAULTS, TYPE_TEXT, coverHTML, renderInvitation, esc } from "../public/assets/invite-core.js";
 import { C, UI, CATS, SUPPORT } from "./content.mjs";
 
 const OUT = "public";
@@ -26,11 +26,10 @@ const ICON = {
 const icon = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
 
 function sampleData(tplId, typeId, lang) {
-  const cat = CATS.find(c => c.id === typeId) || CATS[0];
-  return { ...DEFAULTS, tpl: tplId, type: typeId, lang, n1: cat.sample.n1, n2: cat.sample.n2 || "" , hosts: lang === "ru" ? "Семья Асановых" : DEFAULTS.hosts,
-    msg: lang === "ru" ? "Дорогие родные и друзья! Мы хотим разделить с вами самый важный день нашей жизни." : DEFAULTS.msg,
-    venue: lang === "ru" ? "Тойкана «Шумкар»" : DEFAULTS.venue, addr: lang === "ru" ? "Бишкек, проспект Чүй, 150" : DEFAULTS.addr,
-    prog: lang === "ru" ? "17:00 — Встреча гостей\n18:00 — Никах\n19:00 — Начало тоя\n23:00 — Завершение" : DEFAULTS.prog };
+  const t = TYPE_TEXT[typeId][lang === "ru" ? "ru" : "ky"];
+  return { ...DEFAULTS, tpl: tplId, type: typeId, lang, n1: t.n1, n2: t.n2, msg: t.msg, prog: t.prog,
+    hosts: lang === "ru" ? "Семья Асановых" : DEFAULTS.hosts,
+    venue: lang === "ru" ? "Тойкана «Шумкар»" : DEFAULTS.venue, addr: lang === "ru" ? "Бишкек, проспект Чүй, 150" : DEFAULTS.addr };
 }
 
 // ---------- layout ----------
