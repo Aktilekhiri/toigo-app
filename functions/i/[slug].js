@@ -1,4 +1,5 @@
 import { renderInvitation, titleOf, longDate, TYPES, esc } from "../../public/assets/invite-core.js";
+import { VERSION } from "../../lib/pages.js";
 
 const notFound = origin => new Response(`<!doctype html><html lang="ky"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Чакыруу табылган жок</title>
 <style>body{font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;padding:16px;text-align:center;color:#16191D;background:#fff}a{color:#16191D}</style></head>
@@ -41,13 +42,13 @@ export async function onRequestGet({ request, env, params, waitUntil }) {
 <meta property="og:locale" content="${lang === "ky" ? "ky_KG" : "ru_RU"}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/fonts.css">
-<link rel="stylesheet" href="/assets/invite.css">
+<link rel="stylesheet" href="/assets/fonts.css?v=${VERSION}">
+<link rel="stylesheet" href="/assets/invite.css?v=${VERSION}">
 </head>
 <body class="inv-page">
 ${body}
 <script type="module">
-import { startLive } from "/assets/invite-live.js";
+import { startLive } from "/assets/invite-live.js?v=${VERSION}";
 startLive();
 try { if (localStorage.getItem("toigo-rsvp-${row.slug}")) { const f = document.querySelector(".inv form.rsvp"); if (f) { f.hidden = true; f.nextElementSibling.hidden = false; } } } catch (e) {}
 </script>
