@@ -1,6 +1,6 @@
 # Тойго (toigo.app) — бесплатные онлайн-приглашения на той
 
-Сайт для Cloudflare Pages: статические страницы (папка `public`), серверная часть (папка `functions`) и база данных D1.
+Сайт на Cloudflare Workers: статические страницы (папка `public`), серверная часть (`src/worker.js` и папка `functions`) и база данных D1.
 
 ## Что внутри
 
@@ -16,32 +16,34 @@
 - `schema.sql` — структура базы. Она уже применена, нужна только если базу создавать заново.
 - `tools/` — генератор страниц (`build.mjs`), все тексты сайта (`content.mjs`) и генератор картинок для превью (`og.py`).
 
-## Как запустить (Cloudflare Pages + GitHub)
+## Как запустить (Cloudflare Workers + GitHub)
 
-Код уже лежит в репозитории `Aktilekhiri/toigo-app`.
+Код лежит в репозитории `Aktilekhiri/toigo-app` и деплоится как **Worker** со статическими файлами:
 
-1. В Cloudflare открой **Workers & Pages → Create → Pages → Connect to Git** и выбери `toigo-app`.
-2. Настройки сборки:
-   - Project name: **toigo**
-   - Framework preset: **None**
-   - Build command: **оставить пустым**
-   - Build output directory: **public**
-3. Нажми **Save and Deploy**. База D1 (`chakyr-db`, уже с таблицами) подключится сама из `wrangler.toml`. Если в настройках проекта во вкладке Bindings её нет, добавь вручную: тип D1, имя переменной `DB`, база `chakyr-db`.
-4. Сайт откроется на `https://toigo.pages.dev`. Этот адрес скрыт от поисковиков, чтобы индексировался только основной домен.
+- `src/worker.js` — точка входа. Направляет `/api/*`, `/i/*`, `/media/*`, `/sitemap.xml` и `/robots.txt` в обработчики из `functions/`, остальное отдаёт из `public/`.
+- `wrangler.toml` — имя Worker `toigo-app`, папка `public` и база D1.
 
-Каждый push в ветку `main` автоматически обновляет сайт.
+Настройки в Cloudflare (Workers & Pages → проект → Settings → Build):
+
+- Deploy command: `npx wrangler deploy`
+- Build command: пусто
+- Root directory: `/`
+
+Имя Worker в Cloudflare должно совпадать с `name` в `wrangler.toml` (`toigo-app`). Если проект называется иначе, поменяй `name` в файле.
+
+Каждый push в ветку `main` автоматически обновляет сайт. Технический адрес `*.workers.dev` скрыт от поисковиков.
 
 ## Домен toigo.app
 
 1. Cloudflare → **Domain Registration → Register Domains** → купить `toigo.app`. Домены `.app` работают только по HTTPS, Cloudflare включает его сам.
-2. В проекте Pages: **Custom domains → Set up a custom domain** → `toigo.app`, затем ещё раз для `www.toigo.app`. С `www` сайт сам перенаправляет на `toigo.app`.
+2. В проекте Worker: **Settings → Domains & Routes → Add → Custom domain** → `toigo.app`, затем ещё раз для `www.toigo.app`. С `www` сайт сам перенаправляет на `toigo.app`.
 3. Canonical, hreflang и sitemap подставят новый домен автоматически, пересобирать ничего не нужно.
 
 ## После запуска (5 минут, для SEO)
 
 - **Google Search Console**: добавь ресурс «Домен» `toigo.app`. Подтверждение через DNS: Cloudflare часто делает его в один клик. Потом отправь `https://toigo.app/sitemap.xml`.
 - **Яндекс Вебмастер**: добавь сайт, подтверди через DNS-запись TXT в Cloudflare, отправь тот же sitemap.
-- **Статистика**: в проекте Pages → **Metrics → Web Analytics → Enable**. Это бесплатно, без cookie и без кода.
+- **Статистика**: **Web Analytics → Add a site** → `toigo.app`. Это бесплатно, без cookie и без кода.
 
 ## 3D-кольца на главной
 

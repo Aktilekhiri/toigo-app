@@ -1,8 +1,17 @@
-name = "toigo"
-pages_build_output_dir = "public"
+name = "toigo-app"
+main = "src/worker.js"
 compatibility_date = "2025-07-01"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "404-page"
+run_worker_first = true
 
 [[d1_databases]]
 binding = "DB"
 database_name = "chakyr-db"
 database_id = "ac27a5b4-c57b-487b-ac1b-7e3634a7020a"
+
+[observability]
+enabled = true
