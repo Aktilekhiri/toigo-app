@@ -41,6 +41,14 @@ function head(lang, m) {
 <html lang="${C[lang].htmlLang}">
 <head>
 <meta charset="utf-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RSYZ3T9W8C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-RSYZ3T9W8C');
+</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>${esc(m.title)}</title>
 <meta name="description" content="${esc(m.desc)}">
