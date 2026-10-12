@@ -1,5 +1,5 @@
 // Toigo — host page: guest answers, edit link, delete.
-import { titleOf, esc } from "/assets/invite-core.js?v=mv4zo5d3";
+import { titleOf, esc } from "/assets/invite-core.js?v=mv5en3dl";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;

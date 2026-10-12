@@ -104,7 +104,7 @@ function supportBlock(lang) {
     <div class="eyebrow">${HORN}${S.k}</div>
     <h2 id="sup-h" style="margin-top:14px">${S.h}</h2>
     <p>${S.p}</p>
-    <div class="pay-row"><span>${S.phone}</span><code id="pay-phone">${SUPPORT.phone}</code><button type="button" class="btn btn-g btn-sm" data-copy="#pay-phone" data-done="${S.copied}">${S.copy}</button></div>
+    <div class="pay-row"><span>${S.phone}</span><code id="pay-phone">+996 702 ••• •••</code><button type="button" class="btn btn-g btn-sm" data-pay="show" data-show="${S.show}" data-hide="${S.hide}">${S.show}</button><button type="button" class="btn btn-g btn-sm" data-pay="copy" data-done="${S.copied}">${S.copy}</button></div>
     <div class="pay-row"><span>${S.to}</span><b>${SUPPORT.name}</b></div>
     <div class="acts"><a class="btn btn-gold" href="${SUPPORT.paypal}" target="_blank" rel="noopener">${S.paypal}</a></div>
   </div>
