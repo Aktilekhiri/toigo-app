@@ -257,3 +257,5 @@ td.n{font-variant-numeric:tabular-nums}
 .pill.o{background:#E6EEF8;color:#2F5D8C}
 .pill.s{background:var(--paper);color:var(--muted)}
 .fld .sw + .sw{margin-top:-6px}
+.seat-in{width:120px;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:14px;background:#fff}
+.seat-in:focus{outline:none;border-color:var(--ink)}

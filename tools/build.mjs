@@ -310,6 +310,7 @@ function createPage(lang) {
       ${f("time", S.l_time, `<input id="f-time" name="time" type="time">`)}
       ${f("venue", S.l_venue, `<input id="f-venue" name="venue" type="text" maxlength="120" autocomplete="off" placeholder="${S.ph_venue}">`, "w")}
       ${f("addr", S.l_addr, `<input id="f-addr" name="addr" type="text" maxlength="200" autocomplete="off" placeholder="${S.ph_addr}">`, "w", S.h_addr)}
+      ${f("hall", S.l_hall, `<input id="f-hall" name="hall" type="text" maxlength="80" autocomplete="off" placeholder="${S.ph_hall}">`, "w", S.h_hall)}
     </fieldset>
     <fieldset><legend>${S.lg4}</legend>
       ${f("msg", S.l_msg, `<textarea id="f-msg" name="msg" maxlength="1200" rows="4"></textarea>`, "w")}

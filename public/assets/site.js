@@ -1,6 +1,11 @@
 // Toigo — small behaviors shared by site pages.
-import { renderInvitation } from "/assets/invite-core.js?v=mv5en3dl";
-import { startLive } from "/assets/invite-live.js?v=mv5en3dl";
+<<<<<<< HEAD
+import { renderInvitation } from "/assets/invite-core.js?v=mv5h3l5q";
+import { startLive } from "/assets/invite-live.js?v=mv5h3l5q";
+=======
+import { renderInvitation } from "/assets/invite-core.js?v=mv5h3l5q";
+import { startLive } from "/assets/invite-live.js?v=mv5h3l5q";
+>>>>>>> acb19c5 (Optional hall for everyone and a table number per guest)
 
 // Copy buttons: <button data-copy="#selector" data-done="Copied">
 document.addEventListener("click", async e => {
@@ -38,6 +43,10 @@ if (hp) {
 // Hero: 3D rings, loaded after the page is ready so the first paint stays fast.
 const media = document.getElementById("heroMedia");
 if (media) {
-  const go = () => import("/assets/rings.js?v=mv5en3dl").then(m => m.mountRings(media, { shift: getComputedStyle(document.querySelector(".stage .phone")).display !== "none" })).catch(() => {});
+<<<<<<< HEAD
+  const go = () => import("/assets/rings.js?v=mv5h3l5q").then(m => m.mountRings(media, { shift: getComputedStyle(document.querySelector(".stage .phone")).display !== "none" })).catch(() => {});
+=======
+  const go = () => import("/assets/rings.js?v=mv5h3l5q").then(m => m.mountRings(media, { shift: getComputedStyle(document.querySelector(".stage .phone")).display !== "none" })).catch(() => {});
+>>>>>>> acb19c5 (Optional hall for everyone and a table number per guest)
   if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1500 }); else setTimeout(go, 300);
 }

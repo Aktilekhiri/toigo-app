@@ -26,14 +26,14 @@ export const IV = {
         by: "Жооп берүү мөөнөтү:", rn: "Аты-жөнүңүз", yes: "Келем", no: "Келе албайм", cnt: "Канча адам",
         note: "Каалоо-тилек", send: "Жооп жөнөтүү", thx: "Рахмат! Жообуңуз той ээлерине жетти.", err: "Атыңызды жазыңыз",
         fail: "Жиберилген жок. Интернетти текшерип, кайра басыңыз.", hosts: "Той ээлери", made: "Тойго аркылуу түзүлдү",
-        scroll: "Ылдый жылдырыңыз", music: "Музыка", contact: "Байланыш", call: "Чалуу", preview: "Бул алдын ала көрүү. Жооп чыныгы чакырууда иштейт.",
+        scroll: "Ылдый жылдырыңыз", music: "Музыка", contact: "Байланыш", seat: "Сиздин ордуңуз", call: "Чалуу", preview: "Бул алдын ала көрүү. Жооп чыныгы чакырууда иштейт.",
         past: "Той өттү. Келгениңиздерге рахмат!" },
   ru: { inv: "Приглашаем вас на наш праздник", cd: "До праздника осталось", d: "дней", h: "часов", m: "минут", s: "секунд",
         prog: "Программа", venue: "Место проведения", dress: "Дресс-код", gal: "Фотографии", rsvp: "Вы придёте?",
         by: "ответьте до", rn: "Ваше имя", yes: "Приду", no: "Не смогу", cnt: "Сколько человек",
         note: "Пожелание", send: "Отправить ответ", thx: "Спасибо! Ваш ответ получен.", err: "Укажите имя",
         fail: "Не отправилось. Проверьте интернет и нажмите ещё раз.", hosts: "Хозяева тоя", made: "Сделано в Тойго",
-        scroll: "Листайте вниз", music: "Музыка", contact: "Контакты", call: "Позвонить", preview: "Это предпросмотр. Ответы работают в настоящем приглашении.",
+        scroll: "Листайте вниз", music: "Музыка", contact: "Контакты", seat: "Ваше место", call: "Позвонить", preview: "Это предпросмотр. Ответы работают в настоящем приглашении.",
         past: "Праздник прошёл. Спасибо, что были с нами!" }
 };
 
@@ -132,7 +132,7 @@ export function clean(input) {
   d.date = /^\d{4}-\d{2}-\d{2}$/.test(i.date || "") ? i.date : "";
   d.time = /^\d{2}:\d{2}$/.test(i.time || "") ? i.time : "";
   d.dl = /^\d{4}-\d{2}-\d{2}$/.test(i.dl || "") ? i.dl : "";
-  d.venue = str(i.venue, 120); d.addr = str(i.addr, 200);
+  d.venue = str(i.venue, 120); d.addr = str(i.addr, 200); d.hall = str(i.hall, 80);
   d.msg = str(i.msg, 1200); d.dress = str(i.dress, 200);
   d.prog = str(i.prog, 1500).split("\n").slice(0, 20).join("\n");
   d.phone = str(i.phone, 24).replace(/[^\d+]/g, "");
@@ -221,6 +221,14 @@ export function parseProg(s) {
 /**
  * opts: { mode: "preview" | "live", slug, photoUrl(id), pf (id prefix) }
  */
+// Venue line under the address: the common hall for everyone, plus the guest's own table on a personal link.
+function seatLine(d, guest, T) {
+  const seat = guest && guest.seat ? String(guest.seat) : "";
+  if (!d.hall && !seat) return "";
+  const parts = [d.hall, seat].filter(Boolean).map(esc).join(", ");
+  return `<div class="hall">${seat ? `<span>${T.P("seat")}</span>` : ""}<b>${parts}</b></div>`;
+}
+
 export function renderInvitation(d, opts = {}) {
   const T = mk(d.lang), pf = opts.pf || "inv";
   const photoUrl = opts.photoUrl || (id => `/media/${id}`);
@@ -240,7 +248,7 @@ export function renderInvitation(d, opts = {}) {
     <div class="cd" data-ts="${ts}" data-past="${esc(T.P("past"))}"><div><b data-u="d">0</b><span>${T.P("d")}</span></div><div><b data-u="h">0</b><span>${T.P("h")}</span></div><div><b data-u="m">0</b><span>${T.P("m")}</span></div><div><b data-u="s">0</b><span>${T.P("s")}</span></div></div>
     ${d.date ? `<div class="sub">${T.date(d.date)}</div>` : ""}</section>` : ""}
   ${pr.length ? `<section class="blk"><h2>${T.L("prog")}</h2><ul class="prog">${pr.map(i => `<li><time>${esc(i.t)}</time><span>${esc(i.x)}</span></li>`).join("")}</ul></section>` : ""}
-  ${(d.venue || d.addr) ? `<section class="blk"><h2>${T.L("venue")}</h2>${d.venue ? `<div class="vn">${esc(d.venue)}</div>` : ""}${d.addr ? `<div class="ad">${esc(d.addr)}</div>` : ""}
+  ${(d.venue || d.addr) ? `<section class="blk"><h2>${T.L("venue")}</h2>${d.venue ? `<div class="vn">${esc(d.venue)}</div>` : ""}${d.addr ? `<div class="ad">${esc(d.addr)}</div>` : ""}${seatLine(d, guest, T)}
     ${q ? `<div class="row2"><a class="ib f" href="https://2gis.kg/search/${q}" target="_blank" rel="noopener">2GIS</a><a class="ib" href="https://www.google.com/maps/search/?api=1&amp;query=${q}" target="_blank" rel="noopener">Google Maps</a></div>` : ""}</section>` : ""}
   ${d.dress ? `<section class="blk"><h2>${T.L("dress")}</h2><p class="msg">${esc(d.dress)}</p></section>` : ""}
   ${d.photos && d.photos.length ? `<section class="blk"><h2>${T.L("gal")}</h2><div class="gal">${d.photos.map(p => `<img src="${esc(photoUrl(p))}" alt="" loading="lazy" decoding="async" data-act="zoom">`).join("")}</div></section>` : ""}

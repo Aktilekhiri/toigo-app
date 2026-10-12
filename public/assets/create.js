@@ -1,6 +1,6 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mv5en3dl";
-import { startLive, tick, stopMusic } from "/assets/invite-live.js?v=mv5en3dl";
+import { DEFAULTS, TYPES, TYPE_TEXT, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mv5h3l5q";
+import { startLive, tick, stopMusic } from "/assets/invite-live.js?v=mv5h3l5q";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -59,7 +59,7 @@ async function init() {
 }
 
 // ---------- form <-> data ----------
-const TEXT = ["n1", "n2", "hosts", "date", "time", "venue", "addr", "msg", "prog", "dress", "dl", "phone"];
+const TEXT = ["n1", "n2", "hosts", "date", "time", "venue", "addr", "hall", "msg", "prog", "dress", "dl", "phone"];
 function fill() {
   form.elements.type.value = d.type;
   const tpl = form.querySelector(`input[name=tpl][value="${d.tpl}"]`); if (tpl) tpl.checked = true;

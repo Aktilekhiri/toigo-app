@@ -10,7 +10,7 @@ export async function onRequestGet({ request, env, params }) {
   const row = await checkKey(env, params.slug, keyOf(request));
   if (!row) return err("not_found", 404);
   const { results } = await env.DB.prepare("SELECT id, name, attending, guests, note, guest_id, created_at FROM rsvps WHERE invitation_id = ? ORDER BY created_at DESC").bind(row.id).all();
-  const inv = await env.DB.prepare("SELECT id, code, name, phone, opens, opened_at, created_at FROM guests WHERE invitation_id = ? ORDER BY id").bind(row.id).all();
+  const inv = await env.DB.prepare("SELECT id, code, name, phone, seat, opens, opened_at, created_at FROM guests WHERE invitation_id = ? ORDER BY id").bind(row.id).all();
   return json({ slug: row.slug, data: JSON.parse(row.data), views: row.views, created_at: row.created_at, updated_at: row.updated_at, guests: results, invitees: inv.results });
 }
 
@@ -60,12 +60,17 @@ export async function onRequestPost({ request, env, params }) {
   // Personal links: up to 500 named guests per invitation.
   if (body && body.action === "add_guests" && Array.isArray(body.guests)) {
     const have = await env.DB.prepare("SELECT COUNT(*) AS n FROM guests WHERE invitation_id = ?").bind(row.id).first();
-    const list = body.guests.map(g => ({ name: String(g.name || "").replace(/\s+/g, " ").trim().slice(0, 80), phone: String(g.phone || "").replace(/[^\d+]/g, "").slice(0, 16) }))
+    const list = body.guests.map(g => ({ name: String(g.name || "").replace(/\s+/g, " ").trim().slice(0, 80), phone: String(g.phone || "").replace(/[^\d+]/g, "").slice(0, 16), seat: String(g.seat || "").trim().slice(0, 40) }))
       .filter(g => g.name).slice(0, Math.max(0, 500 - have.n));
     if (!list.length) return err(have.n >= 500 ? "too_many" : "name_required");
     const now = Date.now();
-    await env.DB.batch(list.map(g => env.DB.prepare("INSERT INTO guests (invitation_id, code, name, phone, created_at) VALUES (?, ?, ?, ?, ?)").bind(row.id, randomId(5), g.name, g.phone || null, now)));
+    await env.DB.batch(list.map(g => env.DB.prepare("INSERT INTO guests (invitation_id, code, name, phone, seat, created_at) VALUES (?, ?, ?, ?, ?, ?)").bind(row.id, randomId(5), g.name, g.phone || null, g.seat || null, now)));
     return json({ ok: true, added: list.length });
+  }
+  if (body && body.action === "set_seat" && Number.isInteger(body.id)) {
+    const seat = String(body.seat || "").trim().slice(0, 40);
+    await env.DB.prepare("UPDATE guests SET seat = ? WHERE id = ? AND invitation_id = ?").bind(seat || null, body.id, row.id).run();
+    return json({ ok: true });
   }
   if (body && body.action === "delete_guest" && Number.isInteger(body.id)) {
     await env.DB.batch([

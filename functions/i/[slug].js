@@ -16,7 +16,7 @@ export async function onRequestGet({ request, env, params, waitUntil }) {
   // Personal link /i/<slug>/<code>: greet the guest by name and prefill the answer form.
   let guest = null;
   if (params.code) {
-    guest = await env.DB.prepare("SELECT id, code, name FROM guests WHERE invitation_id = ? AND code = ?").bind(row.id, params.code).first();
+    guest = await env.DB.prepare("SELECT id, code, name, seat FROM guests WHERE invitation_id = ? AND code = ?").bind(row.id, params.code).first();
     if (!guest) return Response.redirect(`${origin}/i/${row.slug}`, 302);
     waitUntil(env.DB.prepare("UPDATE guests SET opens = opens + 1, opened_at = COALESCE(opened_at, ?) WHERE id = ?").bind(Date.now(), guest.id).run());
   }
