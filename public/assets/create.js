@@ -1,6 +1,6 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mv4exbii";
-import { startLive, tick, stopMusic } from "/assets/invite-live.js?v=mv4exbii";
+import { DEFAULTS, TYPES, TYPE_TEXT, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mv4z4vlj";
+import { startLive, tick, stopMusic } from "/assets/invite-live.js?v=mv4z4vlj";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -66,6 +66,7 @@ function fill() {
   const lg = form.querySelector(`input[name=lang][value="${d.lang}"]`); if (lg) lg.checked = true;
   TEXT.forEach(k => { form.elements[k].value = d[k] || ""; });
   form.elements.music.checked = d.music;
+  form.elements.fx.checked = d.fx !== false;
   names(); thumbs();
 }
 function names() {
@@ -103,6 +104,7 @@ form.addEventListener("change", e => {
   if (t.name === "type") { applyType(t.value); fill(); changed(); }
   else if (t.name === "tpl") { d.tpl = t.value; changed(); }
   else if (t.name === "lang") { d.lang = t.value; applyType(d.type); fill(); changed(); }
+  else if (t.name === "fx") { d.fx = t.checked; changed(); }
   else if (t.name === "music") { d.music = t.checked; if (!d.music) stopMusic(); changed(); }
 });
 

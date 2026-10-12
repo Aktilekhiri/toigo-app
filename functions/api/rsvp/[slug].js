@@ -15,7 +15,16 @@ export async function onRequestPost({ request, env, params }) {
   if (!inv) return err("not_found", 404);
   const count = await env.DB.prepare("SELECT COUNT(*) AS n FROM rsvps WHERE invitation_id = ?").bind(inv.id).first();
   if (count.n >= 2000) return err("too_many", 429);
-  await env.DB.prepare("INSERT INTO rsvps (invitation_id, name, attending, guests, note, created_at) VALUES (?, ?, ?, ?, ?, ?)")
-    .bind(inv.id, name, attending, guests, note, Date.now()).run();
+  let guestId = null;
+  if (/^[a-z0-9]{5}$/.test(b.g || "")) {
+    const g = await env.DB.prepare("SELECT id FROM guests WHERE invitation_id = ? AND code = ?").bind(inv.id, b.g).first();
+    if (g) {
+      guestId = g.id;
+      // One answer per personal link: a new answer replaces the previous one.
+      await env.DB.prepare("DELETE FROM rsvps WHERE invitation_id = ? AND guest_id = ?").bind(inv.id, guestId).run();
+    }
+  }
+  await env.DB.prepare("INSERT INTO rsvps (invitation_id, name, attending, guests, note, guest_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)")
+    .bind(inv.id, name, attending, guests, note, guestId, Date.now()).run();
   return json({ ok: true }, 201);
 }

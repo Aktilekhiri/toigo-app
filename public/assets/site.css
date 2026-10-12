@@ -254,3 +254,6 @@ td.n{font-variant-numeric:tabular-nums}
 .scr .inv .nm{font-size:38px}
 .scr .inv .dt{font-size:20px;letter-spacing:.04em}
 @media (max-width:480px){.scr .inv .nm{font-size:32px}.scr .inv .dt{font-size:18px}}
+.pill.o{background:#E6EEF8;color:#2F5D8C}
+.pill.s{background:var(--paper);color:var(--muted)}
+.fld .sw + .sw{margin-top:-6px}

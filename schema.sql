@@ -5,3 +5,7 @@ CREATE INDEX IF NOT EXISTS idx_rsvps_inv ON rsvps(invitation_id);
 CREATE TABLE IF NOT EXISTS photos (id TEXT PRIMARY KEY, invitation_id INTEGER, mime TEXT NOT NULL, bytes BLOB NOT NULL, created_at INTEGER NOT NULL);
 CREATE INDEX IF NOT EXISTS idx_photos_inv ON photos(invitation_id);
 CREATE TABLE IF NOT EXISTS rate (k TEXT PRIMARY KEY, n INTEGER NOT NULL, reset_at INTEGER NOT NULL);
+-- v2: personal guest links
+CREATE TABLE IF NOT EXISTS guests (id INTEGER PRIMARY KEY AUTOINCREMENT, invitation_id INTEGER NOT NULL, code TEXT NOT NULL, name TEXT NOT NULL, phone TEXT, opens INTEGER NOT NULL DEFAULT 0, opened_at INTEGER, created_at INTEGER NOT NULL, UNIQUE(invitation_id, code));
+CREATE INDEX IF NOT EXISTS idx_guests_inv ON guests(invitation_id);
+ALTER TABLE rsvps ADD COLUMN guest_id INTEGER;

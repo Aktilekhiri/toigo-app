@@ -13,14 +13,22 @@ export async function onRequestGet({ request, env, params, waitUntil }) {
   if (!row) return notFound(origin);
   waitUntil(env.DB.prepare("UPDATE invitations SET views = views + 1 WHERE id = ?").bind(row.id).run());
 
+  // Personal link /i/<slug>/<code>: greet the guest by name and prefill the answer form.
+  let guest = null;
+  if (params.code) {
+    guest = await env.DB.prepare("SELECT id, code, name FROM guests WHERE invitation_id = ? AND code = ?").bind(row.id, params.code).first();
+    if (!guest) return Response.redirect(`${origin}/i/${row.slug}`, 302);
+    waitUntil(env.DB.prepare("UPDATE guests SET opens = opens + 1, opened_at = COALESCE(opened_at, ?) WHERE id = ?").bind(Date.now(), guest.id).run());
+  }
+
   const d = JSON.parse(row.data);
   const lang = d.lang === "ru" ? "ru" : "ky";
-  const title = titleOf(d, d.lang);
+  const title = guest ? (lang === "ky" ? `${guest.name}, сизди чакырабыз — ${titleOf(d, d.lang)}` : `${guest.name}, приглашаем вас — ${titleOf(d, d.lang)}`) : titleOf(d, d.lang);
   const descParts = [longDate(d.date, lang), d.time, d.venue].filter(Boolean);
   const desc = (lang === "ky" ? "Сиздерди тоюбузга чакырабыз. " : "Приглашаем вас на наш праздник. ") + descParts.join(" · ");
   const ogImage = d.photos && d.photos.length ? `${origin}/media/${d.photos[0]}` : `${origin}/img/og-${d.tpl}.png`;
-  const pageUrl = `${origin}/i/${row.slug}`;
-  const body = renderInvitation(d, { mode: "live", slug: row.slug, pf: "g" });
+  const pageUrl = `${origin}/i/${row.slug}${guest ? "/" + guest.code : ""}`;
+  const body = renderInvitation(d, { mode: "live", slug: row.slug, pf: "g", guest });
   const themeColor = { alatoo: "#1D2742", akkalpak: "#FFFFFF", shyrdak: "#7E2A20", jibek: "#E3E8DF", anar: "#5B1626", asman: "#DCEAF4" }[d.tpl] || "#FFFFFF";
 
   const html = `<!doctype html>
@@ -50,7 +58,7 @@ ${body}
 <script type="module">
 import { startLive } from "/assets/invite-live.js?v=${VERSION}";
 startLive();
-try { if (localStorage.getItem("toigo-rsvp-${row.slug}")) { const f = document.querySelector(".inv form.rsvp"); if (f) { f.hidden = true; f.nextElementSibling.hidden = false; } } } catch (e) {}
+try { if (localStorage.getItem("toigo-rsvp-${row.slug}${guest ? "-" + guest.code : ""}")) { const f = document.querySelector(".inv form.rsvp"); if (f) { f.hidden = true; f.nextElementSibling.hidden = false; } } } catch (e) {}
 </script>
 </body>
 </html>`;

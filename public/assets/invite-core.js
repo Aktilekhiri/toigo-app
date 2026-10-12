@@ -137,6 +137,7 @@ export function clean(input) {
   d.prog = str(i.prog, 1500).split("\n").slice(0, 20).join("\n");
   d.phone = str(i.phone, 24).replace(/[^\d+]/g, "");
   d.music = i.music !== false;
+  d.fx = i.fx !== false;
   d.photos = Array.isArray(i.photos) ? i.photos.filter(x => /^[a-z0-9]{20}$/.test(x)).slice(0, 6) : [];
   return d;
 }
@@ -228,10 +229,12 @@ export function renderInvitation(d, opts = {}) {
   const ts = eventTs(d);
   const phone = d.phone && d.phone.replace(/\D/g, "").length >= 9 ? d.phone : "";
   const waNum = phone.replace(/\D/g, "");
-  return `<div class="inv t-${d.tpl}" data-mode="${opts.mode || "preview"}" data-slug="${esc(opts.slug || "")}" data-lang="${d.lang}">
+  const guest = opts.guest || null;
+  const dear = { ky: "Урматтуу", ru: "", both: "Урматтуу" }[d.lang] || "";
+  return `<div class="inv t-${d.tpl}" data-mode="${opts.mode || "preview"}" data-slug="${esc(opts.slug || "")}" data-lang="${d.lang}"${d.fx !== false ? ` data-fx="${d.type}"` : ""}${guest ? ` data-guest="${esc(guest.code)}"` : ""}>
   ${d.music ? `<button type="button" class="mus" data-act="music" aria-pressed="false" aria-label="${T.P("music")}">${NOTE}</button>` : ""}
   ${coverHTML(d)}
-  <section class="blk">${HORN}<h2>${T.TT(d.type, "inv")}</h2>${d.msg ? `<p class="msg">${esc(d.msg)}</p>` : ""}
+  <section class="blk">${HORN}${guest ? `<p class="to">${dear ? `<span>${dear}</span>` : ""}<b>${esc(guest.name)}${d.lang === "ru" ? "," : "!"}</b></p>` : ""}<h2>${T.TT(d.type, "inv")}</h2>${d.msg ? `<p class="msg">${esc(d.msg)}</p>` : ""}
     ${d.hosts ? `<div class="hosts">${T.P("hosts")}<b>${esc(d.hosts)}</b></div>` : ""}</section>
   ${ts ? `<section class="blk"><h2>${T.TT(d.type, "cd")}</h2>
     <div class="cd" data-ts="${ts}" data-past="${esc(T.P("past"))}"><div><b data-u="d">0</b><span>${T.P("d")}</span></div><div><b data-u="h">0</b><span>${T.P("h")}</span></div><div><b data-u="m">0</b><span>${T.P("m")}</span></div><div><b data-u="s">0</b><span>${T.P("s")}</span></div></div>
@@ -243,7 +246,7 @@ export function renderInvitation(d, opts = {}) {
   ${d.photos && d.photos.length ? `<section class="blk"><h2>${T.L("gal")}</h2><div class="gal">${d.photos.map(p => `<img src="${esc(photoUrl(p))}" alt="" loading="lazy" decoding="async" data-act="zoom">`).join("")}</div></section>` : ""}
   <section class="blk"><h2>${T.L("rsvp")}</h2>${d.dl ? `<div class="sub">${T.deadline(d.dl)}</div>` : ""}
     <form class="rsvp" data-pf="${pf}" novalidate>
-      <label for="${pf}-rn">${T.P("rn")}</label><input type="text" id="${pf}-rn" name="name" autocomplete="name" maxlength="60" required>
+      <label for="${pf}-rn">${T.P("rn")}</label><input type="text" id="${pf}-rn" name="name" autocomplete="name" maxlength="60" required${guest ? ` value="${esc(guest.name.slice(0, 60))}"` : ""}>
       <div class="yn" role="radiogroup"><label><input type="radio" name="att" id="${pf}-y" value="1" checked><span>${T.P("yes")}</span></label><label><input type="radio" name="att" id="${pf}-n" value="0"><span>${T.P("no")}</span></label></div>
       <div class="cntw"><label for="${pf}-rc">${T.P("cnt")}</label><input type="number" id="${pf}-rc" name="guests" min="1" max="20" value="1" inputmode="numeric"></div>
       <label for="${pf}-rt">${T.P("note")}</label><textarea id="${pf}-rt" name="note" maxlength="300"></textarea>

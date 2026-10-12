@@ -16,6 +16,7 @@ const ROUTES = [
   [/^\/api\/photos\/?$/, photos, []],
   [/^\/media\/([a-z0-9]+)$/, media, ["id"]],
   [/^\/i\/([a-z0-9-]+)\/?$/, invPage, ["slug"]],
+  [/^\/i\/([a-z0-9-]+)\/([a-z0-9]{5})\/?$/, invPage, ["slug", "code"]],
   [/^\/sitemap\.xml$/, sitemap, []],
   [/^\/robots\.txt$/, robots, []]
 ];

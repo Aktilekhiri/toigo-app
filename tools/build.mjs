@@ -325,7 +325,7 @@ function createPage(lang) {
       </div>
       ${f("dl", S.l_dl, `<input id="f-dl" name="dl" type="date">`)}
       ${f("phone", S.l_phone, `<input id="f-phone" name="phone" type="tel" inputmode="tel" maxlength="24" placeholder="+996 700 000 000" autocomplete="tel">`, "", S.h_phone)}
-      <div class="fld w"><label class="sw"><input id="f-music" name="music" type="checkbox" checked>${S.l_music}</label></div>
+      <div class="fld w"><label class="sw"><input id="f-music" name="music" type="checkbox" checked>${S.l_music}</label><label class="sw"><input id="f-fx" name="fx" type="checkbox" checked>${S.l_fx}</label></div>
     </fieldset>
     <div class="submit-row"><button class="btn btn-p" type="submit" id="save">${S.save}</button><span class="form-msg" id="form-msg" aria-live="polite"></span></div>
     <div id="done" hidden></div>

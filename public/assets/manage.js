@@ -1,5 +1,5 @@
 // Toigo — host page: guest answers, edit link, delete.
-import { titleOf, esc } from "/assets/invite-core.js?v=mv4exbii";
+import { titleOf, esc } from "/assets/invite-core.js?v=mv4z4vlj";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -31,7 +31,8 @@ async function load(slug, key) {
     res = await r.json();
   } catch { app.innerHTML = `<div class="empty"><p>${S.net}</p><p style="margin-top:16px"><button class="btn btn-g" type="button" id="retry">${S.refresh}</button></p></div>`; document.getElementById("retry").onclick = () => load(slug, key); return; }
 
-  const d = res.data, g = res.guests;
+  const d = res.data, g = res.guests, invitees = res.invitees || [];
+  const answerOf = id => g.find(x => x.guest_id === id);
   const title = titleOf(d, d.lang);
   document.getElementById("mh1").textContent = title;
   const mine = (store.get("toigo-mine") || []).filter(x => x.slug !== slug);
@@ -57,13 +58,49 @@ async function load(slug, key) {
     <div class="stat"><b>${people}</b><span>${S.total}</span></div>
     <div class="stat"><b>${res.views}</b><span>${S.views}</span></div>
   </div>
-  <h2 style="font-size:26px;margin:8px 0 14px">${S.answers}</h2>
+  <section class="invitees" aria-labelledby="inv-h">
+    <h2 id="inv-h" style="font-size:26px;margin:8px 0 8px">${S.inv_h}</h2>
+    <p style="color:var(--muted);max-width:62ch;margin:0 0 16px">${S.inv_p}</p>
+    <div class="fld" style="max-width:640px"><label for="inv-add">${S.inv_add_l}</label><textarea id="inv-add" rows="4" placeholder="Актилек Казиев Кубанычбекович, +996 702 000 000"></textarea><span class="hint">${S.inv_add_h}</span></div>
+    <div class="submit-row" style="margin:10px 0 18px"><button type="button" class="btn btn-p btn-sm" id="inv-add-btn">${S.inv_add}</button><span class="form-msg" id="inv-msg" aria-live="polite"></span></div>
+    <div class="tbl">${invitees.length ? `<table><thead><tr><th>${S.inv_th}</th><th>${S.inv_st}</th><th></th></tr></thead><tbody>
+      ${invitees.map(x => { const a = answerOf(x.id); const st = a ? `<span class="pill ${a.attending ? "y" : "x"}">${a.attending ? S.inv_yes : S.inv_no}${a.attending && a.guests > 1 ? " · " + a.guests : ""}</span>` : x.opens ? `<span class="pill o">${S.inv_open}</span>` : `<span class="pill s">${S.inv_sent}</span>`;
+        const url = `${location.origin}/i/${slug}/${x.code}`;
+        const text = S.inv_text.replace("{name}", x.name).replace("{title}", title) + "\n" + url;
+        const wa = `https://wa.me/${(x.phone || "").replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;
+        return `<tr><td>${esc(x.name)}${x.phone ? `<br><small style="color:var(--muted)">${esc(x.phone)}</small>` : ""}</td><td>${st}</td>
+          <td style="white-space:nowrap"><a class="btn btn-gold btn-sm" href="${esc(wa)}" target="_blank" rel="noopener">${S.inv_send}</a>
+          <button type="button" class="btn btn-g btn-sm" data-cp="${esc(url)}">${S.inv_copy}</button>
+          <button type="button" class="x-btn" data-delg="${x.id}" aria-label="${S.del} ${esc(x.name)}">${S.del}</button></td></tr>`; }).join("")}
+    </tbody></table>` : `<p class="empty">${S.inv_none}</p>`}</div>
+  </section>
+  <h2 style="font-size:26px;margin:32px 0 14px">${S.answers}</h2>
   <div class="tbl">${g.length ? `<table><thead><tr><th>${S.th_name}</th><th>${S.th_status}</th><th>${S.th_count}</th><th>${S.th_note}</th><th>${S.th_date}</th><th></th></tr></thead><tbody>
     ${g.map(x => `<tr><td>${esc(x.name)}</td><td><span class="pill ${x.attending ? "y" : "x"}">${x.attending ? S.yes : S.no}</span></td><td class="n">${x.attending ? x.guests : "—"}</td><td>${esc(x.note) || "—"}</td><td class="n">${fmt(x.created_at)}</td><td><button type="button" class="x-btn" data-del="${x.id}">${S.del}</button></td></tr>`).join("")}
   </tbody></table>` : `<p class="empty">${S.no_answers}</p>`}</div>
   <div style="margin-top:40px" id="danger"><button type="button" class="btn btn-g btn-sm" id="delinv" style="color:var(--no)">${S.del_inv}</button></div>`;
 
   document.getElementById("refresh").onclick = () => load(slug, key);
+  const post = body => fetch(`/api/invitations/${slug}`, { method: "POST", headers: { "content-type": "application/json", "x-edit-key": key }, body: JSON.stringify(body) }).catch(() => null);
+  document.getElementById("inv-add-btn").onclick = async e => {
+    const btn = e.currentTarget, msg = document.getElementById("inv-msg");
+    const lines = document.getElementById("inv-add").value.split("\n").map(l => l.trim()).filter(Boolean);
+    if (!lines.length) { msg.textContent = S.need_name; return; }
+    const guests = lines.map(l => { const m = /^(.*?)[,;]\s*(\+?[\d\s()-]{7,})$/.exec(l); return m ? { name: m[1], phone: m[2] } : { name: l }; });
+    btn.disabled = true;
+    const r = await post({ action: "add_guests", guests });
+    btn.disabled = false;
+    if (r && r.ok) { toast(S.inv_added); load(slug, key); }
+    else msg.textContent = r && r.status === 400 ? S.inv_max : S.net;
+  };
+  app.querySelectorAll("[data-cp]").forEach(b => b.onclick = async () => {
+    try { await navigator.clipboard.writeText(b.dataset.cp); toast(S.copied); } catch { prompt("", b.dataset.cp); }
+  });
+  app.querySelectorAll("[data-delg]").forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    const r = await post({ action: "delete_guest", id: +b.dataset.delg });
+    if (r && r.ok) load(slug, key); else { b.disabled = false; toast(S.net); }
+  });
   const csv = document.getElementById("csv");
   if (csv) csv.onclick = () => {
     const rows = [[S.th_name, S.th_status, S.th_count, S.th_note, S.th_date], ...g.map(x => [x.name, x.attending ? S.yes : S.no, x.attending ? x.guests : 0, x.note || "", new Date(x.created_at).toISOString()])];
