@@ -1,5 +1,6 @@
 import { renderInvitation, titleOf, longDate, TYPES, esc } from "../../public/assets/invite-core.js";
 import { VERSION } from "../../lib/pages.js";
+import { PREM_THEME } from "../../public/assets/invite-premium.js";
 
 const notFound = origin => new Response(`<!doctype html><html lang="ky"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Чакыруу табылган жок</title>
 <style>body{font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;padding:16px;text-align:center;color:#16191D;background:#fff}a{color:#16191D}</style></head>
@@ -29,7 +30,7 @@ export async function onRequestGet({ request, env, params, waitUntil }) {
   const ogImage = d.photos && d.photos.length ? `${origin}/media/${d.photos[0]}` : `${origin}/img/og-${d.tpl}.png`;
   const pageUrl = `${origin}/i/${row.slug}${guest ? "/" + guest.code : ""}`;
   const body = renderInvitation(d, { mode: "live", slug: row.slug, pf: "g", guest });
-  const themeColor = { ivory: "#FAF7F0", anarp: "#6E1735", emerald: "#124B40", steps: "#DCEEF8", golden: "#171717", pop: "#FFF9F3", heritage: "#842E3A", botanical: "#FFFFFF", midnight: "#0B1428", editorial: "#FFFFFF", alatoo: "#1D2742", akkalpak: "#FFFFFF", shyrdak: "#7E2A20", jibek: "#E3E8DF", anar: "#5B1626", asman: "#DCEAF4" }[d.tpl] || "#FFFFFF";
+  const themeColor = { ivory: "#FAF7F0", anarp: "#6E1735", emerald: "#124B40", steps: "#DCEEF8", golden: "#171717", pop: "#FFF9F3", heritage: "#842E3A", botanical: "#FFFFFF", midnight: "#0B1428", editorial: "#FFFFFF", alatoo: "#1D2742", akkalpak: "#FFFFFF", shyrdak: "#7E2A20", jibek: "#E3E8DF", anar: "#5B1626", asman: "#DCEAF4", ...PREM_THEME }[d.tpl] || "#FFFFFF";
 
   const html = `<!doctype html>
 <html lang="${lang === "ky" ? "ky" : "ru"}">

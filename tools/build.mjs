@@ -4,6 +4,7 @@ import path from "node:path";
 import { TYPES, TPL, TRACKS, DEFAULTS, TYPE_TEXT, coverHTML, renderInvitation, invClass, esc } from "../public/assets/invite-core.js";
 import { C, UI, CATS, SUPPORT } from "./content.mjs";
 import { ILLUS } from "./illus.mjs";
+import { PREM_SWATCH } from "../public/assets/invite-premium.js";
 
 const OUT = "public";
 const LASTMOD = new Date().toISOString().slice(0, 10);
@@ -293,7 +294,7 @@ function createPage(lang) {
     <fieldset><legend>${S.lg1}</legend>
       ${f("type", S.l_type, `<select id="f-type" name="type">${Object.keys(TYPES).map(k => `<option value="${k}">${TYPES[k][lang]}</option>`).join("")}</select>`, "w")}
       <div class="fld w"><span class="lbl">${S.l_tpl}</span><div class="tplpick" role="radiogroup" aria-label="${S.l_tpl}">
-        ${TPL.map(t => `<label data-types="${t.types.join(" ")}"><input type="radio" name="tpl" value="${t.id}" id="tpl-${t.id}"><span><i class="t-${t.id}" style="--sw:var(--ib);background:var(--ib);border:1px solid var(--il)"></i>${t.name[lang]}</span></label>`).join("")}
+        ${TPL.map(t => `<label data-types="${t.types.join(" ")}"><input type="radio" name="tpl" value="${t.id}" id="tpl-${t.id}"><span>${PREM_SWATCH[t.id] ? `<i style="background:${PREM_SWATCH[t.id]};border:1px solid rgba(0,0,0,.08)"></i>` : `<i class="t-${t.id}" style="--sw:var(--ib);background:var(--ib);border:1px solid var(--il)"></i>`}${t.name[lang]}</span></label>`).join("")}
       </div></div>
       <div class="fld w"><span class="lbl">${S.l_lang}</span><div class="seg" role="radiogroup" aria-label="${S.l_lang}">
         <label><input type="radio" name="lang" id="il-ky" value="ky"><span>${S.o_ky}</span></label>

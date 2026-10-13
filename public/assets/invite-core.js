@@ -1,6 +1,7 @@
 // Toigo — shared invitation renderer.
 // Used in the browser (constructor preview) and on the server (/i/:slug).
 // Pure functions only: no DOM access here.
+import { PREM, PREM_TPL, premCover, premOrn, premFinale } from "./invite-premium.js";
 
 export const TYPES = {
   uylonuu: { ky: "Үйлөнүү той", ru: "Свадьба", names: "pair" },
@@ -12,6 +13,7 @@ export const TYPES = {
 };
 
 export const TPL = [
+  ...PREM_TPL,
   { id: "ivory",     name: { ky: "Ivory Elegance", ru: "Ivory Elegance" }, desc: { ky: "Сүт түсү, шампань сызыктары жана нафис гүл бутактары.", ru: "Молочный фон, тонкие линии шампань и деликатные цветочные веточки." }, types: ["uylonuu","kyz"] },
   { id: "anarp",     name: { ky: "Анар Premium", ru: "Анар Premium" }, desc: { ky: "Анар түсү, порошок жана роза-алтын рамка. Кыз узатуу үчүн.", ru: "Гранатовый фон, пудра и рамка из розового золота. Для кыз узатуу." }, types: ["kyz"] },
   { id: "emerald",   name: { ky: "Emerald Royal", ru: "Emerald Royal" }, desc: { ky: "Зымырыт түс, алтын геометрия жана каймак түстүү карточка.", ru: "Изумрудный фон, золотая геометрия и кремовая карточка." }, types: ["sunnot"] },
@@ -37,14 +39,14 @@ export const IV = {
         note: "Каалоо-тилек", send: "Жооп жөнөтүү", thx: "Рахмат! Жообуңуз той ээлерине жетти.", err: "Атыңызды жазыңыз",
         fail: "Жиберилген жок. Интернетти текшерип, кайра басыңыз.", hosts: "Той ээлери", made: "Тойго аркылуу түзүлдү",
         scroll: "Ылдый жылдырыңыз", music: "Музыка", contact: "Байланыш", seat: "Сиздин ордуңуз", call: "Чалуу", preview: "Бул алдын ала көрүү. Жооп чыныгы чакырууда иштейт.",
-        past: "Той өттү. Келгениңиздерге рахмат!" },
+        past: "Той өттү. Келгениңиздерге рахмат!", fin: "Сиздерди чын жүрөктөн күтөбүз" },
   ru: { inv: "Приглашаем вас на наш праздник", cd: "До праздника осталось", d: "дней", h: "часов", m: "минут", s: "секунд",
         prog: "Программа", venue: "Место проведения", dress: "Дресс-код", gal: "Фотографии", rsvp: "Вы придёте?",
         by: "ответьте до", rn: "Ваше имя", yes: "Приду", no: "Не смогу", cnt: "Сколько человек",
         note: "Пожелание", send: "Отправить ответ", thx: "Спасибо! Ваш ответ получен.", err: "Укажите имя",
         fail: "Не отправилось. Проверьте интернет и нажмите ещё раз.", hosts: "Хозяева тоя", made: "Сделано в Тойго",
         scroll: "Листайте вниз", music: "Музыка", contact: "Контакты", seat: "Ваше место", call: "Позвонить", preview: "Это предпросмотр. Ответы работают в настоящем приглашении.",
-        past: "Праздник прошёл. Спасибо, что были с нами!" }
+        past: "Праздник прошёл. Спасибо, что были с нами!", fin: "Ждём вас с любовью" }
 };
 
 const MON = {
@@ -121,7 +123,7 @@ export const TYPE_TEXT = {
 };
 
 export const DEFAULTS = {
-  v: 1, type: "uylonuu", tpl: "ivory", lang: "ky",
+  v: 1, type: "uylonuu", tpl: "silk", lang: "ky",
   n1: "Айбек", n2: "Айзада", hosts: "Асановдор үй-бүлөсү",
   date: "2027-06-12", time: "17:00", venue: "«Шумкар» той үйү", addr: "Бишкек, Чүй проспектиси, 150",
   msg: "Урматтуу туугандар, дос-тамырлар жана жакындарыбыз! Эки жаш жаңы үй-бүлө болуп кошулган кубанычтуу күндү сиздер менен бирге белгилегибиз келет. Салтанаттуу тоюбуздун төрүнөн орун алып, ак батаңыздарды бериңиздер.",
@@ -235,7 +237,7 @@ function names(d) {
 
 // ---------- templates v2: each has its own cover composition ----------
 export const NEW_TPL = new Set(["ivory","anarp","emerald","steps","golden","pop","heritage","botanical","midnight","editorial"]);
-export const invClass = (tpl, type) => `inv t-${tpl}${NEW_TPL.has(tpl) ? " nw" : ""} ty-${type || "uylonuu"}`;
+export const invClass = (tpl, type) => `inv t-${tpl}${NEW_TPL.has(tpl) ? " nw" : PREM.has(tpl) ? " nw pr" : ""} ty-${type || "uylonuu"}`;
 
 const ruYears = n => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? "год" : a >= 2 && a <= 4 && (b < 12 || b > 14) ? "года" : "лет"; };
 function ageWord(n, lang) { return lang === "ru" ? ruYears(n) : lang === "both" ? `жаш / ${ruYears(n)}` : "жаш"; }
@@ -268,6 +270,7 @@ const DIAMOND = '<svg viewBox="0 0 120 20" aria-hidden="true"><path d="M0 10h48M
 
 // divider ornament under the cover, per template
 function orn(tpl) {
+  if (PREM.has(tpl)) return premOrn(tpl);
   const w = s => `<span class="orn orn-${tpl}" aria-hidden="true">${s}</span>`;
   switch (tpl) {
     case "ivory": return w(SPRIG);
@@ -304,9 +307,17 @@ function coverNew(d, T, opts) {
   return "";
 }
 
+function premHelpers(d, T) {
+  const p = dparts(d);
+  return { esc, names: names(d), ey: eyebrow(d, T), p, dot: p ? `${p.dd} · ${p.mm} · ${p.y}` : "",
+    longD: p ? (d.lang === "ru" ? `${p.day} ${p.mon} ${p.y}` : `${p.y}-ж., ${p.day}-${p.monKy}`) : "",
+    when: when(d, T), typeLabel: TYPES[d.type][d.lang === "ru" ? "ru" : "ky"], fin: T.L("fin") };
+}
+
 export function coverHTML(d, opts = {}) {
   const T = mk(d.lang), mini = !!opts.mini;
   if (NEW_TPL.has(d.tpl)) return coverNew(d, T, opts);
+  if (PREM.has(d.tpl)) return premCover(d, premHelpers(d, T), opts);
   return `<div class="cv">${decor(d.tpl, mini)}
     <div class="ey">${eyebrow(d, T)}</div>
     ${["alatoo", "asman", "anar", "jibek"].includes(d.tpl) ? HORN : ""}
@@ -370,5 +381,6 @@ export function renderInvitation(d, opts = {}) {
     <div class="thx" hidden>${T.L("thx")}</div>
   </section>
   ${phone ? `<section class="blk"><h2>${T.L("contact")}</h2><div class="row2"><a class="ib f" href="https://wa.me/${waNum}" target="_blank" rel="noopener">WhatsApp</a><a class="ib" href="tel:${esc(phone)}">${T.P("call")}</a></div><div class="sub">${esc(phone)}</div></section>` : ""}
+  ${PREM.has(d.tpl) ? premFinale(d, premHelpers(d, T)) : ""}
   <footer class="ft"><a href="/" target="_blank" rel="noopener">${T.P("made")}</a></footer></div>`;
 }
