@@ -1,7 +1,7 @@
 // Static site generator for Chakyr. Run: node tools/build.mjs (from project root)
 import fs from "node:fs";
 import path from "node:path";
-import { TYPES, TPL, DEFAULTS, TYPE_TEXT, coverHTML, renderInvitation, invClass, esc } from "../public/assets/invite-core.js";
+import { TYPES, TPL, TRACKS, DEFAULTS, TYPE_TEXT, coverHTML, renderInvitation, invClass, esc } from "../public/assets/invite-core.js";
 import { C, UI, CATS, SUPPORT } from "./content.mjs";
 import { ILLUS } from "./illus.mjs";
 
@@ -329,6 +329,7 @@ function createPage(lang) {
       ${f("dl", S.l_dl, `<input id="f-dl" name="dl" type="date">`)}
       ${f("phone", S.l_phone, `<input id="f-phone" name="phone" type="tel" inputmode="tel" maxlength="24" placeholder="+996 700 000 000" autocomplete="tel">`, "", S.h_phone)}
       <div class="fld w"><label class="sw"><input id="f-music" name="music" type="checkbox" checked>${S.l_music}</label><label class="sw"><input id="f-fx" name="fx" type="checkbox" checked>${S.l_fx}</label></div>
+      ${f("track", S.l_track, `<select id="f-track" name="track">${TRACKS.map(t => `<option value="${t.id}">${t[lang]}</option>`).join("")}</select>`, "", S.h_track)}
     </fieldset>
     <div class="submit-row"><button class="btn btn-p" type="submit" id="save">${S.save}</button><span class="form-msg" id="form-msg" aria-live="polite"></span></div>
     <div id="done" hidden></div>

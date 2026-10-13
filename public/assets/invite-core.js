@@ -126,7 +126,7 @@ export const DEFAULTS = {
   date: "2027-06-12", time: "17:00", venue: "«Шумкар» той үйү", addr: "Бишкек, Чүй проспектиси, 150",
   msg: "Урматтуу туугандар, дос-тамырлар жана жакындарыбыз! Эки жаш жаңы үй-бүлө болуп кошулган кубанычтуу күндү сиздер менен бирге белгилегибиз келет. Салтанаттуу тоюбуздун төрүнөн орун алып, ак батаңыздарды бериңиздер.",
   prog: "17:00 — Конокторду тосуу\n18:00 — Нике кыюу\n19:00 — Той башталат\n23:00 — Коштошуу",
-  dress: "", dl: "2027-06-01", phone: "", music: true, photos: []
+  dress: "", dl: "2027-06-01", phone: "", music: true, track: "komuz", photos: []
 };
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -143,6 +143,15 @@ export function baseSlug(d) {
 }
 
 // Server-side and client-side cleaning: whitelist fields, clamp lengths.
+// Background tracks. "komuz" is Toigo's own; the others are royalty-free tracks chosen by the owner.
+export const TRACKS = [
+  { id: "komuz", file: "toi-music-3", ky: "Комуз (Тойго)", ru: "Комуз (Тойго)" },
+  { id: "atlas", file: "toi-atlas-1", ky: "Atlas Kyrgyzstan", ru: "Atlas Kyrgyzstan" },
+  { id: "m3", file: "toi-melody-3", ky: "Обон 3", ru: "Мелодия 3" },
+  { id: "m4", file: "toi-melody-4", ky: "Обон 4", ru: "Мелодия 4" }
+];
+export const trackFile = id => (TRACKS.find(t => t.id === id) || TRACKS[0]).file;
+
 export function clean(input) {
   const d = {}; const i = input && typeof input === "object" ? input : {};
   const str = (v, n) => String(v ?? "").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "").trim().slice(0, n);
@@ -160,6 +169,7 @@ export function clean(input) {
   d.prog = str(i.prog, 1500).split("\n").slice(0, 20).join("\n");
   d.phone = str(i.phone, 24).replace(/[^\d+]/g, "");
   d.music = i.music !== false;
+  d.track = TRACKS.some(t => t.id === i.track) ? i.track : "komuz";
   d.fx = i.fx !== false;
   d.photos = Array.isArray(i.photos) ? i.photos.filter(x => /^[a-z0-9]{20}$/.test(x)).slice(0, 6) : [];
   return d;
@@ -335,7 +345,7 @@ export function renderInvitation(d, opts = {}) {
   const guest = opts.guest || null;
   const dear = { ky: "Урматтуу", ru: "", both: "Урматтуу" }[d.lang] || "";
   return `<div class="${invClass(d.tpl, d.type)}" data-mode="${opts.mode || "preview"}" data-slug="${esc(opts.slug || "")}" data-lang="${d.lang}"${d.fx !== false ? ` data-fx="${d.type}"` : ""}${guest ? ` data-guest="${esc(guest.code)}"` : ""}>
-  ${d.music ? `<button type="button" class="mus" data-act="music" aria-pressed="false" aria-label="${T.P("music")}">${NOTE}</button>` : ""}
+  ${d.music ? `<button type="button" class="mus" data-act="music" data-track="${trackFile(d.track)}" aria-pressed="false" aria-label="${T.P("music")}">${NOTE}</button>` : ""}
   ${coverHTML(d, { photoUrl })}
   <section class="blk">${orn(d.tpl)}${guest ? `<p class="to">${dear ? `<span>${dear}</span>` : ""}<b>${esc(guest.name)}${d.lang === "ru" ? "," : "!"}</b></p>` : ""}<h2>${T.TT(d.type, "inv")}</h2>${d.msg ? `<p class="msg">${esc(d.msg)}</p>` : ""}
     ${d.hosts ? `<div class="hosts">${T.P("hosts")}<b>${esc(d.hosts)}</b></div>` : ""}</section>

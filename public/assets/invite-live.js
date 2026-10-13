@@ -16,17 +16,29 @@ function tick() {
 }
 
 // Background music: one shared <audio>, loaded only after the guest taps the music button.
-const MUS = { on: false, el: null };
-function toggleMusic() {
+const MUS = { on: false, el: null, file: "" };
+function toggleMusic(btn) {
+  const file = (btn && btn.dataset.track) || "toi-music-3";
   if (!MUS.el) {
     MUS.el = new Audio();
-    // AAC for Safari/iPhone, Opus for browsers without AAC.
-    MUS.el.src = MUS.el.canPlayType('audio/mp4; codecs="mp4a.40.2"') ? "/assets/audio/toi-music-3.m4a" : "/assets/audio/toi-music-3.webm";
     MUS.el.loop = true; MUS.el.preload = "auto"; MUS.el.volume = 0.8;
     MUS.el.addEventListener("pause", () => sync(false));
     MUS.el.addEventListener("play", () => sync(true));
   }
+  // AAC for Safari/iPhone, Opus for browsers without AAC.
+  if (MUS.file !== file) {
+    MUS.file = file;
+    MUS.el.src = `/assets/audio/${file}.` + (MUS.el.canPlayType('audio/mp4; codecs="mp4a.40.2"') ? "m4a" : "webm");
+  }
   if (MUS.el.paused) MUS.el.play().catch(() => sync(false)); else MUS.el.pause();
+}
+// Constructor: switch the playing track without the guest pressing anything.
+export function setTrack(file) {
+  if (!MUS.el || MUS.file === file) return;
+  const playing = !MUS.el.paused;
+  MUS.file = file;
+  MUS.el.src = `/assets/audio/${file}.` + (MUS.el.canPlayType('audio/mp4; codecs="mp4a.40.2"') ? "m4a" : "webm");
+  if (playing) MUS.el.play().catch(() => sync(false));
 }
 function sync(on) {
   MUS.on = on;
@@ -137,7 +149,7 @@ export function startLive() {
   tick(); setInterval(tick, 1000);
   scanFx(); setInterval(scanFx, 400);
   document.addEventListener("click", e => {
-    if (e.target.closest(".inv [data-act=music]")) { toggleMusic(); return; }
+    { const mb = e.target.closest(".inv [data-act=music]"); if (mb) { toggleMusic(mb); return; } }
     const z = e.target.closest(".inv [data-act=zoom]");
     if (z) {
       const lb = document.createElement("div"); lb.className = "lb"; lb.tabIndex = -1;
