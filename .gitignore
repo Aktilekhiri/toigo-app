@@ -3,3 +3,7 @@ node_modules/
 tools/node_modules/
 tools/ttf
 tools/ttf/
+.dev.vars
+.env
+.env.*
+!.env.example

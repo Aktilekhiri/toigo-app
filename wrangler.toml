@@ -15,3 +15,21 @@ database_id = "ac27a5b4-c57b-487b-ac1b-7e3634a7020a"
 
 [observability]
 enabled = true
+
+# Non-secret settings. Secrets (keys, passwords) are set with `npx wrangler secret put NAME`, see .env.example.
+[vars]
+SITE_URL = "https://toigo.app"
+PAYMENT_MODE = "manual"          # "manual" (bank transfer, admin confirms) or "finik" (online, needs FINIK_* secrets)
+FINIK_ENV = "beta"               # "beta" for tests, "prod" after Finik activates the account
+ADMIN_EMAIL = "xebecweb.com@gmail.com"
+MAIL_FROM = "orders@toigo.app"
+
+# Retry order e-mails every 10 minutes.
+[triggers]
+crons = ["*/10 * * * *"]
+
+# Admin e-mails through Cloudflare Email Routing. Enable after README step "Почта": turn on Email Routing
+# for toigo.app and verify xebecweb.com@gmail.com as a destination, then uncomment:
+# [[send_email]]
+# name = "MAILER"
+# destination_address = "xebecweb.com@gmail.com"

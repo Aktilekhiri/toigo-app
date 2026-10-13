@@ -8,6 +8,13 @@ import * as media from "../functions/media/[id].js";
 import * as invPage from "../functions/i/[slug].js";
 import * as sitemap from "../functions/sitemap.xml.js";
 import * as robots from "../functions/robots.txt.js";
+import * as orders from "../functions/api/orders/index.js";
+import * as order from "../functions/api/orders/[id].js";
+import * as finikHook from "../functions/api/pay/finik.js";
+import * as adminLogin from "../functions/api/admin/login.js";
+import * as adminOrders from "../functions/api/admin/orders.js";
+import * as adminOrder from "../functions/api/admin/orders/[id].js";
+import { retryDue } from "../lib/mailer.js";
 
 const ROUTES = [
   [/^\/api\/invitations\/?$/, invitations, []],
@@ -17,6 +24,12 @@ const ROUTES = [
   [/^\/media\/([a-z0-9]+)$/, media, ["id"]],
   [/^\/i\/([a-z0-9-]+)\/?$/, invPage, ["slug"]],
   [/^\/i\/([a-z0-9-]+)\/([a-z0-9]{5})\/?$/, invPage, ["slug", "code"]],
+  [/^\/api\/orders\/?$/, orders, []],
+  [/^\/api\/orders\/(TG-[A-Z0-9]{6})\/?$/, order, ["id"]],
+  [/^\/api\/pay\/finik\/?$/, finikHook, []],
+  [/^\/api\/admin\/login\/?$/, adminLogin, []],
+  [/^\/api\/admin\/orders\/?$/, adminOrders, []],
+  [/^\/api\/admin\/orders\/(TG-[A-Z0-9]{6})\/?$/, adminOrder, ["id"]],
   [/^\/sitemap\.xml$/, sitemap, []],
   [/^\/robots\.txt$/, robots, []]
 ];
@@ -37,6 +50,10 @@ async function route(request, env, ctx) {
 }
 
 export default {
+  // Cron: retry order e-mails that failed or were waiting for a mail transport.
+  async scheduled(event, env, ctx) {
+    if (env.DB) ctx.waitUntil(retryDue(env).catch(e => console.error("retry", e && e.message)));
+  },
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     // One address for SEO: www.toigo.app → toigo.app
@@ -55,7 +72,8 @@ export default {
     headers.set("x-frame-options", "SAMEORIGIN");
     // Hide technical copies (*.workers.dev, *.pages.dev) from search engines.
     if (/\.(workers|pages)\.dev$/.test(url.hostname)) headers.set("x-robots-tag", "noindex");
-    if (url.pathname.startsWith("/manage/") || url.pathname.startsWith("/ru/manage/")) headers.set("x-robots-tag", "noindex");
+    if (/^\/(ru\/)?(manage|order\/status|admin)\//.test(url.pathname) || url.pathname.startsWith("/admin")) headers.set("x-robots-tag", "noindex");
+    if (url.pathname.startsWith("/admin") || url.pathname.startsWith("/api/")) headers.set("cache-control", "no-store");
 
     const type = headers.get("content-type") || "";
     if (!type.includes("text/html") || request.method === "HEAD") return new Response(res.body, { status: res.status, statusText: res.statusText, headers });

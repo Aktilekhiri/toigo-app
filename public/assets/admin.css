@@ -1,0 +1,33 @@
+/* Toigo orders admin */
+.adm{max-width:1120px;margin:0 auto;padding:16px 16px 60px}
+.adm-top{display:flex;align-items:center;gap:14px;padding:6px 0 18px;border-bottom:1px solid var(--line);margin-bottom:22px}
+.adm-top b{font-weight:500;color:var(--muted)}
+.adm-top .btn{margin-left:auto}
+.adm h1{font-size:34px}
+.adm-login{max-width:380px;margin:60px auto;display:flex;flex-direction:column;gap:16px}
+.adm-bar{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
+.adm-search{display:flex;gap:8px;max-width:460px}
+.adm-search input{flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;min-height:44px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:99px;padding:7px 13px;font:inherit;font-size:14px;cursor:pointer;min-height:36px}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.adm table{min-width:640px}
+.adm tbody tr[data-id]{cursor:pointer}
+.adm tbody tr[data-id]:hover{background:var(--paper)}
+.adm small{color:var(--muted);font-size:13px}
+.pill{display:inline-block;border-radius:99px;padding:3px 10px;font-size:13px;font-weight:500;white-space:nowrap;background:var(--gold-soft);color:#5C4313}
+.p-ok{background:#E5F2EA;color:var(--ok)}.p-done{background:var(--ink);color:#fff}.p-no{background:#F6E4E0;color:var(--no)}.p-mute{background:var(--paper);color:var(--muted)}
+.adm-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:8px 0 18px}
+.adm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.box{border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.box h2{font-size:22px}
+.box h3{font-size:18px}
+.kv{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;margin:0}
+.kv div{display:grid;grid-template-columns:140px minmax(0,1fr);gap:10px}
+.kv dt{color:var(--muted);font-size:14px}.kv dd{margin:0;white-space:pre-line;overflow-wrap:anywhere}
+.box .fld{display:flex;flex-direction:column;gap:6px}
+.box textarea{min-height:90px}
+.manual-pay{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:10px}
+.manual-pay .row2{display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px}
+.empty-box{border:1px dashed var(--line);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+@media (max-width:860px){.adm-grid{grid-template-columns:minmax(0,1fr)}.kv div{grid-template-columns:110px minmax(0,1fr)}}

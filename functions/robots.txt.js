@@ -4,6 +4,10 @@ export function onRequestGet({ request }) {
 Allow: /
 Disallow: /api/
 Disallow: /manage/
+Disallow: /ru/manage/
+Disallow: /order/status/
+Disallow: /ru/order/status/
+Disallow: /admin/
 
 Sitemap: ${origin}/sitemap.xml
 `;

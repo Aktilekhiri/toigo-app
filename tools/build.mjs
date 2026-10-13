@@ -4,6 +4,8 @@ import path from "node:path";
 import { TYPES, TPL, TRACKS, DEFAULTS, TYPE_TEXT, coverHTML, renderInvitation, invClass, esc } from "../public/assets/invite-core.js";
 import { C, UI, CATS, SUPPORT } from "./content.mjs";
 import { ILLUS } from "./illus.mjs";
+import { PAID } from "./content-paid.mjs";
+import { SERVICES, CURRENCY, EVENT_TYPES } from "../lib/services.js";
 import { PREM_SWATCH } from "../public/assets/invite-premium.js";
 
 const OUT = "public";
@@ -89,7 +91,7 @@ function header(lang, m) {
 <header class="hdr"><div class="wrap">
   <a class="brand" href="${home}" aria-label="Тойго">${HORN}Тойго</a>
   <nav class="nav" aria-label="${lang === "ky" ? "Негизги меню" : "Основное меню"}">
-    <a href="${a("#designs")}">${N.designs}</a><a href="${a("#how")}">${N.how}</a><a href="${a("#faq")}">${N.faq}</a><a href="${a("#support")}">${N.support}</a>
+    <a href="${a("#designs")}">${N.designs}</a><a href="${u(lang, "/services/")}"${m.path && m.path.endsWith("/services/") ? ' aria-current="page"' : ""}>${PAID[lang].nav}</a><a href="${a("#faq")}">${N.faq}</a><a href="${a("#support")}">${N.support}</a>
   </nav>
   <div class="lang" role="group" aria-label="Тил / Язык">
     <a href="${m.alt ? m.alt.ky : "/"}" hreflang="ky" lang="ky" ${lang === "ky" ? 'aria-current="true"' : ""}>KG</a>
@@ -127,7 +129,7 @@ function footer(lang) {
   <div class="cols">
     <div><a class="brand" href="${u(lang, "/")}">${HORN}Тойго</a><p style="margin-top:12px;max-width:36ch">${F.tag}</p></div>
     <div><h3>${F.types}</h3><ul>${CATS.map(c => `<li><a href="${u(lang, `/toi/${c.path}/`)}">${TYPES[c.id][lang]}</a></li>`).join("")}</ul></div>
-    <div><h3>${F.site}</h3><ul><li><a href="${u(lang, "/create/")}">${N.create}</a></li><li><a href="${u(lang, "/manage/")}">${N.mine}</a></li><li><a href="${u(lang, "/")}#faq">${N.faq}</a></li><li><a href="#support">${N.support}</a></li><li><a href="${u(lang, "/privacy/")}">${F.privacy}</a></li></ul></div>
+    <div><h3>${F.site}</h3><ul><li><a href="${u(lang, "/create/")}">${N.create}</a></li><li><a href="${u(lang, "/manage/")}">${N.mine}</a></li><li><a href="${u(lang, "/services/")}">${PAID[lang].nav}</a></li><li><a href="${u(lang, "/terms/")}">${PAID[lang].terms.h1}</a></li><li><a href="${u(lang, "/")}#faq">${N.faq}</a></li><li><a href="#support">${N.support}</a></li><li><a href="${u(lang, "/privacy/")}">${F.privacy}</a></li></ul></div>
   </div>
   <div class="copy"><span>© ${new Date().getFullYear()} Тойго. ${F.rights}</span><span><a href="/" lang="ky">Кыргызча</a> · <a href="/ru/" lang="ru">Русский</a></span></div>
 </div></footer>
@@ -194,6 +196,149 @@ function bandSec(lang) {
 
 const faqLd = items => ({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: items.map(q => ({ "@type": "Question", name: q[0], acceptedAnswer: { "@type": "Answer", text: q[1] } })) });
 
+
+// ---------- paid services ----------
+const minPrice = Math.min(...Object.values(SERVICES).map(x => x.price));
+const waBtn = (label, cls = "btn btn-g") => `<button type="button" class="${cls}" data-wa>${label}</button>`;
+
+function paidBand(lang) {
+  const P = PAID[lang];
+  return `<section class="sec" style="padding-top:0"><div class="wrap"><div class="band paid-band">
+  <div><div class="k">${P.home_k}</div><h2>${P.home_h}</h2><p>${P.home_p.replace("{from}", minPrice)}</p></div>
+  <a class="btn btn-gold" href="${u(lang, "/services/")}">${P.home_btn}</a>
+</div></div></section>`;
+}
+
+function priceCards(lang) {
+  const P = PAID[lang].svc, ord = u(lang, "/order/");
+  const li = xs => `<ul>${xs.map(x => `<li>${x}</li>`).join("")}</ul>`;
+  return `<div class="plans">
+  <article class="plan"><h3>${P.free_name}</h3><p class="ps">${P.free_short}</p><div class="pv">0 <small>${P.som}</small></div>${li(P.free_inc)}<a class="btn btn-g" href="${u(lang, "/create/")}">${P.free_btn}</a></article>
+  ${Object.entries(SERVICES).map(([id, x], i) => `<article class="plan${i === 1 ? " hot" : ""}"><h3>${x.name[lang]}</h3><p class="ps">${x.short[lang]}</p><div class="pv">${x.price} <small>${P.som}</small></div>${li(x.includes[lang])}<a class="btn ${i === 1 ? "btn-gold" : "btn-p"}" href="${ord}?s=${id}">${P.order}</a></article>`).join("")}
+</div>`;
+}
+
+function servicesPage(lang) {
+  const P = PAID[lang].svc;
+  const p = "/services/", alt = { ky: p, ru: "/ru" + p };
+  if (lang === "ky") PAGES.push({ ky: alt.ky, ru: alt.ru, freq: "monthly", prio: "0.8" });
+  const examples = TPL.filter(t => ["silk", "kjibek", "nomad"].includes(t.id));
+  const jsonld = [
+    { "@context": "https://schema.org", "@type": "Service", name: P.h1, serviceType: "Digital invitation design", areaServed: { "@type": "Country", name: "Kyrgyzstan" },
+      provider: { "@type": "Organization", name: "Тойго", url: O + "/" }, url: O + u(lang, p),
+      offers: Object.values(SERVICES).map(x => ({ "@type": "Offer", name: x.name[lang], price: String(x.price), priceCurrency: CURRENCY, url: O + u(lang, "/order/") })) },
+    faqLd(P.faq)
+  ];
+  const body = `
+<section class="page-h"><div class="wrap">
+  <div class="eyebrow">${HORN}${P.k}</div>
+  <h1>${P.h1}</h1><p class="lead">${P.lead}</p>
+  <div class="acts"><a class="btn btn-p" href="${u(lang, "/order/")}">${P.order}</a><a class="btn btn-g" href="${u(lang, "/create/")}">${P.free_btn}</a></div>
+</div></section>
+<section class="sec paper" aria-labelledby="pr-h"><div class="wrap">
+  <div class="sec-h"><div><div class="k">${P.cmp_k}</div><h2 id="pr-h">${P.cmp_h}</h2></div></div>
+  ${priceCards(lang)}
+</div></section>
+<section class="sec" aria-labelledby="ex-h"><div class="wrap">
+  <div class="sec-h"><div><div class="k">${P.ex_k}</div><h2 id="ex-h">${P.ex_h}</h2></div></div>
+  ${cards(lang, examples)}
+</div></section>
+<section class="sec paper" aria-labelledby="st-h"><div class="wrap">
+  <div class="sec-h"><div><div class="k">${P.steps_k}</div><h2 id="st-h">${P.steps_h}</h2></div></div>
+  <ol class="steps">${P.steps.map(x => `<li><h3>${x[0]}</h3><p>${x[1]}</p></li>`).join("")}</ol>
+</div></section>
+<section class="sec" aria-labelledby="tr-h"><div class="wrap">
+  <div class="sec-h"><div><div class="k">${P.terms_k}</div><h2 id="tr-h">${P.terms_h}</h2></div></div>
+  <ul class="terms-list">${P.terms.map(x => `<li>${x}</li>`).join("")}</ul>
+  <p style="margin-top:14px"><a class="link" href="${u(lang, "/terms/")}">${P.terms_link} →</a></p>
+</div></section>
+${faqSec(lang, P.faq)}
+<section class="sec" style="padding-top:0"><div class="wrap"><div class="band">
+  <div><h2>${P.help_h}</h2><p>${P.help_p}</p></div>
+  ${waBtn(P.wa, "btn btn-p")}
+</div></div></section>`;
+  write(u(lang, p), page(lang, { title: P.title, desc: P.desc, path: alt[lang], alt, jsonld }, body));
+}
+
+function orderPage(lang) {
+  const P = PAID[lang].order, S = PAID[lang].svc;
+  const p = "/order/", alt = { ky: p, ru: "/ru" + p };
+  const f = (id, label, input, hint = "", cls = "") => `<div class="fld ${cls}" id="w-${id}"><label for="o-${id}">${label}</label>${input}${hint ? `<span class="hint">${hint}</span>` : ""}<span class="bad" id="e-${id}" aria-live="polite"></span></div>`;
+  const types = EVENT_TYPES.map(t => `<option value="${t}">${t === "other" ? P.other : TYPES[t][lang]}</option>`).join("");
+  const tpls = `<option value="">${P.tpl_any}</option>` + TPL.map(t => `<option value="${t.id}">${esc(t.name[lang])}</option>`).join("");
+  const body = `
+<section class="page-h" style="padding-bottom:8px"><div class="wrap"><h1>${P.h1}</h1><p class="lead">${P.lead}</p></div></section>
+<section class="sec" style="padding-top:20px"><div class="wrap order-wrap">
+  <form id="order" class="ctor order-form" novalidate>
+    <fieldset><legend>${P.s_service}</legend>
+      <div class="fld w"><div class="svc-pick" role="radiogroup" aria-label="${P.s_service}">
+        ${Object.entries(SERVICES).map(([id, x], i) => `<label><input type="radio" name="service" value="${id}"${i === 0 ? " checked" : ""}><span><b>${x.name[lang]}</b><em>${x.price} ${S.som}</em><small>${x.short[lang]}</small></span></label>`).join("")}
+      </div><span class="bad" id="e-service" aria-live="polite"></span></div>
+    </fieldset>
+    <fieldset><legend>${P.s_event}</legend>
+      ${f("event_type", P.l_event, `<select id="o-event_type" name="event_type">${types}</select>`)}
+      ${f("event_date", P.l_date, `<input id="o-event_date" name="event_date" type="date">`)}
+      ${f("names", P.l_names, `<input id="o-names" name="names" maxlength="200" autocomplete="off">`, P.h_names, "w")}
+      ${f("tpl", P.l_tpl, `<select id="o-tpl" name="tpl">${tpls}</select>`, "", "w")}
+      ${f("message", P.l_message, `<textarea id="o-message" name="message" maxlength="2000"></textarea>`, P.h_message, "w")}
+      ${f("extra", P.l_extra, `<textarea id="o-extra" name="extra" maxlength="1000" style="min-height:70px"></textarea>`, "", "w")}
+    </fieldset>
+    <fieldset><legend>${P.s_contact}</legend>
+      ${f("name", P.l_name, `<input id="o-name" name="name" maxlength="80" autocomplete="name">`)}
+      ${f("contact", P.l_contact, `<input id="o-contact" name="contact" type="tel" inputmode="tel" maxlength="40" placeholder="+996 700 000 000" autocomplete="tel">`, P.h_contact)}
+      ${f("email", P.l_email, `<input id="o-email" name="email" type="email" maxlength="120" autocomplete="email">`, P.h_email, "w")}
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+      <div class="fld w" id="w-consent"><label class="sw"><input type="checkbox" id="o-consent" name="consent"><span>${P.consent.replace("{terms}", u(lang, "/terms/")).replace("{privacy}", u(lang, "/privacy/"))}</span></label><span class="bad" id="e-consent" aria-live="polite"></span></div>
+    </fieldset>
+    <div class="order-total"><span>${P.total}</span><b id="o-total">${Object.values(SERVICES)[0].price} ${S.som}</b></div>
+    <div class="submit-row"><button class="btn btn-p" type="submit" id="o-submit">${P.submit_manual}</button><span class="form-msg" id="o-msg" aria-live="polite"></span></div>
+  </form>
+</div></section>
+<script type="application/json" id="i18n">${JSON.stringify({ lang, t: P, som: S.som, prices: Object.fromEntries(Object.entries(SERVICES).map(([k, x]) => [k, x.price])) })}</script>
+<script type="module" src="/assets/order.js?v=${V}"></script>`;
+  write(u(lang, p), page(lang, { title: P.title, desc: S.desc, path: alt[lang], alt, noindex: true, noSupport: true }, body));
+}
+
+function statusPage(lang) {
+  const P = PAID[lang].status, X = PAID[lang];
+  const p = "/order/status/", alt = { ky: p, ru: "/ru" + p };
+  const sv = Object.fromEntries(Object.entries(SERVICES).map(([k, x]) => [k, x.name[lang]]));
+  const body = `
+<section class="page-h" style="padding-bottom:0"><div class="wrap"><h1>${P.h1} <span id="s-id"></span></h1></div></section>
+<section class="sec" style="padding-top:24px"><div class="wrap"><div id="s-app" class="ostatus" aria-live="polite"><p class="empty">${P.loading}</p></div></div></section>
+<template id="s-manual"><div class="manual">
+  <h3>${P.manual_h}</h3><p data-manual-text></p>
+  <div class="pay-row"><span>${P.phone}</span><code id="pay-phone">+996 702 ••• •••</code><button type="button" class="btn btn-g btn-sm" data-pay="show" data-show="${P.show}" data-hide="${P.hide}">${P.show}</button><button type="button" class="btn btn-g btn-sm" data-pay="copy" data-done="${P.copied}">${P.copy}</button></div>
+  <div class="pay-row"><span>${P.to}</span><b>${SUPPORT.name}</b></div>
+  <div class="qrs" style="max-width:420px"><figure><img src="/img/qr-mbank.jpg" alt="MBank QR" width="300" height="423" loading="lazy">MBank</figure><figure><img src="/img/qr-obank.png" alt="O!Bank QR" width="300" height="423" loading="lazy">O!Bank</figure></div>
+</div></template>
+<script type="application/json" id="i18n">${JSON.stringify({ lang, t: P, services: sv, som: X.svc.som, home: u(lang, "/") })}</script>
+<script type="module" src="/assets/order-status.js?v=${V}"></script>`;
+  write(u(lang, p), page(lang, { title: P.title, desc: P.title, path: alt[lang], alt, noindex: true, noSupport: true }, body));
+}
+
+function termsPage(lang) {
+  const K = PAID[lang].terms;
+  const p = "/terms/", alt = { ky: p, ru: "/ru" + p };
+  if (lang === "ky") PAGES.push({ ky: alt.ky, ru: alt.ru, freq: "yearly", prio: "0.3" });
+  const body = `
+<section class="page-h"><div class="wrap">
+  <h1>${K.h1}</h1>
+  <p class="crumbs">${C[lang].privacy.updated}: ${LASTMOD}</p>
+  <div class="prose">${K.items.map(i => `<h2 style="font-size:24px;margin-top:14px">${i[0]}</h2><p>${i[1]}</p>`).join("")}</div>
+</div></section>`;
+  write(u(lang, p), page(lang, { title: K.title, desc: K.items[0][1], path: alt[lang], alt, noSupport: true }, body));
+}
+
+function adminPage() {
+  write("admin/index.html", `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><title>Заказы — Тойго</title><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/fonts.css?v=${V}"><link rel="stylesheet" href="/assets/site.css?v=${V}"><link rel="stylesheet" href="/assets/admin.css?v=${V}"></head>
+<body><main id="main" class="adm"><div class="adm-top"><a class="brand" href="/">${HORN}Тойго</a><b>Заказы</b><button type="button" class="btn btn-g btn-sm" id="a-logout" hidden>Выйти</button></div><div id="a-app"></div></main>
+<script type="application/json" id="a-data">${JSON.stringify({ services: Object.fromEntries(Object.entries(SERVICES).map(([k, x]) => [k, { name: x.name.ru, price: x.price }])), types: Object.fromEntries(EVENT_TYPES.map(t => [t, t === "other" ? "Другое" : TYPES[t].ru])) })}</script>
+<script type="module" src="/assets/admin.js?v=${V}"></script></body></html>`);
+}
+
 // ---------- pages ----------
 const PAGES = [];
 
@@ -241,6 +386,7 @@ ${stepsSec(lang).replace('class="sec"', 'class="sec paper"')}
   <div class="feats">${H.feats.map(f => `<div class="feat">${icon(f[0])}<h3>${f[1]}</h3><p>${f[2]}</p></div>`).join("")}</div>
 </div></section>
 
+${paidBand(lang)}
 ${faqSec(lang, C[lang].faq)}
 ${bandSec(lang)}`;
   write(u(lang, "/"), page(lang, { title: H.title, desc: H.desc, path: alt[lang], alt, jsonld, isHome: true }, body));
@@ -380,7 +526,7 @@ function privacyPage(lang) {
 <section class="page-h"><div class="wrap">
   <h1>${K.h1}</h1>
   <p class="crumbs">${K.updated}: ${LASTMOD}</p>
-  <div class="prose">${K.items.map(i => `<h2 style="font-size:24px;margin-top:14px">${i[0]}</h2><p>${i[1]}</p>`).join("")}</div>
+  <div class="prose">${[...K.items, PAID[lang].privacy_add].map(i => `<h2 style="font-size:24px;margin-top:14px">${i[0]}</h2><p>${i[1]}</p>`).join("")}</div>
 </div></section>`;
   write(u(lang, p), page(lang, { title: K.title, desc: K.items[0][1], path: alt[lang], alt, noSupport: true }, body));
 }
@@ -403,7 +549,9 @@ for (const lang of ["ky", "ru"]) {
   managePage(lang);
   TPL.forEach(t => demoPage(lang, t));
   privacyPage(lang);
+  servicesPage(lang); orderPage(lang); statusPage(lang); termsPage(lang);
 }
+adminPage();
 notFound();
 
 // Stamp every module import with the build version, so browsers never mix old and new files.
