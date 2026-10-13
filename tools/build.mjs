@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { TYPES, TPL, DEFAULTS, TYPE_TEXT, coverHTML, renderInvitation, invClass, esc } from "../public/assets/invite-core.js";
 import { C, UI, CATS, SUPPORT } from "./content.mjs";
+import { ILLUS } from "./illus.mjs";
 
 const OUT = "public";
 const LASTMOD = new Date().toISOString().slice(0, 10);
@@ -162,7 +163,7 @@ function cards(lang, list, typeHint) {
 
 function catsRow(lang) {
   return `<ul class="cats">${CATS.map(c => `<li><a href="${u(lang, `/toi/${c.path}/`)}">
-    <span class="cat-img" style="--c:${c.c};--cf:${c.cf}">${HORN}<img src="/img/cat-${c.id}.jpg?v=${V}" alt="" width="300" height="300" loading="lazy" onerror="this.remove()"></span>
+    <span class="cat-img" style="--c:${c.c};--cf:${c.cf}">${ILLUS[c.id]}</span>
     <span>${TYPES[c.id][lang]}</span></a></li>`).join("")}</ul>`;
 }
 

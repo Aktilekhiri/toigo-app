@@ -1,6 +1,6 @@
 // Toigo — small behaviors shared by site pages.
-import { renderInvitation } from "/assets/invite-core.js?v=mv66ynhe";
-import { startLive } from "/assets/invite-live.js?v=mv66ynhe";
+import { renderInvitation } from "/assets/invite-core.js?v=mv67t1y6";
+import { startLive } from "/assets/invite-live.js?v=mv67t1y6";
 
 // Copy buttons: <button data-copy="#selector" data-done="Copied">
 document.addEventListener("click", async e => {
@@ -38,6 +38,6 @@ if (hp) {
 // Hero: 3D rings, loaded after the page is ready so the first paint stays fast.
 const media = document.getElementById("heroMedia");
 if (media) {
-  const go = () => import("/assets/rings.js?v=mv66ynhe").then(m => m.mountRings(media, { shift: getComputedStyle(document.querySelector(".stage .phone")).display !== "none" })).catch(() => {});
+  const go = () => import("/assets/rings.js?v=mv67t1y6").then(m => m.mountRings(media, { shift: getComputedStyle(document.querySelector(".stage .phone")).display !== "none" })).catch(() => {});
   if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1500 }); else setTimeout(go, 300);
 }

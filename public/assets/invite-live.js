@@ -21,7 +21,7 @@ function toggleMusic() {
   if (!MUS.el) {
     MUS.el = new Audio();
     // AAC for Safari/iPhone, Opus for browsers without AAC.
-    MUS.el.src = MUS.el.canPlayType('audio/mp4; codecs="mp4a.40.2"') ? "/assets/audio/toi-music-2.m4a" : "/assets/audio/toi-music-2.webm";
+    MUS.el.src = MUS.el.canPlayType('audio/mp4; codecs="mp4a.40.2"') ? "/assets/audio/toi-music-3.m4a" : "/assets/audio/toi-music-3.webm";
     MUS.el.loop = true; MUS.el.preload = "auto"; MUS.el.volume = 0.8;
     MUS.el.addEventListener("pause", () => sync(false));
     MUS.el.addEventListener("play", () => sync(true));
