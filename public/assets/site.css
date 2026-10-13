@@ -259,3 +259,7 @@ td.n{font-variant-numeric:tabular-nums}
 .fld .sw + .sw{margin-top:-6px}
 .seat-in{width:120px;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:14px;background:#fff}
 .seat-in:focus{outline:none;border-color:var(--ink)}
+.ready{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px;font-size:13px;color:var(--muted)}
+.chip-btn{border:1px solid var(--line);background:#fff;border-radius:99px;min-width:36px;height:32px;padding:0 12px;cursor:pointer;font-weight:500}
+.chip-btn:hover{border-color:var(--ink)}
+.tplpick label[hidden]{display:none}

@@ -1,6 +1,6 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mv5h4qzg";
-import { startLive, tick, stopMusic } from "/assets/invite-live.js?v=mv5h4qzg";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mv66ynhe";
+import { startLive, tick, stopMusic } from "/assets/invite-live.js?v=mv66ynhe";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -22,9 +22,14 @@ let d = { ...DEFAULTS, ...(LANG === "ru" ? RU_DEFAULTS : {}) };
 
 // Sample texts follow the type and language until the person edits them.
 const HOSTS = { ky: DEFAULTS.hosts, ru: RU_DEFAULTS.hosts };
-const isSample = (f, v) => !v || Object.values(TYPE_TEXT).some(o => o.ky[f] === v || o.ru[f] === v);
+const isSample = (f, v) => !v || Object.values(TYPE_TEXT).some(o => o.ky[f] === v || o.ru[f] === v || (f === "msg" && (o.ky.msgs.includes(v) || o.ru.msgs.includes(v))));
+// Best design per toi type; used when the current design does not fit the new type.
+const PREF = { uylonuu: "ivory", kyz: "anarp", sunnot: "emerald", tushoo: "steps", maarake: "golden", tuulgan: "pop" };
+const fits = (tpl, type) => (TPL.find(t => t.id === tpl) || { types: [] }).types.includes(type);
 function applyType(type) {
+  const prev = d.type;
   d.type = type;
+  if (!fits(d.tpl, type) || d.tpl === PREF[prev]) d.tpl = PREF[type];
   const L = d.lang === "ru" ? "ru" : "ky", t = TYPE_TEXT[type][L];
   ["n1", "n2", "msg", "prog"].forEach(f => { if (isSample(f, d[f])) d[f] = t[f]; });
   if (!d.hosts || Object.values(HOSTS).includes(d.hosts)) d.hosts = HOSTS[L];
@@ -51,15 +56,17 @@ async function init() {
   } else {
     const draft = store.get("toigo-draft-" + LANG);
     if (draft && draft.n1) d = clean({ ...d, ...draft });
-    if (TYPES[params.get("type")]) applyType(params.get("type"));
-    if (params.get("tpl")) d.tpl = params.get("tpl");
+    const qt = params.get("type"), qp = params.get("tpl"), qtpl = TPL.find(t => t.id === qp);
+    if (TYPES[qt]) applyType(qt);
+    else if (qtpl && !qtpl.types.includes(d.type)) applyType(qtpl.types[0]);
+    if (qtpl && qtpl.types.includes(d.type)) d.tpl = qp;
     d = clean(d);
   }
   fill(); render();
 }
 
 // ---------- form <-> data ----------
-const TEXT = ["n1", "n2", "hosts", "date", "time", "venue", "addr", "hall", "msg", "prog", "dress", "dl", "phone"];
+const TEXT = ["n1", "n2", "hosts", "date", "time", "venue", "addr", "hall", "age", "msg", "prog", "dress", "dl", "phone"];
 function fill() {
   form.elements.type.value = d.type;
   const tpl = form.querySelector(`input[name=tpl][value="${d.tpl}"]`); if (tpl) tpl.checked = true;
@@ -69,7 +76,18 @@ function fill() {
   form.elements.fx.checked = d.fx !== false;
   names(); thumbs();
 }
+function tplFilter() {
+  let first = null, ok = false;
+  form.querySelectorAll(".tplpick label[data-types]").forEach(l => {
+    const on = l.dataset.types.split(" ").includes(d.type);
+    l.hidden = !on;
+    if (on) { first = first || l.querySelector("input").value; if (l.querySelector("input").value === d.tpl) ok = true; }
+  });
+  if (!ok && first) { d.tpl = PREF[d.type] && fits(PREF[d.type], d.type) ? PREF[d.type] : first; const r = form.querySelector(`input[name=tpl][value="${d.tpl}"]`); if (r) r.checked = true; }
+}
 function names() {
+  $("#w-age").hidden = !(d.type === "maarake" || d.type === "tuulgan");
+  tplFilter();
   const map = { pair: S.n_pair, kyz: S.n_kyz, child: S.n_child, jub: S.n_jub, bday: S.n_bday };
   const pair = d.type === "uylonuu";
   $("#lab-n1").textContent = map[TYPES[d.type].names];
@@ -95,6 +113,12 @@ function changed() {
   if (!edit) { clearTimeout(draftT); draftT = setTimeout(() => store.set("toigo-draft-" + LANG, d), 400); }
 }
 
+form.addEventListener("click", e => {
+  const b = e.target.closest("[data-ready]"); if (!b) return;
+  const L = d.lang === "ru" ? "ru" : "ky";
+  d.msg = TYPE_TEXT[d.type][L].msgs[+b.dataset.ready];
+  form.elements.msg.value = d.msg; changed();
+});
 form.addEventListener("input", e => {
   const t = e.target;
   if (TEXT.includes(t.name)) { d[t.name] = t.value; if (t.name === "n1") $("#w-n1").classList.remove("err"); changed(); }

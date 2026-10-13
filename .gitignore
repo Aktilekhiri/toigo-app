@@ -1,4 +1,5 @@
-node_modules/
 .wrangler/
+node_modules/
 tools/node_modules/
+tools/ttf
 tools/ttf/

@@ -70,6 +70,11 @@ def site_og(lang):
     im.save(f"public/img/og-{lang}.png", optimize=True)
 
 TPLC = {
+    "ivory": ("#FAF7F0", "#342A26", "#B49663"), "anarp": ("#6E1735", "#F6E7E6", "#D7A894"),
+    "emerald": ("#124B40", "#F7F1E5", "#C7A45B"), "steps": ("#FFF9F0", "#3E5148", "#6E9A7E"),
+    "golden": ("#171717", "#F5F0E5", "#D7BD83"), "pop": ("#FFF9F3", "#2A2A33", "#FF786B"),
+    "heritage": ("#F5EBDD", "#3B2A22", "#842E3A"), "botanical": ("#FFFFFF", "#344C3D", "#6F8B66"),
+    "midnight": ("#101B35", "#F9F7F1", "#D6B56D"), "editorial": ("#FFFFFF", "#171717", "#B4532A"),
     "alatoo": ("#1D2742", "#EFEBE3", "#D2AE62"), "akkalpak": ("#FFFFFF", "#151515", "#151515"),
     "shyrdak": ("#7E2A20", "#FBF1E2", "#E8B65A"), "jibek": ("#E3E8DF", "#2C3A31", "#8C5E43"),
     "anar": ("#5B1626", "#FAEFE6", "#D9AE6A"), "asman": ("#DCEAF4", "#1F3550", "#B85A1A"),

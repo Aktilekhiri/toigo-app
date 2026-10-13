@@ -1,7 +1,7 @@
 // Static site generator for Chakyr. Run: node tools/build.mjs (from project root)
 import fs from "node:fs";
 import path from "node:path";
-import { TYPES, TPL, DEFAULTS, TYPE_TEXT, coverHTML, renderInvitation, esc } from "../public/assets/invite-core.js";
+import { TYPES, TPL, DEFAULTS, TYPE_TEXT, coverHTML, renderInvitation, invClass, esc } from "../public/assets/invite-core.js";
 import { C, UI, CATS, SUPPORT } from "./content.mjs";
 
 const OUT = "public";
@@ -27,7 +27,7 @@ const icon = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 
 function sampleData(tplId, typeId, lang) {
   const t = TYPE_TEXT[typeId][lang === "ru" ? "ru" : "ky"];
-  return { ...DEFAULTS, tpl: tplId, type: typeId, lang, n1: t.n1, n2: t.n2, msg: t.msg, prog: t.prog,
+  return { ...DEFAULTS, tpl: tplId, type: typeId, lang, n1: t.n1, n2: t.n2, msg: t.msg, prog: t.prog, age: typeId === "maarake" ? 60 : typeId === "tuulgan" ? 25 : "",
     hosts: lang === "ru" ? "Семья Асановых" : DEFAULTS.hosts,
     venue: lang === "ru" ? "Тойкана «Шумкар»" : DEFAULTS.venue, addr: lang === "ru" ? "Бишкек, проспект Чүй, 150" : DEFAULTS.addr };
 }
@@ -150,7 +150,7 @@ function cards(lang, list, typeHint) {
     const type = typeHint && t.types.includes(typeHint) ? typeHint : t.types[0];
     const d = sampleData(t.id, type, lang);
     return `<article class="card">
-      <a class="mini" href="${u(lang, `/demo/${t.id}/`)}" aria-label="${esc(t.name[lang])}: ${K.view}"><div class="inv t-${t.id}">${coverHTML(d, { mini: true }).replace(/<h1 class="nm">/, '<div class="nm">').replace(/<\/h1>/, "</div>")}</div></a>
+      <a class="mini" href="${u(lang, `/demo/${t.id}/`)}" aria-label="${esc(t.name[lang])}: ${K.view}"><div class="${invClass(t.id, d.type)}">${coverHTML(d, { mini: true }).replace(/<h1 class="nm">/, '<div class="nm">').replace(/<\/h1>/, "</div>")}</div></a>
       <div class="card-b">
         <h3>${t.name[lang]}</h3>
         <p>${t.desc[lang]}</p>
@@ -292,7 +292,7 @@ function createPage(lang) {
     <fieldset><legend>${S.lg1}</legend>
       ${f("type", S.l_type, `<select id="f-type" name="type">${Object.keys(TYPES).map(k => `<option value="${k}">${TYPES[k][lang]}</option>`).join("")}</select>`, "w")}
       <div class="fld w"><span class="lbl">${S.l_tpl}</span><div class="tplpick" role="radiogroup" aria-label="${S.l_tpl}">
-        ${TPL.map(t => `<label><input type="radio" name="tpl" value="${t.id}" id="tpl-${t.id}"><span><i class="t-${t.id}" style="--sw:var(--ib);background:var(--ib);border:1px solid var(--il)"></i>${t.name[lang]}</span></label>`).join("")}
+        ${TPL.map(t => `<label data-types="${t.types.join(" ")}"><input type="radio" name="tpl" value="${t.id}" id="tpl-${t.id}"><span><i class="t-${t.id}" style="--sw:var(--ib);background:var(--ib);border:1px solid var(--il)"></i>${t.name[lang]}</span></label>`).join("")}
       </div></div>
       <div class="fld w"><span class="lbl">${S.l_lang}</span><div class="seg" role="radiogroup" aria-label="${S.l_lang}">
         <label><input type="radio" name="lang" id="il-ky" value="ky"><span>${S.o_ky}</span></label>
@@ -310,10 +310,11 @@ function createPage(lang) {
       ${f("time", S.l_time, `<input id="f-time" name="time" type="time">`)}
       ${f("venue", S.l_venue, `<input id="f-venue" name="venue" type="text" maxlength="120" autocomplete="off" placeholder="${S.ph_venue}">`, "w")}
       ${f("addr", S.l_addr, `<input id="f-addr" name="addr" type="text" maxlength="200" autocomplete="off" placeholder="${S.ph_addr}">`, "w", S.h_addr)}
+      ${f("age", S.l_age, `<input id="f-age" name="age" type="number" min="1" max="120" inputmode="numeric" placeholder="${S.ph_age}">`, "", S.h_age)}
       ${f("hall", S.l_hall, `<input id="f-hall" name="hall" type="text" maxlength="80" autocomplete="off" placeholder="${S.ph_hall}">`, "w", S.h_hall)}
     </fieldset>
     <fieldset><legend>${S.lg4}</legend>
-      ${f("msg", S.l_msg, `<textarea id="f-msg" name="msg" maxlength="1200" rows="4"></textarea>`, "w")}
+      ${f("msg", S.l_msg, `<textarea id="f-msg" name="msg" maxlength="1200" rows="5"></textarea><div class="ready" role="group" aria-label="${S.l_ready}"><span>${S.l_ready}</span><button type="button" class="chip-btn" data-ready="0">1</button><button type="button" class="chip-btn" data-ready="1">2</button><button type="button" class="chip-btn" data-ready="2">3</button></div>`, "w")}
       ${f("prog", S.l_prog, `<textarea id="f-prog" name="prog" maxlength="1500" rows="5"></textarea>`, "w", S.h_prog)}
       ${f("dress", S.l_dress, `<input id="f-dress" name="dress" type="text" maxlength="200" autocomplete="off">`, "w", S.h_opt)}
     </fieldset>
