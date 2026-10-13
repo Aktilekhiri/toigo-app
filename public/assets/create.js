@@ -1,6 +1,6 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mv69d1xh";
-import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mv69d1xh";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mv6br3vk";
+import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mv6br3vk";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
