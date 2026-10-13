@@ -1,6 +1,6 @@
 // Toigo — small behaviors shared by site pages.
-import { renderInvitation } from "/assets/invite-core.js?v=mv6ab4sw";
-import { startLive } from "/assets/invite-live.js?v=mv6ab4sw";
+import { renderInvitation } from "/assets/invite-core.js?v=mv69d1xh";
+import { startLive } from "/assets/invite-live.js?v=mv69d1xh";
 
 // Copy buttons: <button data-copy="#selector" data-done="Copied">
 document.addEventListener("click", async e => {
@@ -38,15 +38,6 @@ if (hp) {
 // Hero: 3D rings, loaded after the page is ready so the first paint stays fast.
 const media = document.getElementById("heroMedia");
 if (media) {
-  const go = () => import("/assets/rings.js?v=mv6ab4sw").then(m => m.mountRings(media, { shift: getComputedStyle(document.querySelector(".stage .phone")).display !== "none" })).catch(() => {});
+  const go = () => import("/assets/rings.js?v=mv69d1xh").then(m => m.mountRings(media, { shift: getComputedStyle(document.querySelector(".stage .phone")).display !== "none" })).catch(() => {});
   if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1500 }); else setTimeout(go, 300);
 }
-
-// WhatsApp buttons (<button data-wa data-wa-text="TG-...">): the number is assembled on click, never stored in the HTML.
-document.addEventListener("click", e => {
-  const b = e.target.closest("[data-wa]"); if (!b) return;
-  const n = ["996", "702", "097", "127"].join("");
-  const ru = document.documentElement.lang === "ru";
-  const t = b.dataset.waText ? (ru ? `Здравствуйте! Заказ ${b.dataset.waText}` : `Саламатсызбы! Заказ ${b.dataset.waText}`) : (ru ? "Здравствуйте! Вопрос по Тойго" : "Саламатсызбы! Тойго боюнча суроо");
-  window.open(`https://wa.me/${n}?text=${encodeURIComponent(t)}`, "_blank", "noopener");
-});
