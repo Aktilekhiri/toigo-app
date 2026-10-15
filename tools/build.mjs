@@ -23,7 +23,9 @@ const ICON = {
   photo: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/>',
   music: '<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
   lang: '<path d="M4 5h9M8.5 3v2M6 5c1 4 3.5 7 7 8.5M11 5c-1 4-3.5 7-7 8.5M13 21l4-10 4 10M14.5 17.5h5"/>',
-  edit: '<path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4"/>'
+  edit: '<path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4"/>',
+  phone: '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
+  link: '<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/>'
 };
 const icon = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
 
@@ -151,8 +153,8 @@ function cards(lang, list, typeHint) {
   return `<div class="grid">${list.map(t => {
     const type = typeHint && t.types.includes(typeHint) ? typeHint : t.types[0];
     const d = sampleData(t.id, type, lang);
-    return `<article class="card">
-      <a class="mini" href="${u(lang, `/demo/${t.id}/`)}" aria-label="${esc(t.name[lang])}: ${K.view}"><div class="${invClass(t.id, d.type)}">${coverHTML(d, { mini: true }).replace(/<h1 class="nm">/, '<div class="nm">').replace(/<\/h1>/, "</div>")}</div></a>
+    return `<article class="card" data-types="${t.types.join(" ")}">
+      <a class="mini" href="${u(lang, `/demo/${t.id}/`)}" aria-label="${esc(t.name[lang])}: ${K.view}"><div class="${invClass(t.id, d.type)}">${coverHTML(d, { mini: true }).replace(/<h1 class="nm"/, '<div class="nm"').replace(/<\/h1>/, "</div>")}</div></a>
       <div class="card-b">
         <h3>${t.name[lang]}</h3>
         <p>${t.desc[lang]}</p>
@@ -197,11 +199,14 @@ const faqLd = items => ({ "@context": "https://schema.org", "@type": "FAQPage", 
 // ---------- pages ----------
 const PAGES = [];
 
+const PH = (name, alt, w, h, cls = "", lazy = true) => `<img class="${cls}" src="/img/ph/${name}.webp" srcset="/img/ph/${name}-s.webp ${w > h ? 720 : 480}w, /img/ph/${name}.webp ${w}w" sizes="(max-width:700px) 92vw, 46vw" width="${w}" height="${h}" alt="${esc(alt)}"${lazy ? ' loading="lazy"' : ' fetchpriority="high"'} decoding="async">`;
+const OTHER = ["sunnot", "tushoo", "maarake"];
+
 function homePage(lang) {
-  const H = C[lang].home, N = C[lang].nav;
+  const H = C[lang].home, N = C[lang].nav, K = C[lang].cat;
   const alt = { ky: "/", ru: "/ru/" };
   PAGES.push(lang === "ky" ? { ky: "/", ru: "/ru/", freq: "weekly", prio: "1.0" } : null);
-  const hero = sampleData("alatoo", "uylonuu", lang);
+  const hero = sampleData("ivorygold", "uylonuu", lang);
   const jsonld = [
     { "@context": "https://schema.org", "@type": "WebSite", name: "Тойго", url: O + "/", inLanguage: ["ky", "ru"] },
     { "@context": "https://schema.org", "@type": "Organization", name: "Тойго", url: O + "/", logo: O + "/icon-512.png" },
@@ -209,8 +214,11 @@ function homePage(lang) {
       inLanguage: lang, description: H.desc, offers: { "@type": "Offer", price: "0", priceCurrency: "KGS" } },
     faqLd(C[lang].faq)
   ];
+  const cat = id => CATS.find(c => c.id === id);
+  const tiles = [["uylonuu", "hero", 1408, 768], ["kyz", "kyz", 768, 1376], ["nikah", "nikah", 768, 1376], ["tuulgan", "birthday", 768, 1376]];
+  const chips = [["", H.f_all], ["uylonuu"], ["kyz"], ["nikah"], ["tuulgan"], ["other", H.f_other]];
   const body = `
-<section class="hero"><div class="wrap">
+<section class="hero hero2"><div class="wrap">
   <div class="copy">
     <div class="eyebrow">${HORN}${H.eyebrow}</div>
     <h1>${H.h1}</h1>
@@ -219,30 +227,47 @@ function homePage(lang) {
     <div class="facts">${H.facts.map(f => `<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join("")}</div>
   </div>
   <div class="stage" aria-hidden="true">
-    <div class="arch" id="heroMedia"></div>
-    <div class="phone"><div class="scr" id="heroPhone" data-inv="${esc(JSON.stringify(hero))}"><div class="inv t-alatoo">${coverHTML(hero).replace(/<h1 class="nm">/, '<p class="nm">').replace(/<\/h1>/, "</p>")}</div></div></div>
+    <div class="arch arch-ph">${PH("hero", "", 1408, 768, "", false)}</div>
+    <div class="phone"><div class="scr" id="heroPhone" data-inv="${esc(JSON.stringify(hero))}"><div class="${invClass(hero.tpl, hero.type)}">${coverHTML(hero, { mini: true }).replace(/<h1 class="nm"/, '<p class="nm"').replace(/<\/h1>/, "</p>")}</div></div></div>
   </div>
 </div></section>
 
 <section class="sec paper" aria-labelledby="cats-h"><div class="wrap">
   <div class="sec-h"><div><div class="k">${H.cats_k}</div><h2 id="cats-h">${H.cats_h}</h2></div></div>
-  ${catsRow(lang)}
+  <ul class="tiles">
+    ${tiles.map(([id, img, w, h], i) => `<li class="tile${i === 0 ? " big" : ""}"><a href="${u(lang, `/toi/${cat(id).path}/`)}">${PH(img, "", w, h)}<span class="tile-t"><b>${TYPES[id][lang]}</b><em>→</em></span></a></li>`).join("")}
+    <li class="tile"><div class="tile-o">${PH("table", "", 1376, 768)}<span class="tile-t"><b>${H.f_other}</b><span class="tile-links">${OTHER.map(id => `<a href="${u(lang, `/toi/${cat(id).path}/`)}">${TYPES[id][lang]}</a>`).join("")}</span></span></div></li>
+  </ul>
 </div></section>
 
 <section class="sec" id="designs" aria-labelledby="designs-h"><div class="wrap">
   <div class="sec-h"><div><div class="k">${H.designs_k}</div><h2 id="designs-h">${H.designs_h}</h2><p>${H.designs_p}</p></div></div>
+  <div class="chips-f" role="group" aria-label="${H.designs_h}">${chips.map(([id, label], i) => `<button type="button" class="chip-f" data-filter="${id}" aria-pressed="${i === 0}">${label || TYPES[id][lang]}</button>`).join("")}</div>
   ${cards(lang, TPL)}
 </div></section>
 
-${stepsSec(lang).replace('class="sec"', 'class="sec paper"')}
-
-<section class="sec" aria-labelledby="feats-h"><div class="wrap">
-  <div class="sec-h"><div><div class="k">${H.feats_k}</div><h2 id="feats-h">${H.feats_h}</h2></div></div>
-  <div class="feats">${H.feats.map(f => `<div class="feat">${icon(f[0])}<h3>${f[1]}</h3><p>${f[2]}</p></div>`).join("")}</div>
+<section class="sec paper" aria-labelledby="ben-h"><div class="wrap">
+  <div class="sec-h"><div><div class="k">${H.ben_k}</div><h2 id="ben-h">${H.ben_h}</h2></div></div>
+  <div class="bens">${H.bens.map(f => `<div class="ben">${icon(f[0])}<h3>${f[1]}</h3><p>${f[2].replace("{n}", TPL.length)}</p></div>`).join("")}</div>
+  <p class="inc">${H.inc}</p>
 </div></section>
 
-${faqSec(lang, C[lang].faq)}
-${bandSec(lang)}`;
+${stepsSec(lang)}
+${faqSec(lang, C[lang].faq).replace('class="sec"', 'class="sec paper"')}
+
+<section class="sec final" aria-labelledby="final-h"><div class="wrap">
+  <div class="collage" aria-hidden="true">
+    <figure class="c1">${PH("stationery", "", 1376, 768)}</figure>
+    <figure class="c2">${PH("bouquet", "", 768, 1376)}</figure>
+    <figure class="c3">${PH("table", "", 1376, 768)}</figure>
+  </div>
+  <div class="final-t">
+    <div class="eyebrow">${HORN}Тойго</div>
+    <h2 id="final-h">${H.final_h}</h2>
+    <p class="lead">${H.final_p}</p>
+    <div class="acts"><a class="btn btn-p" href="${u(lang, "/create/")}">${N.create}</a><a class="btn btn-g" href="#designs">${H.btn2}</a></div>
+  </div>
+</div></section>`;
   write(u(lang, "/"), page(lang, { title: H.title, desc: H.desc, path: alt[lang], alt, jsonld, isHome: true }, body));
 }
 
@@ -329,7 +354,7 @@ function createPage(lang) {
       </div>
       ${f("dl", S.l_dl, `<input id="f-dl" name="dl" type="date">`)}
       ${f("phone", S.l_phone, `<input id="f-phone" name="phone" type="tel" inputmode="tel" maxlength="24" placeholder="+996 700 000 000" autocomplete="tel">`, "", S.h_phone)}
-      <div class="fld w"><label class="sw"><input id="f-music" name="music" type="checkbox" checked>${S.l_music}</label><label class="sw"><input id="f-fx" name="fx" type="checkbox" checked>${S.l_fx}</label></div>
+      <div class="fld w"><label class="sw"><input id="f-music" name="music" type="checkbox" checked>${S.l_music}</label><label class="sw"><input id="f-fx" name="fx" type="checkbox" checked>${S.l_fx}</label><label class="sw"><input id="f-env" name="env" type="checkbox" checked>${S.l_env}</label></div>
       ${f("track", S.l_track, `<select id="f-track" name="track">${TRACKS.map(t => `<option value="${t.id}">${t[lang]}</option>`).join("")}</select>`, "", S.h_track)}
     </fieldset>
     <div class="submit-row"><button class="btn btn-p" type="submit" id="save">${S.save}</button><span class="form-msg" id="form-msg" aria-live="polite"></span></div>
@@ -366,7 +391,7 @@ function demoPage(lang, t) {
   <a class="btn btn-g btn-sm" href="${u(lang, "/")}#designs">← ${K.back}</a>
   <a class="btn btn-p btn-sm" href="${u(lang, "/create/")}?tpl=${t.id}">${K.use}</a>
 </div>
-${renderInvitation(d, { mode: "preview", pf: "demo" })}
+${renderInvitation(d, { mode: "preview", pf: "demo", envelope: true })}
 <script type="module">import { startLive } from "/assets/invite-live.js?v=${V}"; startLive();</script>
 </body></html>`;
   write(u(lang, p), html);

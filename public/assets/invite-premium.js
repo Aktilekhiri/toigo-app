@@ -1,14 +1,18 @@
 // Toigo — premium collection: six designs with full-screen covers, own SVG art and a closing screen.
 // Pure string builders (no DOM), shared by the server and the constructor preview.
 
-export const PREM = new Set(["silk", "nomad", "garden", "kjibek", "aurora", "noir"]);
+import { PHOTO_IDS, PHOTO_TPL, PHOTO_THEME, PHOTO_SWATCH, photoCover, photoOrn, photoFinale } from "./invite-photo.js";
+
+export const PREM = new Set(["silk", "nomad", "garden", "kjibek", "aurora", "noir", ...PHOTO_IDS]);
+const isPhoto = id => PHOTO_IDS.includes(id);
 
 export const PREM_TPL = [
-  { id: "silk", name: { ky: "Silk & Gold", ru: "Silk & Gold" }, types: ["uylonuu"],
+  ...PHOTO_TPL,
+  { id: "silk", name: { ky: "Silk & Gold", ru: "Silk & Gold" }, types: ["uylonuu", "nikah"],
     desc: { ky: "Жибек кездеменин бырыштары, шампань алтыны жана журналдык типографика.", ru: "Складки шёлка, золото шампань и журнальная типографика." } },
   { id: "nomad", name: { ky: "Nomadic Royal", ru: "Nomadic Royal" }, types: ["uylonuu"],
     desc: { ky: "Түнкү Ала-Тоо, асимметриялык курам жана геометриялык оюм-рамка.", ru: "Ночные горы, асимметричная композиция и геометрическая рамка-орнамент." } },
-  { id: "garden", name: { ky: "Secret Garden", ru: "Secret Garden" }, types: ["uylonuu"],
+  { id: "garden", name: { ky: "Secret Garden", ru: "Secret Garden" }, types: ["uylonuu", "nikah"],
     desc: { ky: "Жашыл бак, жарык нурлары жана ботаникалык бутактар.", ru: "Тенистый сад, лучи света и ботанические ветви." } },
   { id: "kjibek", name: { ky: "Кыз Жибек", ru: "Кыз Жибек" }, types: ["kyz"],
     desc: { ky: "Бордо баркыт, алтын сайма жана салтанаттуу арка.", ru: "Бордовый бархат, золотая вышивка и торжественная арка." } },
@@ -20,9 +24,9 @@ export const PREM_TPL = [
 
 // Swatches for the design picker in the constructor.
 export const PREM_SWATCH = { silk: "linear-gradient(135deg,#FFFCF7,#E3CFA8)", nomad: "linear-gradient(#0C1626,#2A3B5E)", garden: "linear-gradient(135deg,#46695A,#16271F)",
-  kjibek: "radial-gradient(circle at 50% 40%,#8B344B,#4C1323)", aurora: "linear-gradient(135deg,#FBF7F3,#E7C9C7)", noir: "linear-gradient(135deg,#101411 45%,#1E5546)" };
+  kjibek: "radial-gradient(circle at 50% 40%,#8B344B,#4C1323)", aurora: "linear-gradient(135deg,#FBF7F3,#E7C9C7)", noir: "linear-gradient(135deg,#101411 45%,#1E5546)", ...PHOTO_SWATCH };
 
-export const PREM_THEME = { silk: "#F7F3EB", nomad: "#142238", garden: "#243D32", kjibek: "#651D32", aurora: "#FBF7F3", noir: "#101411" };
+export const PREM_THEME = { silk: "#F7F3EB", nomad: "#142238", garden: "#243D32", kjibek: "#651D32", aurora: "#FBF7F3", noir: "#101411", ...PHOTO_THEME };
 
 // deterministic pseudo-random, so server and browser draw identical art
 function rng(seed) { let x = seed; return () => (x = (x * 9301 + 49297) % 233280) / 233280; }
@@ -119,6 +123,7 @@ const FLOW = '<svg viewBox="0 0 60 60" aria-hidden="true"><g fill="none" stroke=
 const HORN_S = `<svg viewBox="0 0 40 24" aria-hidden="true"><path d="${HORNP}" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2.2 1.4" stroke-linecap="round"/></svg>`;
 
 export function premOrn(tpl) {
+  if (isPhoto(tpl)) return photoOrn(tpl);
   const m = { silk: DIAM, nomad: NCORNER.replace('viewBox="0 0 48 48"', 'viewBox="0 0 48 48" class="nc1"'), garden: SPRIG2, kjibek: HORN_S, aurora: FLOW, noir: "" };
   return tpl === "noir" ? '<span class="orn orn-noir" aria-hidden="true"></span>' : `<span class="orn orn-${tpl}" aria-hidden="true">${m[tpl]}</span>`;
 }
@@ -126,7 +131,7 @@ export function premOrn(tpl) {
 /** Cover for a premium design. h: helpers from invite-core { esc, names, ey, p, dot, longD, when, typeLabel } */
 // longest word in the names: the CSS shrinks the font so that word always fits the width
 function longest(d) {
-  const words = [d.n1, d.type === "uylonuu" ? d.n2 : ""].join(" ").split(/[\s]+/).filter(Boolean).flatMap(w => w.split(/(?<=-)/));
+  const words = [d.n1, (d.type === "uylonuu" || d.type === "nikah") ? d.n2 : ""].join(" ").split(/[\s]+/).filter(Boolean).flatMap(w => w.split(/(?<=-)/));
   return Math.max(6, ...words.map(w => w.length));
 }
 
@@ -140,6 +145,7 @@ export function premCover(d, h, opts) {
   const cue = mini ? "" : '<span class="cue" aria-hidden="true"></span>';
   const cls = `cv${photo ? " has-ph" : ""}`;
   const mon = p ? (d.lang === "ru" ? p.mon : p.monKy) : "";
+  if (isPhoto(d.tpl)) return photoCover(d, { ...h, nm, cue, photo }, mini);
   switch (d.tpl) {
     case "silk": return `<div class="${cls}"><div class="art">${ph || SILK}</div><div class="hc">
       <div class="ey">${ey}</div>${nm}<div class="ivr"><i></i><b></b><i></i></div><div class="dt">${dot}</div><div class="sub">${when}</div></div>${cue}</div>`;
@@ -160,5 +166,6 @@ export function premCover(d, h, opts) {
 
 export function premFinale(d, h) {
   const { names, dot, fin } = h;
+  if (isPhoto(d.tpl)) return photoFinale(d, { ...h, nl: longest(d) });
   return `<section class="fin"><span class="fin-o" aria-hidden="true">${{ silk: DIAM, nomad: NCORNER, garden: SPRIG2, kjibek: HORN_S, aurora: FLOW, noir: "" }[d.tpl]}</span><p class="fin-k">${fin}</p><div class="fin-n" style="--nl:${longest(d)}">${names}</div>${dot ? `<div class="fin-d">${dot}</div>` : ""}</section>`;
 }

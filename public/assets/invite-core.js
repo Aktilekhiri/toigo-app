@@ -6,28 +6,32 @@ import { PREM, PREM_TPL, premCover, premOrn, premFinale } from "./invite-premium
 export const TYPES = {
   uylonuu: { ky: "Үйлөнүү той", ru: "Свадьба", names: "pair" },
   kyz:     { ky: "Кыз узатуу", ru: "Кыз узатуу", names: "kyz" },
+  nikah:   { ky: "Нике кыюу", ru: "Никах", names: "pair" },
   sunnot:  { ky: "Сүннөт той", ru: "Сүннөт той", names: "child" },
   tushoo:  { ky: "Тушоо кесүү", ru: "Тушоо кесүү", names: "child" },
   maarake: { ky: "Маараке", ru: "Юбилей", names: "jub" },
   tuulgan: { ky: "Туулган күн", ru: "День рождения", names: "bday" }
 };
 
+// Types with two names (groom & bride).
+export const isPair = t => !!(TYPES[t] && TYPES[t].names === "pair");
+
 export const TPL = [
   ...PREM_TPL,
-  { id: "ivory",     name: { ky: "Ivory Elegance", ru: "Ivory Elegance" }, desc: { ky: "Сүт түсү, шампань сызыктары жана нафис гүл бутактары.", ru: "Молочный фон, тонкие линии шампань и деликатные цветочные веточки." }, types: ["uylonuu","kyz"] },
+  { id: "ivory",     name: { ky: "Ivory Elegance", ru: "Ivory Elegance" }, desc: { ky: "Сүт түсү, шампань сызыктары жана нафис гүл бутактары.", ru: "Молочный фон, тонкие линии шампань и деликатные цветочные веточки." }, types: ["uylonuu","kyz","nikah"] },
   { id: "anarp",     name: { ky: "Анар Premium", ru: "Анар Premium" }, desc: { ky: "Анар түсү, порошок жана роза-алтын рамка. Кыз узатуу үчүн.", ru: "Гранатовый фон, пудра и рамка из розового золота. Для кыз узатуу." }, types: ["kyz"] },
   { id: "emerald",   name: { ky: "Emerald Royal", ru: "Emerald Royal" }, desc: { ky: "Зымырыт түс, алтын геометрия жана каймак түстүү карточка.", ru: "Изумрудный фон, золотая геометрия и кремовая карточка." }, types: ["sunnot"] },
   { id: "steps",     name: { ky: "Little Steps", ru: "Little Steps" }, desc: { ky: "Кичинекей изчелер, булуттар жана жашыл адырлар.", ru: "Следы маленьких ножек, облака и мягкие зелёные холмы." }, types: ["tushoo","sunnot","tuulgan"] },
   { id: "golden",    name: { ky: "Golden Anniversary", ru: "Golden Anniversary" }, desc: { ky: "Кара фон, шампань түстөгү чоң сан жана ар-деко нурлары.", ru: "Чёрный фон, крупная цифра цвета шампань и лучи ар-деко." }, types: ["maarake"] },
   { id: "pop",       name: { ky: "Color Pop", ru: "Color Pop" }, desc: { ky: "Шарлар, конфетти жана ачык түстөр. Ар кандай жашка.", ru: "Шары, конфетти и яркие цвета. Для любого возраста." }, types: ["tuulgan","tushoo"] },
   { id: "heritage",  name: { ky: "Heritage", ru: "Heritage" }, desc: { ky: "Заманбап улуттук стиль: кыял оюму, кийиз түстөрү, ачык тор.", ru: "Современная национальная эстетика: узор кыял, цвета войлока, чистая сетка." }, types: ["uylonuu","kyz","sunnot","tushoo"] },
-  { id: "botanical", name: { ky: "Botanical Garden", ru: "Botanical Garden" }, desc: { ky: "Шалфей жалбырактары жана жуптун сүрөтү үчүн арка.", ru: "Шалфейные листья и арка для фотографии пары." }, types: ["uylonuu"] },
-  { id: "midnight",  name: { ky: "Midnight Sky", ru: "Midnight Sky" }, desc: { ky: "Түнкү асман, жылдыздар жана жумшак алтын жарык.", ru: "Ночное небо, звёзды и мягкое золотое свечение." }, types: ["uylonuu","maarake"] },
+  { id: "botanical", name: { ky: "Botanical Garden", ru: "Botanical Garden" }, desc: { ky: "Шалфей жалбырактары жана жуптун сүрөтү үчүн арка.", ru: "Шалфейные листья и арка для фотографии пары." }, types: ["uylonuu","nikah"] },
+  { id: "midnight",  name: { ky: "Midnight Sky", ru: "Midnight Sky" }, desc: { ky: "Түнкү асман, жылдыздар жана жумшак алтын жарык.", ru: "Ночное небо, звёзды и мягкое золотое свечение." }, types: ["uylonuu","maarake","nikah"] },
   { id: "editorial", name: { ky: "Modern Editorial", ru: "Modern Editorial" }, desc: { ky: "Чоң тамгалар, ак мейкиндик, ар бир тойго өз түсү.", ru: "Крупная типографика, много воздуха и свой акцент для каждого тоя." }, types: ["uylonuu","maarake","tuulgan"] },
-  { id: "alatoo",  name: { ky: "Ала-Тоо",   ru: "Ала-Тоо" },   desc: { ky: "Кар баскан тоолор жана түнкү көк асман.", ru: "Снежные горы и ночная синева." }, types: ["uylonuu","kyz","sunnot","tushoo","maarake","tuulgan"] },
-  { id: "akkalpak",name: { ky: "Ак калпак", ru: "Ак калпак" }, desc: { ky: "Ак түс жана калпактын кара сайма оюму.", ru: "Белый фон и чёрный узор, как вышивка на калпаке." }, types: ["uylonuu","kyz","sunnot","maarake","tuulgan"] },
+  { id: "alatoo",  name: { ky: "Ала-Тоо",   ru: "Ала-Тоо" },   desc: { ky: "Кар баскан тоолор жана түнкү көк асман.", ru: "Снежные горы и ночная синева." }, types: ["uylonuu","kyz","sunnot","tushoo","maarake","tuulgan","nikah"] },
+  { id: "akkalpak",name: { ky: "Ак калпак", ru: "Ак калпак" }, desc: { ky: "Ак түс жана калпактын кара сайма оюму.", ru: "Белый фон и чёрный узор, как вышивка на калпаке." }, types: ["uylonuu","kyz","sunnot","maarake","tuulgan","nikah"] },
   { id: "shyrdak", name: { ky: "Шырдак",    ru: "Шырдак" },    desc: { ky: "Кызыл кийиз жана «кочкор мүйүз» оюму.", ru: "Красный войлок и орнамент «кочкор мүйүз»." }, types: ["uylonuu","kyz","sunnot","tushoo","maarake"] },
-  { id: "jibek",   name: { ky: "Жибек",     ru: "Жибек" },     desc: { ky: "Шалфей түсү жана жибек жиптей ичке сызыктар.", ru: "Шалфей и тонкие линии, как шёлковая нить." }, types: ["uylonuu","kyz","maarake","tuulgan"] },
+  { id: "jibek",   name: { ky: "Жибек",     ru: "Жибек" },     desc: { ky: "Шалфей түсү жана жибек жиптей ичке сызыктар.", ru: "Шалфей и тонкие линии, как шёлковая нить." }, types: ["uylonuu","kyz","maarake","tuulgan","nikah"] },
   { id: "anar",    name: { ky: "Анар",      ru: "Анар" },      desc: { ky: "Анар түсү, алтын чекиттер. Кыз узатууга ылайык.", ru: "Гранатовый цвет и золотые точки. Для кыз узатуу." }, types: ["kyz","uylonuu","maarake"] },
   { id: "asman",   name: { ky: "Көк асман", ru: "Көк асман" }, desc: { ky: "Ачык асман жана ак булуттар. Балдар тою үчүн.", ru: "Светлое небо и облака. Для детских тоев." }, types: ["sunnot","tushoo","tuulgan"] }
 ];
@@ -39,14 +43,14 @@ export const IV = {
         note: "Каалоо-тилек", send: "Жооп жөнөтүү", thx: "Рахмат! Жообуңуз той ээлерине жетти.", err: "Атыңызды жазыңыз",
         fail: "Жиберилген жок. Интернетти текшерип, кайра басыңыз.", hosts: "Той ээлери", made: "Тойго аркылуу түзүлдү",
         scroll: "Ылдый жылдырыңыз", music: "Музыка", contact: "Байланыш", seat: "Сиздин ордуңуз", call: "Чалуу", preview: "Бул алдын ала көрүү. Жооп чыныгы чакырууда иштейт.",
-        past: "Той өттү. Келгениңиздерге рахмат!", fin: "Сиздерди чын жүрөктөн күтөбүз" },
+        past: "Той өттү. Келгениңиздерге рахмат!", env_tap: "Ачуу үчүн басыңыз", env_for: "Сизге чакыруу", fin: "Сиздерди чын жүрөктөн күтөбүз" },
   ru: { inv: "Приглашаем вас на наш праздник", cd: "До праздника осталось", d: "дней", h: "часов", m: "минут", s: "секунд",
         prog: "Программа", venue: "Место проведения", dress: "Дресс-код", gal: "Фотографии", rsvp: "Вы придёте?",
         by: "ответьте до", rn: "Ваше имя", yes: "Приду", no: "Не смогу", cnt: "Сколько человек",
         note: "Пожелание", send: "Отправить ответ", thx: "Спасибо! Ваш ответ получен.", err: "Укажите имя",
         fail: "Не отправилось. Проверьте интернет и нажмите ещё раз.", hosts: "Хозяева тоя", made: "Сделано в Тойго",
         scroll: "Листайте вниз", music: "Музыка", contact: "Контакты", seat: "Ваше место", call: "Позвонить", preview: "Это предпросмотр. Ответы работают в настоящем приглашении.",
-        past: "Праздник прошёл. Спасибо, что были с нами!", fin: "Ждём вас с любовью" }
+        past: "Праздник прошёл. Спасибо, что были с нами!", env_tap: "Нажмите, чтобы открыть", env_for: "Вам приглашение", fin: "Ждём вас с любовью" }
 };
 
 const MON = {
@@ -79,6 +83,16 @@ export const TYPE_TEXT = {
           msg: "Дорогие родные и друзья! Наша дочь начинает новую жизнь, и мы приглашаем вас на её кыз узатуу. Проводим её вместе — с добрыми пожеланиями и благословением.",
           msgs: ["Дорогие родные и друзья! Наша дочь начинает новую жизнь, и мы приглашаем вас на её кыз узатуу. Проводим её вместе — с добрыми пожеланиями и благословением.", "Дорогой гость! Пришёл день, когда мы провожаем нашу любимую дочь в счастливую семейную жизнь. Будем рады видеть вас рядом в этот важный для нас день.", "Наша дочь делает первый шаг в новую жизнь. Приходите пожелать ей доброго пути и разделить с нами этот светлый праздник!"],
           prog: "16:00 — Встреча гостей\n17:00 — Обряд кыз узатуу\n18:00 — Начало тоя\n22:00 — Завершение" }
+  },
+  nikah: {
+    ky: { inv: "Сиздерди нике кыюу үлпөтүбүзгө чакырабыз", cd: "Никеге чейин калды", n1: "Бекзат", n2: "Айпери",
+          msg: "Урматтуу туугандар жана жакындарыбыз! Эки жүрөк ыйык нике менен бириккен кубанычтуу күнүбүздү сиздер менен бөлүшкүбүз келет. Ак батаңыздар жана дуба-тилегиңиздер биз үчүн эң баалуу белек.",
+          msgs: ["Урматтуу туугандар жана жакындарыбыз! Эки жүрөк ыйык нике менен бириккен кубанычтуу күнүбүздү сиздер менен бөлүшкүбүз келет. Ак батаңыздар жана дуба-тилегиңиздер биз үчүн эң баалуу белек.", "Кадырлуу коногубуз! Нике кыюу салтанатыбызга келип, жаңы үй-бүлөгө ак бата бериңиз. Сиздин катышууңуз биз үчүн чоң сый.", "Эки жүрөк — бир тагдыр. Нике кыйылчу кубанычтуу күнүбүздө жаныбызда болуңуз, сиздерди чын жүрөктөн күтөбүз."],
+          prog: "15:00 — Конокторду тосуу\n16:00 — Нике кыюу\n17:00 — Дасторкон\n20:00 — Коштошуу" },
+    ru: { inv: "Приглашаем вас на наш никах", cd: "До никаха осталось", n1: "Бекзат", n2: "Айпери",
+          msg: "Дорогие родные и близкие! В этот благословенный день два сердца соединятся священным союзом. Мы будем счастливы разделить с вами радость нашего никаха и услышать ваши добрые молитвы и пожелания.",
+          msgs: ["Дорогие родные и близкие! В этот благословенный день два сердца соединятся священным союзом. Мы будем счастливы разделить с вами радость нашего никаха и услышать ваши добрые молитвы и пожелания.", "Дорогой гость! Приглашаем вас на церемонию никаха и праздничный дастархан. Ваше присутствие и благословение — самый ценный подарок для нас.", "Два сердца — одна судьба. Будем рады видеть вас рядом в светлый день нашего никаха. Ждём вас всем сердцем!"],
+          prog: "15:00 — Встреча гостей\n16:00 — Никах\n17:00 — Праздничный дастархан\n20:00 — Завершение" }
   },
   sunnot: {
     ky: { inv: "Сиздерди уулубуздун сүннөт тоюна чакырабыз", cd: "Тойго чейин калды", n1: "Нурислам", n2: "",
@@ -128,7 +142,7 @@ export const DEFAULTS = {
   date: "2027-06-12", time: "17:00", venue: "«Шумкар» той үйү", addr: "Бишкек, Чүй проспектиси, 150",
   msg: "Урматтуу туугандар, дос-тамырлар жана жакындарыбыз! Эки жаш жаңы үй-бүлө болуп кошулган кубанычтуу күндү сиздер менен бирге белгилегибиз келет. Салтанаттуу тоюбуздун төрүнөн орун алып, ак батаңыздарды бериңиздер.",
   prog: "17:00 — Конокторду тосуу\n18:00 — Нике кыюу\n19:00 — Той башталат\n23:00 — Коштошуу",
-  dress: "", dl: "2027-06-01", phone: "", music: true, track: "komuz", photos: []
+  dress: "", dl: "2027-06-01", phone: "", music: true, track: "komuz", env: true, photos: []
 };
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -138,7 +152,7 @@ export const slugify = s => String(s || "").toLowerCase().split("").map(c => TR[
 
 export function baseSlug(d) {
   const p = parseD(d.date);
-  const parts = [slugify(d.n1), d.type === "uylonuu" ? slugify(d.n2) : ""].filter(Boolean);
+  const parts = [slugify(d.n1), isPair(d.type) ? slugify(d.n2) : ""].filter(Boolean);
   if (!parts.length) parts.push("toi");
   if (p) parts.push(String(p.y));
   return parts.join("-");
@@ -173,6 +187,7 @@ export function clean(input) {
   d.music = i.music !== false;
   d.track = TRACKS.some(t => t.id === i.track) ? i.track : "komuz";
   d.fx = i.fx !== false;
+  d.env = i.env !== false;
   d.photos = Array.isArray(i.photos) ? i.photos.filter(x => /^[a-z0-9]{20}$/.test(x)).slice(0, 6) : [];
   return d;
 }
@@ -191,7 +206,7 @@ export function eventTs(d) {
 
 export function titleOf(d, lang) {
   const L = lang === "both" ? "ky" : lang;
-  const who = d.type === "uylonuu" ? [d.n1, d.n2].filter(Boolean).join(" & ") : d.n1;
+  const who = isPair(d.type) ? [d.n1, d.n2].filter(Boolean).join(" & ") : d.n1;
   return `${who || "…"} — ${TYPES[d.type][L]}`;
 }
 
@@ -231,7 +246,7 @@ function mk(lang) {
 }
 
 function names(d) {
-  const a = esc(d.n1 || "…"); if (d.type !== "uylonuu") return a;
+  const a = esc(d.n1 || "…"); if (!isPair(d.type)) return a;
   return `${a}<span class="amp">&amp;</span>${esc(d.n2 || "…")}`;
 }
 
@@ -249,7 +264,7 @@ function dparts(d) {
   return { day: p.d, dd: String(p.d).padStart(2, "0"), mm: String(p.m + 1).padStart(2, "0"), y: p.y, mon: MON[L][p.m], monKy: MON.ky[p.m] };
 }
 const when = (d, T) => `${esc(T.wd(d.date))}${d.time ? " · " + esc(d.time) : ""}`;
-const initials = d => [d.n1, d.type === "uylonuu" ? d.n2 : ""].filter(Boolean).map(x => x.trim()[0] || "").join(" & ").toUpperCase();
+const initials = d => [d.n1, isPair(d.type) ? d.n2 : ""].filter(Boolean).map(x => x.trim()[0] || "").join(" & ").toUpperCase();
 
 // small ornaments (currentColor)
 const SPRIG = '<svg viewBox="0 0 120 36" aria-hidden="true"><path d="M8 26C38 8 82 8 112 26" fill="none" stroke="currentColor" stroke-width="1"/><g fill="currentColor"><ellipse cx="30" cy="16" rx="6" ry="2.2" transform="rotate(-35 30 16)"/><ellipse cx="32" cy="22" rx="6" ry="2.2" transform="rotate(30 32 22)"/><ellipse cx="90" cy="16" rx="6" ry="2.2" transform="rotate(35 90 16)"/><ellipse cx="88" cy="22" rx="6" ry="2.2" transform="rotate(-30 88 22)"/><ellipse cx="46" cy="11" rx="5" ry="1.9" transform="rotate(-20 46 11)"/><ellipse cx="74" cy="11" rx="5" ry="1.9" transform="rotate(20 74 11)"/><circle cx="60" cy="10.5" r="1.6"/></g><circle cx="60" cy="10.5" r="4.2" fill="none" stroke="currentColor"/></svg>';
@@ -345,6 +360,24 @@ function seatLine(d, guest, T) {
   return `<div class="hall">${seat ? `<span>${T.P("seat")}</span>` : ""}<b>${parts}</b></div>`;
 }
 
+// Sealed envelope shown before the invitation (live pages and demos). Tapping opens it and starts the music.
+const SEAL = '<svg viewBox="0 0 40 24" aria-hidden="true"><path d="M20 23C20 13 15 6 9 6C4 6 2 10 3.5 13C5 16 9.5 15.5 9.5 12.5C9.5 10.5 7.5 9.5 6.3 10.6M20 23C20 13 25 6 31 6C36 6 38 10 36.5 13C35 16 30.5 15.5 30.5 12.5C30.5 10.5 32.5 9.5 33.7 10.6M20 23V2M17 5L20 2L23 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+function envelope(d, T, guest) {
+  const who = names(d).replace('<span class="amp">&amp;</span>', " & ");
+  return `<div class="env" data-act="open" role="button" tabindex="0" aria-label="${esc(T.P("env_tap"))}">
+    <div class="env-in">
+      <p class="env-for">${guest ? `<b class="env-guest">${esc(guest.name)}</b>` : ""}${T.L("env_for")}</p>
+      <div class="env-box">
+        <div class="env-back"></div>
+        <div class="env-card"><span class="env-card-k">${T.type(d.type)}</span><b>${who}</b>${d.date ? `<span>${esc(numDate(d.date))}</span>` : ""}</div>
+        <div class="env-pocket"></div>
+        <div class="env-flap"><i></i></div>
+        <span class="env-seal">${SEAL}</span>
+      </div>
+      <p class="env-tap">${T.L("env_tap")}</p>
+    </div></div>`;
+}
+
 export function renderInvitation(d, opts = {}) {
   const T = mk(d.lang), pf = opts.pf || "inv";
   const photoUrl = opts.photoUrl || (id => `/media/${id}`);
@@ -356,6 +389,7 @@ export function renderInvitation(d, opts = {}) {
   const guest = opts.guest || null;
   const dear = { ky: "Урматтуу", ru: "", both: "Урматтуу" }[d.lang] || "";
   return `<div class="${invClass(d.tpl, d.type)}" data-mode="${opts.mode || "preview"}" data-slug="${esc(opts.slug || "")}" data-lang="${d.lang}"${d.fx !== false ? ` data-fx="${d.type}"` : ""}${guest ? ` data-guest="${esc(guest.code)}"` : ""}>
+  ${opts.envelope && d.env !== false ? envelope(d, T, guest) : ""}
   ${d.music ? `<button type="button" class="mus" data-act="music" data-track="${trackFile(d.track)}" aria-pressed="false" aria-label="${T.P("music")}">${NOTE}</button>` : ""}
   ${coverHTML(d, { photoUrl })}
   <section class="blk">${orn(d.tpl)}${guest ? `<p class="to">${dear ? `<span>${dear}</span>` : ""}<b>${esc(guest.name)}${d.lang === "ru" ? "," : "!"}</b></p>` : ""}<h2>${T.TT(d.type, "inv")}</h2>${d.msg ? `<p class="msg">${esc(d.msg)}</p>` : ""}

@@ -73,6 +73,7 @@ async function submitRsvp(form) {
 // tushoo: rising bubbles · maarake: gold sparkles · tuulgan: confetti
 const FX = {
   uylonuu: { n: 22, kinds: ["fly", "petal", "petal"], colors: ["#8EC5FF", "#B7DAFF", "#5E9EEA", "#DCEEFF"], dir: 1 },
+  nikah:   { n: 22, kinds: ["petal", "petal", "spark"], colors: ["#FFFFFF", "#F6F1E6", "#E9DFC9", "#D9BF86"], dir: 1 },
   kyz:     { n: 24, kinds: ["petal"], colors: ["#F6B3C2", "#EC8AA0", "#F9D5DE", "#E8C27A"], dir: 1 },
   sunnot:  { n: 26, kinds: ["star"], colors: ["#F2C46B", "#FFE3A3", "#FFFFFF"], dir: 1 },
   tushoo:  { n: 18, kinds: ["bubble"], colors: ["#9CCBF0", "#FFFFFF", "#F7C58A"], dir: -1 },
@@ -144,11 +145,31 @@ function scanFx() {
 }
 
 let started = false;
+// Envelope: open once per page visit-session; the tap is a user gesture, so music may start here.
+function initEnvelope() {
+  const env = document.querySelector(".inv .env"); if (!env) return;
+  let seen = false; try { seen = sessionStorage.getItem("toigo-env:" + location.pathname) === "1"; } catch (_) {}
+  if (seen) { env.remove(); return; }
+  document.documentElement.classList.add("env-lock");
+}
+function openEnvelope(env) {
+  if (env.classList.contains("open")) return;
+  try { sessionStorage.setItem("toigo-env:" + location.pathname, "1"); } catch (_) {}
+  const mb = env.closest(".inv").querySelector("[data-act=music]");
+  if (mb && mb.getAttribute("aria-pressed") !== "true") toggleMusic(mb);
+  env.classList.add("open");
+  const done = () => { env.remove(); document.documentElement.classList.remove("env-lock"); };
+  setTimeout(done, REDUCE ? 350 : 2750);
+}
+
 export function startLive() {
   if (started) return; started = true;
+  initEnvelope();
+  document.addEventListener("keydown", e => { const env = e.target.closest && e.target.closest(".inv .env"); if (env && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openEnvelope(env); } });
   tick(); setInterval(tick, 1000);
   scanFx(); setInterval(scanFx, 400);
   document.addEventListener("click", e => {
+    { const env = e.target.closest(".inv .env"); if (env) { openEnvelope(env); return; } }
     { const mb = e.target.closest(".inv [data-act=music]"); if (mb) { toggleMusic(mb); return; } }
     const z = e.target.closest(".inv [data-act=zoom]");
     if (z) {

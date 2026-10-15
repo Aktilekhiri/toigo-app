@@ -1,6 +1,6 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mv6br3vk";
-import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mv6br3vk";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mv91qp0c";
+import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mv91qp0c";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -24,7 +24,7 @@ let d = { ...DEFAULTS, ...(LANG === "ru" ? RU_DEFAULTS : {}) };
 const HOSTS = { ky: DEFAULTS.hosts, ru: RU_DEFAULTS.hosts };
 const isSample = (f, v) => !v || Object.values(TYPE_TEXT).some(o => o.ky[f] === v || o.ru[f] === v || (f === "msg" && (o.ky.msgs.includes(v) || o.ru.msgs.includes(v))));
 // Best design per toi type; used when the current design does not fit the new type.
-const PREF = { uylonuu: "silk", kyz: "kjibek", sunnot: "emerald", tushoo: "steps", maarake: "golden", tuulgan: "pop" };
+const PREF = { uylonuu: "silk", kyz: "kjibek", nikah: "ivorygold", sunnot: "emerald", tushoo: "steps", maarake: "golden", tuulgan: "pop" };
 const fits = (tpl, type) => (TPL.find(t => t.id === tpl) || { types: [] }).types.includes(type);
 function applyType(type) {
   const prev = d.type;
@@ -76,6 +76,7 @@ function fill() {
   form.elements.track.value = d.track || "komuz";
   $("#w-track").hidden = !d.music;
   form.elements.fx.checked = d.fx !== false;
+  form.elements.env.checked = d.env !== false;
   names(); thumbs();
 }
 function tplFilter() {
@@ -91,7 +92,7 @@ function names() {
   $("#w-age").hidden = !(d.type === "maarake" || d.type === "tuulgan");
   tplFilter();
   const map = { pair: S.n_pair, kyz: S.n_kyz, child: S.n_child, jub: S.n_jub, bday: S.n_bday };
-  const pair = d.type === "uylonuu";
+  const pair = isPair(d.type);
   $("#lab-n1").textContent = map[TYPES[d.type].names];
   $("#w-n2").hidden = !pair;
   $("#w-n1").classList.toggle("w", !pair);
@@ -131,6 +132,7 @@ form.addEventListener("change", e => {
   else if (t.name === "tpl") { d.tpl = t.value; changed(); }
   else if (t.name === "lang") { d.lang = t.value; applyType(d.type); fill(); changed(); }
   else if (t.name === "fx") { d.fx = t.checked; changed(); }
+  else if (t.name === "env") { d.env = t.checked; changed(); }
   else if (t.name === "music") { d.music = t.checked; $("#w-track").hidden = !d.music; if (!d.music) stopMusic(); changed(); }
   else if (t.name === "track") { d.track = t.value; setTrack(trackFile(d.track)); changed(); }
 });
