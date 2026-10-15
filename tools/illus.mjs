@@ -39,27 +39,6 @@ export const ILLUS = {
     <g fill="#5A4636"><circle cx="52.7" cy="9.5" r="1.4"/><circle cx="67.3" cy="9.5" r="1.4"/><circle cx="60" cy="5.5" r="1.4"/></g>
     ${spark(30, 40, 1)}${spark(92, 48, .8)}${spark(88, 24, .6, "#F3D58E")}`, "Шөкүлө"),
 
-  // Nikah: a brass lantern with a candle among white roses, on ivory.
-  nikah: svg(`<defs>${bg("n-bg", "#FFFCF5", "#E6DCC6")}${gold("n-g")}
-    <radialGradient id="n-l" cx=".5" cy=".55" r=".5"><stop offset="0" stop-color="#FFF4C8"/><stop offset=".6" stop-color="#FFD98A" stop-opacity=".55"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/></radialGradient></defs>
-    <rect width="120" height="120" fill="url(#n-bg)"/>
-    <ellipse cx="60" cy="96" rx="36" ry="4.5" fill="#8C7650" opacity=".18"/>
-    <circle cx="60" cy="62" r="24" fill="url(#n-l)"/>
-    <path d="M60 18v8" stroke="url(#n-g)" stroke-width="1.4"/><circle cx="60" cy="16" r="2.4" fill="none" stroke="url(#n-g)" stroke-width="1.2"/>
-    <path d="M50 34L60 26L70 34Z" fill="url(#n-g)"/>
-    <path d="M47 36H73L71 41H49Z" fill="url(#n-g)"/>
-    <path d="M49 41H71V80H49Z" fill="#FFF8E6" opacity=".55"/>
-    <path d="M49 41V80M71 41V80M60 41V80M49 54H71M49 67H71" stroke="url(#n-g)" stroke-width="1.2"/>
-    <path d="M52 44q8 6 16 0M52 57q8 6 16 0M52 70q8 6 16 0" fill="none" stroke="#C9A55E" stroke-width=".7" opacity=".8"/>
-    <path d="M46 80H74L72 86H48Z" fill="url(#n-g)"/>
-    <rect x="57.5" y="62" width="5" height="12" rx="1" fill="#FFFDF7"/><path d="M60 55q3 3.5 0 7q-3-3.5 0-7z" fill="#FFC94D"/>
-    <g fill="#FFFFFF" stroke="#D8CBB0" stroke-width=".6">
-      <circle cx="34" cy="88" r="9"/><circle cx="86" cy="88" r="10"/><circle cx="24" cy="94" r="6"/><circle cx="97" cy="96" r="6"/>
-    </g>
-    <g fill="none" stroke="#D8CBB0" stroke-width=".6"><path d="M29 86q5-5 10 0q-5 5-10 0M80 86q6-6 12 0q-6 6-12 0"/></g>
-    <g fill="#9BAE8E"><ellipse cx="44" cy="93" rx="7" ry="2.6" transform="rotate(-25 44 93)"/><ellipse cx="74" cy="94" rx="7" ry="2.6" transform="rotate(25 74 94)"/><ellipse cx="16" cy="90" rx="6" ry="2.2" transform="rotate(30 16 90)"/><ellipse cx="104" cy="90" rx="6" ry="2.2" transform="rotate(-30 104 90)"/></g>
-    ${spark(26, 40, .9, "#D9AE5C")}${spark(94, 34, .7, "#D9AE5C")}${spark(88, 58, .5, "#C9A55E")}`, "Фанар жана гүлдөр"),
-
   // Sünnöt: the boy's ak kalpak with a black split brim and gold embroidery.
   sunnot: svg(`<defs>${bg("s-bg", "#A8452F", "#561811")}${gold("s-g")}
     <linearGradient id="s-w" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#D8D1C4"/><stop offset=".45" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C0B0"/></linearGradient></defs>

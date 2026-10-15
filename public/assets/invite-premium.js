@@ -8,11 +8,11 @@ const isPhoto = id => PHOTO_IDS.includes(id);
 
 export const PREM_TPL = [
   ...PHOTO_TPL,
-  { id: "silk", name: { ky: "Silk & Gold", ru: "Silk & Gold" }, types: ["uylonuu", "nikah"],
+  { id: "silk", name: { ky: "Silk & Gold", ru: "Silk & Gold" }, types: ["uylonuu"],
     desc: { ky: "Жибек кездеменин бырыштары, шампань алтыны жана журналдык типографика.", ru: "Складки шёлка, золото шампань и журнальная типографика." } },
   { id: "nomad", name: { ky: "Nomadic Royal", ru: "Nomadic Royal" }, types: ["uylonuu"],
     desc: { ky: "Түнкү Ала-Тоо, асимметриялык курам жана геометриялык оюм-рамка.", ru: "Ночные горы, асимметричная композиция и геометрическая рамка-орнамент." } },
-  { id: "garden", name: { ky: "Secret Garden", ru: "Secret Garden" }, types: ["uylonuu", "nikah"],
+  { id: "garden", name: { ky: "Secret Garden", ru: "Secret Garden" }, types: ["uylonuu"],
     desc: { ky: "Жашыл бак, жарык нурлары жана ботаникалык бутактар.", ru: "Тенистый сад, лучи света и ботанические ветви." } },
   { id: "kjibek", name: { ky: "Кыз Жибек", ru: "Кыз Жибек" }, types: ["kyz"],
     desc: { ky: "Бордо баркыт, алтын сайма жана салтанаттуу арка.", ru: "Бордовый бархат, золотая вышивка и торжественная арка." } },
@@ -131,7 +131,7 @@ export function premOrn(tpl) {
 /** Cover for a premium design. h: helpers from invite-core { esc, names, ey, p, dot, longD, when, typeLabel } */
 // longest word in the names: the CSS shrinks the font so that word always fits the width
 function longest(d) {
-  const words = [d.n1, (d.type === "uylonuu" || d.type === "nikah") ? d.n2 : ""].join(" ").split(/[\s]+/).filter(Boolean).flatMap(w => w.split(/(?<=-)/));
+  const words = [d.n1, d.type === "uylonuu" ? d.n2 : ""].join(" ").split(/[\s]+/).filter(Boolean).flatMap(w => w.split(/(?<=-)/));
   return Math.max(6, ...words.map(w => w.length));
 }
 

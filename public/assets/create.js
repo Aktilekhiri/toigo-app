@@ -1,6 +1,6 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mv91qp0c";
-import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mv91qp0c";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mv920jox";
+import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mv920jox";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -24,7 +24,7 @@ let d = { ...DEFAULTS, ...(LANG === "ru" ? RU_DEFAULTS : {}) };
 const HOSTS = { ky: DEFAULTS.hosts, ru: RU_DEFAULTS.hosts };
 const isSample = (f, v) => !v || Object.values(TYPE_TEXT).some(o => o.ky[f] === v || o.ru[f] === v || (f === "msg" && (o.ky.msgs.includes(v) || o.ru.msgs.includes(v))));
 // Best design per toi type; used when the current design does not fit the new type.
-const PREF = { uylonuu: "silk", kyz: "kjibek", nikah: "ivorygold", sunnot: "emerald", tushoo: "steps", maarake: "golden", tuulgan: "pop" };
+const PREF = { uylonuu: "silk", kyz: "kjibek", sunnot: "emerald", tushoo: "steps", maarake: "golden", tuulgan: "pop" };
 const fits = (tpl, type) => (TPL.find(t => t.id === tpl) || { types: [] }).types.includes(type);
 function applyType(type) {
   const prev = d.type;

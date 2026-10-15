@@ -5,20 +5,20 @@
 export const PHOTO_IDS = ["ivorygold", "bloom", "mountain", "lens", "akjol", "emnight", "nur", "blush"];
 
 export const PHOTO_TPL = [
-  { id: "ivorygold", types: ["uylonuu", "nikah", "kyz", "maarake"], name: { ky: "Ivory & Gold", ru: "Ivory & Gold" },
+  { id: "ivorygold", types: ["uylonuu", "kyz", "maarake"], name: { ky: "Ivory & Gold", ru: "Ivory & Gold" },
     desc: { ky: "Сүт түстөгү кагаз, ак гүлдөр жана алтын жалатылган тамгалар.", ru: "Бумага цвета слоновой кости, белые цветы и золотое тиснение." } },
-  { id: "bloom", types: ["uylonuu", "nikah", "tuulgan", "maarake", "kyz"], name: { ky: "Garden Bloom", ru: "Garden Bloom" },
+  { id: "bloom", types: ["uylonuu", "tuulgan", "maarake", "kyz"], name: { ky: "Garden Bloom", ru: "Garden Bloom" },
     desc: { ky: "Жашыл бак, ак гүлдөр жана жарык карточка.", ru: "Зелёный сад, белые цветы и светлая карточка." } },
-  { id: "mountain", types: ["uylonuu", "kyz", "nikah", "maarake"], name: { ky: "Mountain Romance", ru: "Mountain Romance" },
+  { id: "mountain", types: ["uylonuu", "kyz", "maarake"], name: { ky: "Mountain Romance", ru: "Mountain Romance" },
     desc: { ky: "Ысык-Көл, алтын саат жана Ала-Тоо.", ru: "Иссык-Куль, золотой час и горы Ала-Тоо." } },
-  { id: "lens", types: ["uylonuu", "kyz", "nikah", "tuulgan", "maarake"], name: { ky: "Photo Editorial", ru: "Photo Editorial" },
+  { id: "lens", types: ["uylonuu", "kyz", "tuulgan", "maarake"], name: { ky: "Photo Editorial", ru: "Photo Editorial" },
     desc: { ky: "Чоң сүрөт жана журналдык тамгалар. Өз сүрөтүңүздү коюңуз.", ru: "Большое фото и журнальная типографика. Поставьте своё фото." } },
   { id: "akjol", types: ["kyz"], name: { ky: "Ак жол", ru: "Ак жол" },
     desc: { ky: "Боз үйдүн эшиги, шөкүлө жана бордо-алтын түстөр.", ru: "Дверь юрты, шөкүлө и бордово-золотые тона." } },
-  { id: "emnight", types: ["uylonuu", "maarake", "nikah", "tuulgan"], name: { ky: "Midnight Elegance", ru: "Midnight Elegance" },
+  { id: "emnight", types: ["uylonuu", "maarake", "tuulgan"], name: { ky: "Midnight Elegance", ru: "Midnight Elegance" },
     desc: { ky: "Шамдар, кечки көл жана кочкул жашыл менен алтын.", ru: "Свечи, вечернее озеро, тёмно-зелёный и золото." } },
-  { id: "nur", types: ["nikah"], name: { ky: "Нур", ru: "Нур" },
-    desc: { ky: "Ак жибек, фанарлар жана ак гүлдөр. Нике кыюу үчүн.", ru: "Белый шёлк, фонари и белые цветы. Для никаха." } },
+  { id: "nur", types: ["uylonuu"], name: { ky: "Нур", ru: "Нур" },
+    desc: { ky: "Ак жибек, фанарлар жана ак гүлдөр. Нике кыюуга да ылайык.", ru: "Белый шёлк, фонари и белые цветы. Подходит и для никаха." } },
   { id: "blush", types: ["tuulgan"], name: { ky: "Blush Party", ru: "Blush Party" },
     desc: { ky: "Шампань шарлар, торт жана назик түстөр.", ru: "Шары цвета шампань, торт и нежные оттенки." } }
 ];

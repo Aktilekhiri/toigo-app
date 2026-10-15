@@ -73,7 +73,6 @@ async function submitRsvp(form) {
 // tushoo: rising bubbles · maarake: gold sparkles · tuulgan: confetti
 const FX = {
   uylonuu: { n: 22, kinds: ["fly", "petal", "petal"], colors: ["#8EC5FF", "#B7DAFF", "#5E9EEA", "#DCEEFF"], dir: 1 },
-  nikah:   { n: 22, kinds: ["petal", "petal", "spark"], colors: ["#FFFFFF", "#F6F1E6", "#E9DFC9", "#D9BF86"], dir: 1 },
   kyz:     { n: 24, kinds: ["petal"], colors: ["#F6B3C2", "#EC8AA0", "#F9D5DE", "#E8C27A"], dir: 1 },
   sunnot:  { n: 26, kinds: ["star"], colors: ["#F2C46B", "#FFE3A3", "#FFFFFF"], dir: 1 },
   tushoo:  { n: 18, kinds: ["bubble"], colors: ["#9CCBF0", "#FFFFFF", "#F7C58A"], dir: -1 },

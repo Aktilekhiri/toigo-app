@@ -215,8 +215,8 @@ function homePage(lang) {
     faqLd(C[lang].faq)
   ];
   const cat = id => CATS.find(c => c.id === id);
-  const tiles = [["uylonuu", "hero", 1408, 768], ["kyz", "kyz", 768, 1376], ["nikah", "nikah", 768, 1376], ["tuulgan", "birthday", 768, 1376]];
-  const chips = [["", H.f_all], ["uylonuu"], ["kyz"], ["nikah"], ["tuulgan"], ["other", H.f_other]];
+  const tiles = [["uylonuu", "hero", 1408, 768], ["kyz", "kyz", 768, 1376], ["tuulgan", "birthday", 768, 1376]];
+  const chips = [["", H.f_all], ["uylonuu"], ["kyz"], ["tuulgan"], ["other", H.f_other]];
   const body = `
 <section class="hero hero2"><div class="wrap">
   <div class="copy">
@@ -236,7 +236,7 @@ function homePage(lang) {
   <div class="sec-h"><div><div class="k">${H.cats_k}</div><h2 id="cats-h">${H.cats_h}</h2></div></div>
   <ul class="tiles">
     ${tiles.map(([id, img, w, h], i) => `<li class="tile${i === 0 ? " big" : ""}"><a href="${u(lang, `/toi/${cat(id).path}/`)}">${PH(img, "", w, h)}<span class="tile-t"><b>${TYPES[id][lang]}</b><em>→</em></span></a></li>`).join("")}
-    <li class="tile"><div class="tile-o">${PH("table", "", 1376, 768)}<span class="tile-t"><b>${H.f_other}</b><span class="tile-links">${OTHER.map(id => `<a href="${u(lang, `/toi/${cat(id).path}/`)}">${TYPES[id][lang]}</a>`).join("")}</span></span></div></li>
+    <li class="tile other"><div class="tile-o">${PH("table", "", 1376, 768)}<span class="tile-t"><b>${H.f_other}</b><span class="tile-links">${OTHER.map(id => `<a href="${u(lang, `/toi/${cat(id).path}/`)}">${TYPES[id][lang]}</a>`).join("")}</span></span></div></li>
   </ul>
 </div></section>
 

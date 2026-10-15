@@ -44,6 +44,8 @@ export default {
       url.hostname = url.hostname.slice(4);
       return Response.redirect(url.toString(), 301);
     }
+    // "Никах" was merged into the wedding category.
+    if (/^\/(ru\/)?toi\/nikah\/?$/.test(url.pathname)) return Response.redirect(`${url.origin}${url.pathname.startsWith("/ru/") ? "/ru" : ""}/toi/uylonuu-toi/`, 301);
     let res;
     try { res = await route(request, env, ctx); }
     catch (e) { console.error(e); res = new Response(JSON.stringify({ error: "server_error" }), { status: 500, headers: { "content-type": "application/json" } }); }
