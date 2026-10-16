@@ -354,7 +354,7 @@ function createPage(lang) {
       </div>
       ${f("dl", S.l_dl, `<input id="f-dl" name="dl" type="date">`)}
       ${f("phone", S.l_phone, `<input id="f-phone" name="phone" type="tel" inputmode="tel" maxlength="24" placeholder="+996 700 000 000" autocomplete="tel">`, "", S.h_phone)}
-      <div class="fld w"><label class="sw"><input id="f-music" name="music" type="checkbox" checked>${S.l_music}</label><label class="sw"><input id="f-fx" name="fx" type="checkbox" checked>${S.l_fx}</label><label class="sw"><input id="f-env" name="env" type="checkbox" checked>${S.l_env}</label></div>
+      <div class="fld w"><label class="sw"><input id="f-music" name="music" type="checkbox" checked>${S.l_music}</label><label class="sw"><input id="f-fx" name="fx" type="checkbox" checked>${S.l_fx}</label></div>
       ${f("track", S.l_track, `<select id="f-track" name="track">${TRACKS.map(t => `<option value="${t.id}">${t[lang]}</option>`).join("")}</select>`, "", S.h_track)}
     </fieldset>
     <div class="submit-row"><button class="btn btn-p" type="submit" id="save">${S.save}</button><span class="form-msg" id="form-msg" aria-live="polite"></span></div>
@@ -391,7 +391,7 @@ function demoPage(lang, t) {
   <a class="btn btn-g btn-sm" href="${u(lang, "/")}#designs">← ${K.back}</a>
   <a class="btn btn-p btn-sm" href="${u(lang, "/create/")}?tpl=${t.id}">${K.use}</a>
 </div>
-${renderInvitation(d, { mode: "preview", pf: "demo", envelope: true })}
+${renderInvitation(d, { mode: "preview", pf: "demo" })}
 <script type="module">import { startLive } from "/assets/invite-live.js?v=${V}"; startLive();</script>
 </body></html>`;
   write(u(lang, p), html);

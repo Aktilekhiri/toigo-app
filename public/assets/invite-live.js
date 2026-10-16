@@ -144,126 +144,12 @@ function scanFx() {
 }
 
 let started = false;
-// Envelope: open once per page visit-session; the tap is a user gesture, so music may start here.
-function initEnvelope() {
-  const env = document.querySelector(".inv .env"); if (!env) return;
-  let seen = false; try { seen = sessionStorage.getItem("toigo-env:" + location.pathname) === "1"; } catch (_) {}
-  if (seen) { env.remove(); return; }
-  document.documentElement.classList.add("env-lock");
-}
-// ---------- Envelope opening: wax seal bursts into gold dust, the flap opens,
-// silk pours out of the envelope and covers the screen, then dissolves into the invitation.
-const SILK_VS = "attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}";
-const SILK_FS = `precision highp float;
-uniform vec2 R;uniform vec4 B;uniform float T,P,D,K;uniform vec3 C0,C1,C2;
-float h(vec2 p,float t){p=mat2(.8,-.6,.6,.8)*p;vec2 q=p;q.x+=.45*sin(q.y*1.1+t*.6);q.y+=.2*sin(q.x*.9-t*.45);
- return .6*sin(q.x*1.6+q.y*.35+t*.8)+.3*sin(q.x*2.9-q.y*.6-t*1.05)+.1*sin(q.x*5.1+q.y*1.2+t*1.5);}
-vec3 silk(vec2 p,float t){float e=.004;float a=h(p,t);vec2 g=vec2(h(p+vec2(e,0.),t)-a,h(p+vec2(0.,e),t)-a)/e;
- vec3 n=normalize(vec3(-g*.3,1.));vec3 L=normalize(vec3(-.5,.6,.65));float d=clamp(dot(n,L),0.,1.);
- float s=pow(clamp(dot(n,normalize(L+vec3(0.,0.,1.))),0.,1.),14.);
- vec3 sh=K>.5?C0*.5:C0*vec3(.84,.78,.70);vec3 c=mix(sh,C0,smoothstep(.2,.98,d));c=mix(c,C2,.16*smoothstep(.2,-.8,a));return c+C1*s*(K>.5?.5:.22);}
-float aa(float v){return clamp(v/(1.6*D)+.5,0.,1.);}
-void main(){vec2 f=vec2(gl_FragCoord.x,R.y-gl_FragCoord.y);float x=f.x,y=f.y,W=R.x,H=R.y;
- vec2 p=f/min(W,H)*2.6;float cx=B.x+B.z*.5;
- float r=smoothstep(0.,1.,clamp(P/.72,0.,1.));float xn=(x-cx)/(B.z*.5);
- float top=B.y+B.w*.45-r*(B.y+B.w*.45+H*.35)*(1.-.22*min(xn*xn,4.))+14.*D*sin(x/(40.*D)+T*3.)*(.35+r);
- float hw=B.z*.44*(1.+r*2.6);
- float rx=(x-B.x)/B.z,ry=(y-B.y)/B.w;float pk=step(0.,rx)*step(rx,1.)*step(.56*(1.-abs(2.*rx-1.)),ry)*step(ry,1.04);
- float ob=max(aa(B.x-x),aa(x-B.x-B.z));float aA=aa(y-top)*aa(hw-abs(x-cx))*aa(B.y+B.w-y)*(1.-pk)*(1.-ob*aa(y-B.y-4.*D));
- vec3 cA=silk(p,T)*mix(.8,1.,smoothstep(0.,26.*D,y-top));
- float s=smoothstep(.42,1.,P);
- float fr=-.3*H+s*1.75*H+.07*H*sin(x/W*3.3+T*1.8)+(x-cx)*.28*(1.-s);
- float aF=aa(fr-y)*step(.42,P);vec3 cF=silk(p*1.15+vec2(3.1,1.7),T*1.1)*mix(.84,1.,smoothstep(0.,30.*D,fr-y));
- float sh=(1.-aF)*step(.42,P)*.22*exp(-max(y-fr,0.)/(34.*D));
- vec3 col=cF*aF+cA*aA*(1.-aF);float al=aF+aA*(1.-aF);
- col*= (1.-sh);al=al+sh*(1.-al);gl_FragColor=vec4(col,al);}`;
-
-function rgbOf(str) {
-  const c = document.createElement("canvas").getContext("2d"); c.fillStyle = "#000"; c.fillStyle = str || "#fff";
-  const v = c.fillStyle; if (v[0] === "#") return [1, 3, 5].map(i => parseInt(v.slice(i, i + 2), 16) / 255);
-  return v.match(/[\d.]+/g).slice(0, 3).map(n => +n / 255);
-}
-const mixc = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
-
-function silkLayer(env, box, dur) {
-  const cv = document.createElement("canvas"); cv.className = "env-silk";
-  const gl = cv.getContext("webgl", { premultipliedAlpha: true, antialias: false }) || cv.getContext("experimental-webgl");
-  if (!gl) return null;
-  const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return gl.getShaderParameter(o, gl.COMPILE_STATUS) ? o : null; };
-  const vs = sh(gl.VERTEX_SHADER, SILK_VS), fs = sh(gl.FRAGMENT_SHADER, SILK_FS); if (!vs || !fs) return null;
-  const pg = gl.createProgram(); gl.attachShader(pg, vs); gl.attachShader(pg, fs); gl.linkProgram(pg);
-  if (!gl.getProgramParameter(pg, gl.LINK_STATUS)) return null;
-  gl.useProgram(pg);
-  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-  const al = gl.getAttribLocation(pg, "a"); gl.enableVertexAttribArray(al); gl.vertexAttribPointer(al, 2, gl.FLOAT, false, 0, 0);
-  const U = n => gl.getUniformLocation(pg, n);
-  const cs = getComputedStyle(env.closest(".inv"));
-  const ib = rgbOf(cs.getPropertyValue("--ib").trim()), ia = rgbOf(cs.getPropertyValue("--ia").trim());
-  const lum = .3 * ib[0] + .59 * ib[1] + .11 * ib[2], dark = lum < .45;
-  const c0 = dark ? mixc(ib, [1, 1, 1], .1).map(v => Math.min(v * 1.7, 1)) : mixc(ib, [1, 1, 1], .4), c1 = dark ? mixc(ia, [1, 1, 1], .3) : [1, 1, 1], c2 = dark ? mixc(ib, [0, 0, 0], .3) : mixc(ia, [1, 1, 1], .25);
-  gl.uniform3fv(U("C0"), c0); gl.uniform3fv(U("C1"), c1); gl.uniform3fv(U("C2"), c2); gl.uniform1f(U("K"), dark ? 1 : 0);
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-  const size = () => { cv.width = Math.round(innerWidth * dpr); cv.height = Math.round(innerHeight * dpr); gl.viewport(0, 0, cv.width, cv.height); };
-  size(); env.appendChild(cv);
-  const t0 = performance.now(); let raf = 0, stop = false;
-  const frame = now => {
-    if (stop) return;
-    if (cv.width !== Math.round(innerWidth * dpr)) size();
-    const b = box.getBoundingClientRect(), t = (now - t0) / 1000;
-    gl.uniform2f(U("R"), cv.width, cv.height); gl.uniform1f(U("D"), dpr);
-    gl.uniform4f(U("B"), b.left * dpr, b.top * dpr, b.width * dpr, b.height * dpr);
-    gl.uniform1f(U("T"), t + 1.3); gl.uniform1f(U("P"), Math.min(t / dur, 1.2));
-    gl.drawArrays(gl.TRIANGLES, 0, 3); raf = requestAnimationFrame(frame);
-  };
-  raf = requestAnimationFrame(frame);
-  return () => { stop = true; cancelAnimationFrame(raf); };
-}
-
-function sealDust(env) {
-  const seal = env.querySelector(".env-seal"), box = env.querySelector(".env-box");
-  if (!seal || !box || !seal.animate) return;
-  const sr = seal.getBoundingClientRect(), br = box.getBoundingClientRect();
-  const x0 = sr.left - br.left + sr.width / 2, y0 = sr.top - br.top + sr.height / 2;
-  for (let i = 0; i < 34; i++) {
-    const p = document.createElement("i"); p.className = "env-dust";
-    const a = Math.random() * Math.PI * 2, r = 30 + Math.random() * 120, sz = 2 + Math.random() * 4;
-    p.style.cssText = `left:${x0}px;top:${y0}px;width:${sz}px;height:${sz}px`;
-    box.appendChild(p);
-    p.animate([{ transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
-      { transform: `translate(calc(-50% + ${Math.cos(a) * r}px),calc(-50% + ${Math.sin(a) * r - 30 - Math.random() * 40}px)) scale(.3)`, opacity: 0 }],
-      { duration: 900 + Math.random() * 700, easing: "cubic-bezier(.15,.7,.3,1)", fill: "forwards" });
-  }
-}
-
-function openEnvelope(env) {
-  if (env.classList.contains("open")) return;
-  try { sessionStorage.setItem("toigo-env:" + location.pathname, "1"); } catch (_) {}
-  const inv = env.closest(".inv");
-  const mb = inv.querySelector("[data-act=music]");
-  if (mb && mb.getAttribute("aria-pressed") !== "true") toggleMusic(mb);
-  const done = () => { env.remove(); document.documentElement.classList.remove("env-lock"); };
-  if (REDUCE) { env.classList.add("open"); setTimeout(done, 350); return; }
-  sealDust(env);
-  env.classList.add("open");
-  let stopSilk = null;
-  setTimeout(() => { stopSilk = silkLayer(env, env.querySelector(".env-box"), 2.3); if (stopSilk) env.classList.add("silk"); else env.classList.add("plain"); }, 850);
-  setTimeout(() => {
-    if (!stopSilk) return; // plain CSS fallback handles its own fade
-    env.classList.add("covered"); inv.classList.add("reveal");
-    setTimeout(() => env.classList.add("gone"), 150);
-    setTimeout(() => { stopSilk(); done(); }, 1250);
-  }, 850 + 2350);
-  setTimeout(() => { if (!stopSilk) done(); }, 2850);
-}
 
 export function startLive() {
   if (started) return; started = true;
-  initEnvelope();
-  document.addEventListener("keydown", e => { const env = e.target.closest && e.target.closest(".inv .env"); if (env && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openEnvelope(env); } });
   tick(); setInterval(tick, 1000);
   scanFx(); setInterval(scanFx, 400);
   document.addEventListener("click", e => {
-    { const env = e.target.closest(".inv .env"); if (env) { openEnvelope(env); return; } }
     { const mb = e.target.closest(".inv [data-act=music]"); if (mb) { toggleMusic(mb); return; } }
     const z = e.target.closest(".inv [data-act=zoom]");
     if (z) {

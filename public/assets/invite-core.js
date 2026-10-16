@@ -1,7 +1,7 @@
 // Toigo — shared invitation renderer.
 // Used in the browser (constructor preview) and on the server (/i/:slug).
 // Pure functions only: no DOM access here.
-import { PREM, PREM_TPL, premCover, premOrn, premFinale, envBg } from "./invite-premium.js";
+import { PREM, PREM_TPL, premCover, premOrn, premFinale } from "./invite-premium.js";
 
 export const TYPES = {
   uylonuu: { ky: "Үйлөнүү той", ru: "Свадьба", names: "pair" },
@@ -42,14 +42,14 @@ export const IV = {
         note: "Каалоо-тилек", send: "Жооп жөнөтүү", thx: "Рахмат! Жообуңуз той ээлерине жетти.", err: "Атыңызды жазыңыз",
         fail: "Жиберилген жок. Интернетти текшерип, кайра басыңыз.", hosts: "Той ээлери", made: "Тойго аркылуу түзүлдү",
         scroll: "Ылдый жылдырыңыз", music: "Музыка", contact: "Байланыш", seat: "Сиздин ордуңуз", call: "Чалуу", preview: "Бул алдын ала көрүү. Жооп чыныгы чакырууда иштейт.",
-        past: "Той өттү. Келгениңиздерге рахмат!", env_tap: "Ачуу үчүн басыңыз", env_for: "Сизге чакыруу", fin: "Сиздерди чын жүрөктөн күтөбүз" },
+        past: "Той өттү. Келгениңиздерге рахмат!", fin: "Сиздерди чын жүрөктөн күтөбүз" },
   ru: { inv: "Приглашаем вас на наш праздник", cd: "До праздника осталось", d: "дней", h: "часов", m: "минут", s: "секунд",
         prog: "Программа", venue: "Место проведения", dress: "Дресс-код", gal: "Фотографии", rsvp: "Вы придёте?",
         by: "ответьте до", rn: "Ваше имя", yes: "Приду", no: "Не смогу", cnt: "Сколько человек",
         note: "Пожелание", send: "Отправить ответ", thx: "Спасибо! Ваш ответ получен.", err: "Укажите имя",
         fail: "Не отправилось. Проверьте интернет и нажмите ещё раз.", hosts: "Хозяева тоя", made: "Сделано в Тойго",
         scroll: "Листайте вниз", music: "Музыка", contact: "Контакты", seat: "Ваше место", call: "Позвонить", preview: "Это предпросмотр. Ответы работают в настоящем приглашении.",
-        past: "Праздник прошёл. Спасибо, что были с нами!", env_tap: "Нажмите, чтобы открыть", env_for: "Вам приглашение", fin: "Ждём вас с любовью" }
+        past: "Праздник прошёл. Спасибо, что были с нами!", fin: "Ждём вас с любовью" }
 };
 
 const MON = {
@@ -131,7 +131,7 @@ export const DEFAULTS = {
   date: "2027-06-12", time: "17:00", venue: "«Шумкар» той үйү", addr: "Бишкек, Чүй проспектиси, 150",
   msg: "Урматтуу туугандар, дос-тамырлар жана жакындарыбыз! Эки жаш жаңы үй-бүлө болуп кошулган кубанычтуу күндү сиздер менен бирге белгилегибиз келет. Салтанаттуу тоюбуздун төрүнөн орун алып, ак батаңыздарды бериңиздер.",
   prog: "17:00 — Конокторду тосуу\n18:00 — Нике кыюу\n19:00 — Той башталат\n23:00 — Коштошуу",
-  dress: "", dl: "2027-06-01", phone: "", music: true, track: "komuz", env: true, photos: []
+  dress: "", dl: "2027-06-01", phone: "", music: true, track: "komuz", photos: []
 };
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -176,7 +176,6 @@ export function clean(input) {
   d.music = i.music !== false;
   d.track = TRACKS.some(t => t.id === i.track) ? i.track : "komuz";
   d.fx = i.fx !== false;
-  d.env = i.env !== false;
   d.photos = Array.isArray(i.photos) ? i.photos.filter(x => /^[a-z0-9]{20}$/.test(x)).slice(0, 6) : [];
   return d;
 }
@@ -349,26 +348,6 @@ function seatLine(d, guest, T) {
   return `<div class="hall">${seat ? `<span>${T.P("seat")}</span>` : ""}<b>${parts}</b></div>`;
 }
 
-// Sealed envelope shown before the invitation (live pages and demos). Tapping opens it and starts the music.
-const SEAL = '<svg viewBox="0 0 40 24" aria-hidden="true"><path d="M20 23C20 13 15 6 9 6C4 6 2 10 3.5 13C5 16 9.5 15.5 9.5 12.5C9.5 10.5 7.5 9.5 6.3 10.6M20 23C20 13 25 6 31 6C36 6 38 10 36.5 13C35 16 30.5 15.5 30.5 12.5C30.5 10.5 32.5 9.5 33.7 10.6M20 23V2M17 5L20 2L23 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
-function envelope(d, T, guest) {
-  const who = names(d).replace('<span class="amp">&amp;</span>', " & ");
-  const bg = envBg(d.tpl);
-  return `<div class="env${bg ? " env-ph" : ""}" data-act="open" role="button" tabindex="0" aria-label="${esc(T.P("env_tap"))}">
-    ${bg ? `<div class="env-bg" aria-hidden="true"><img src="${esc(bg)}" alt="" decoding="async"></div>` : ""}
-    <div class="env-in">
-      <p class="env-for">${guest ? `<b class="env-guest">${esc(guest.name)}</b>` : ""}${T.L("env_for")}</p>
-      <div class="env-box">
-        <div class="env-back"></div>
-        <div class="env-card"><span class="env-card-k">${T.type(d.type)}</span><b>${who}</b>${d.date ? `<span>${esc(numDate(d.date))}</span>` : ""}</div>
-        <div class="env-pocket"></div>
-        <div class="env-flap"><i></i></div>
-        <span class="env-seal">${SEAL}</span>
-      </div>
-      <p class="env-tap">${T.L("env_tap")}</p>
-    </div></div>`;
-}
-
 export function renderInvitation(d, opts = {}) {
   const T = mk(d.lang), pf = opts.pf || "inv";
   const photoUrl = opts.photoUrl || (id => `/media/${id}`);
@@ -380,7 +359,6 @@ export function renderInvitation(d, opts = {}) {
   const guest = opts.guest || null;
   const dear = { ky: "Урматтуу", ru: "", both: "Урматтуу" }[d.lang] || "";
   return `<div class="${invClass(d.tpl, d.type)}" data-mode="${opts.mode || "preview"}" data-slug="${esc(opts.slug || "")}" data-lang="${d.lang}"${d.fx !== false ? ` data-fx="${d.type}"` : ""}${guest ? ` data-guest="${esc(guest.code)}"` : ""}>
-  ${opts.envelope && d.env !== false ? envelope(d, T, guest) : ""}
   ${d.music ? `<button type="button" class="mus" data-act="music" data-track="${trackFile(d.track)}" aria-pressed="false" aria-label="${T.P("music")}">${NOTE}</button>` : ""}
   ${coverHTML(d, { photoUrl })}
   <section class="blk">${orn(d.tpl)}${guest ? `<p class="to">${dear ? `<span>${dear}</span>` : ""}<b>${esc(guest.name)}${d.lang === "ru" ? "," : "!"}</b></p>` : ""}<h2>${T.TT(d.type, "inv")}</h2>${d.msg ? `<p class="msg">${esc(d.msg)}</p>` : ""}

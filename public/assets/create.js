@@ -1,6 +1,6 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mvavi62f";
-import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mvavi62f";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mvayfvr9";
+import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mvayfvr9";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -76,7 +76,6 @@ function fill() {
   form.elements.track.value = d.track || "komuz";
   $("#w-track").hidden = !d.music;
   form.elements.fx.checked = d.fx !== false;
-  form.elements.env.checked = d.env !== false;
   names(); thumbs();
 }
 function tplFilter() {
@@ -132,7 +131,6 @@ form.addEventListener("change", e => {
   else if (t.name === "tpl") { d.tpl = t.value; changed(); }
   else if (t.name === "lang") { d.lang = t.value; applyType(d.type); fill(); changed(); }
   else if (t.name === "fx") { d.fx = t.checked; changed(); }
-  else if (t.name === "env") { d.env = t.checked; changed(); }
   else if (t.name === "music") { d.music = t.checked; $("#w-track").hidden = !d.music; if (!d.music) stopMusic(); changed(); }
   else if (t.name === "track") { d.track = t.value; setTrack(trackFile(d.track)); changed(); }
 });

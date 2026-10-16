@@ -29,7 +29,7 @@ export async function onRequestGet({ request, env, params, waitUntil }) {
   const desc = (lang === "ky" ? "Сиздерди тоюбузга чакырабыз. " : "Приглашаем вас на наш праздник. ") + descParts.join(" · ");
   const ogImage = d.photos && d.photos.length ? `${origin}/media/${d.photos[0]}` : `${origin}/img/og-${d.tpl}.png`;
   const pageUrl = `${origin}/i/${row.slug}${guest ? "/" + guest.code : ""}`;
-  const body = renderInvitation(d, { mode: "live", slug: row.slug, pf: "g", guest, envelope: true });
+  const body = renderInvitation(d, { mode: "live", slug: row.slug, pf: "g", guest });
   const themeColor = { ivory: "#FAF7F0", anarp: "#6E1735", emerald: "#124B40", steps: "#DCEEF8", golden: "#171717", pop: "#FFF9F3", heritage: "#842E3A", botanical: "#FFFFFF", midnight: "#0B1428", editorial: "#FFFFFF", alatoo: "#1D2742", akkalpak: "#FFFFFF", shyrdak: "#7E2A20", jibek: "#E3E8DF", anar: "#5B1626", asman: "#DCEAF4", ...PREM_THEME }[d.tpl] || "#FFFFFF";
 
   const html = `<!doctype html>
