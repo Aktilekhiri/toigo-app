@@ -1,8 +1,8 @@
-// Toigo — photo collection: eight designs built on Toigo's own generated photographs (public/img/ph).
+// Toigo — photo collection: twelve designs (incl. three watercolors) built on Toigo's own generated photographs (public/img/ph).
 // Some keep their photo as a backdrop and show the customer's photo in a frame ("inset"),
 // others let the customer's photo replace the cover photo ("replace").
 
-export const PHOTO_IDS = ["ivorygold", "bloom", "mountain", "lens", "akjol", "emnight", "nur", "blush"];
+export const PHOTO_IDS = ["ivorygold", "bloom", "mountain", "lens", "akjol", "emnight", "nur", "blush", "muras", "wclake", "wcpeony", "jailoo"];
 
 export const PHOTO_TPL = [
   { id: "ivorygold", types: ["uylonuu", "kyz", "maarake"], name: { ky: "Ivory & Gold", ru: "Ivory & Gold" },
@@ -16,24 +16,33 @@ export const PHOTO_TPL = [
   { id: "akjol", types: ["kyz"], name: { ky: "Ак жол", ru: "Ак жол" },
     desc: { ky: "Боз үйдүн эшиги, шөкүлө жана бордо-алтын түстөр.", ru: "Дверь юрты, шөкүлө и бордово-золотые тона." } },
   { id: "emnight", types: ["uylonuu", "maarake", "tuulgan"], name: { ky: "Midnight Elegance", ru: "Midnight Elegance" },
-    desc: { ky: "Шамдар, кечки көл жана кочкул жашыл менен алтын.", ru: "Свечи, вечернее озеро, тёмно-зелёный и золото." } },
+    desc: { ky: "Кочкул жашыл бархат, ак гүлдөр жана шамдар.", ru: "Тёмно-зелёный бархат, белые цветы и свечи." } },
   { id: "nur", types: ["uylonuu"], name: { ky: "Нур", ru: "Нур" },
     desc: { ky: "Ак жибек, фанарлар жана ак гүлдөр. Нике кыюуга да ылайык.", ru: "Белый шёлк, фонари и белые цветы. Подходит и для никаха." } },
   { id: "blush", types: ["tuulgan"], name: { ky: "Blush Party", ru: "Blush Party" },
-    desc: { ky: "Шампань шарлар, торт жана назик түстөр.", ru: "Шары цвета шампань, торт и нежные оттенки." } }
+    desc: { ky: "Шампань шарлар, торт жана назик түстөр.", ru: "Шары цвета шампань, торт и нежные оттенки." } },
+  { id: "muras", types: ["uylonuu", "kyz", "sunnot", "tushoo", "maarake"], name: { ky: "Мурас", ru: "Мурас" },
+    desc: { ky: "Ак кийиз, кочкор мүйүз оюм-чийме жана жез табак.", ru: "Белый войлок, орнамент «кочкор мүйүз» и медная чаша." } },
+  { id: "wclake", types: ["uylonuu", "maarake", "tuulgan"], name: { ky: "Акварель · Ала-Тоо", ru: "Акварель · Ала-Тоо" },
+    desc: { ky: "Акварель тоолор, көк көл жана кызгалдактар.", ru: "Акварельные горы, бирюзовое озеро и маки." } },
+  { id: "wcpeony", types: ["kyz", "uylonuu", "tuulgan"], name: { ky: "Акварель · Анар гүл", ru: "Акварель · Гранатовый сад" },
+    desc: { ky: "Пиондор, анар гүлдөрү жана бордо-кызгылт түстөр.", ru: "Пионы, цветы граната и бордово-розовые тона." } },
+  { id: "jailoo", types: ["sunnot", "tushoo", "maarake", "tuulgan"], name: { ky: "Акварель · Жайлоо", ru: "Акварель · Жайлоо" },
+    desc: { ky: "Жайлоо, боз үйлөр, жылкылар жана талаа гүлдөрү.", ru: "Жайлоо, юрты, лошади и полевые цветы." } }
 ];
 
-const IMG = { ivorygold: "floral-ivory", bloom: "botanical", mountain: "issykkul", lens: "bouquet", akjol: "kyz", emnight: "table", nur: "nikah", blush: "birthday" };
-const REPLACE = new Set(["lens", "akjol", "emnight", "nur"]);
+const IMG = { ivorygold: "floral-ivory", bloom: "botanical", mountain: "issykkul", lens: "bride", akjol: "kyz", emnight: "emerald", nur: "nikah", blush: "birthday", muras: "heritage", wclake: "wc-lake", wcpeony: "wc-peony", jailoo: "wc-jailoo" };
+const REPLACE = new Set(["lens", "akjol", "nur"]);
 
-export const PHOTO_THEME = { ivorygold: "#F6F1E6", bloom: "#DDE3D3", mountain: "#E9D7C2", lens: "#FFFFFF", akjol: "#3F1219", emnight: "#0F2A22", nur: "#F7F3EA", blush: "#F6EDE7" };
+export const PHOTO_THEME = { ivorygold: "#F6F1E6", bloom: "#DDE3D3", mountain: "#E9D7C2", lens: "#FFFFFF", akjol: "#3F1219", emnight: "#0F2A22", nur: "#F7F3EA", blush: "#F6EDE7", muras: "#F3EDE1", wclake: "#FBF8F1", wcpeony: "#FBF8F2", jailoo: "#F4F6EC" };
 export const PHOTO_SWATCH = Object.fromEntries(PHOTO_IDS.map(id => [id, `center/cover url(/img/ph/${IMG[id]}-s.webp)`]));
 export const photoOg = id => `/img/ph/${IMG[id]}.webp`;
 
 const LEAF = '<svg viewBox="0 0 120 22" aria-hidden="true"><path d="M4 14C40 2 80 2 116 14" fill="none" stroke="currentColor" stroke-width="1"/><g fill="currentColor"><path d="M34 8c4-5 10-5 13-2-4 4-9 4-13 2zM86 8c-4-5-10-5-13-2 4 4 9 4 13 2z"/><circle cx="60" cy="5" r="2.2"/></g></svg>';
 const RULE = '<svg viewBox="0 0 160 12" aria-hidden="true"><path d="M0 6h68M92 6h68" stroke="currentColor" stroke-width=".8"/><path d="M80 1l5 5-5 5-5-5z" fill="none" stroke="currentColor"/></svg>';
 const KYAL = '<svg viewBox="0 0 168 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1">' + Array.from({ length: 7 }, (_, i) => `<path d="M${i * 24 + 2} 8l10-6 10 6-10 6z"/>`).join("") + '</g></svg>';
-const ORN = { ivorygold: RULE, bloom: LEAF, mountain: RULE, lens: "", akjol: KYAL, emnight: RULE, nur: LEAF, blush: LEAF };
+const SPRIG = '<img src="/img/ph/wc-sprig.webp" alt="" loading="lazy" decoding="async">';
+const ORN = { ivorygold: RULE, bloom: LEAF, mountain: RULE, lens: "", akjol: KYAL, emnight: RULE, nur: LEAF, blush: LEAF, muras: KYAL, wclake: SPRIG, wcpeony: SPRIG, jailoo: SPRIG };
 
 export function photoOrn(tpl) {
   return tpl === "lens" ? '<span class="orn orn-lens" aria-hidden="true"></span>' : `<span class="orn orn-${tpl}" aria-hidden="true">${ORN[tpl]}</span>`;
@@ -60,12 +69,16 @@ export function photoCover(d, h, mini) {
       <div class="ey">${ey}</div>${nm}${p ? `<div class="ld"><b>${p.dd}</b><span>${esc(mon)}<br>${p.y}</span><em>${when}</em></div>` : `<div class="sub">${when}</div>`}</div>${cue}</div>`;
     case "akjol": return `<div class="${cls}"><div class="art">${bg}</div><div class="hc">
       <span class="orn-i">${KYAL}</span><div class="ey">${ey}</div>${nm}<div class="dt">${longD}</div><div class="sub">${when}</div></div>${cue}</div>`;
-    case "emnight": return `<div class="${cls}"><div class="art">${bg}</div><div class="hc">
+    case "emnight": return `<div class="${cls}"><div class="art">${bg}</div><div class="hc">${inset}
       <div class="ey">${ey}</div>${nm}<span class="orn-i">${RULE}</span><div class="dt">${dot}</div><div class="sub">${when}</div></div>${cue}</div>`;
     case "nur": return `<div class="${cls}"><div class="art">${bg}</div><div class="hc">
       <span class="orn-i">${LEAF}</span><div class="ey">${ey}</div>${nm}<div class="dt">${longD}</div><div class="sub">${when}</div></div>${cue}</div>`;
     case "blush": return `<div class="${cls}"><div class="art">${bg}</div><div class="hc">${inset}
       <div class="ey">${ey}</div>${nm}<div class="dt"><span>${dot}</span></div><div class="sub">${when}</div></div>${cue}</div>`;
+    case "muras": return `<div class="${cls}"><div class="art">${bg}</div><div class="hc">${inset}
+      <div class="ey">${ey}</div>${nm}<span class="orn-i">${KYAL}</span><div class="dt">${longD}</div><div class="sub">${when}</div></div>${cue}</div>`;
+    case "wclake": case "wcpeony": case "jailoo": return `<div class="${cls} wc"><div class="art">${bg}</div><div class="hc">${inset}
+      <div class="ey">${ey}</div>${nm}<div class="dt">${longD}</div><div class="sub">${when}</div></div>${cue}</div>`;
   }
   return "";
 }
