@@ -1,10 +1,12 @@
 // Toigo — premium collection: six designs with full-screen covers, own SVG art and a closing screen.
 // Pure string builders (no DOM), shared by the server and the constructor preview.
 
-import { PHOTO_IDS, PHOTO_TPL, PHOTO_THEME, PHOTO_SWATCH, photoCover, photoOrn, photoFinale } from "./invite-photo.js";
+import { PHOTO_IDS, PHOTO_TPL, PHOTO_THEME, PHOTO_SWATCH, photoCover, photoOrn, photoFinale, photoOg } from "./invite-photo.js";
 
 export const PREM = new Set(["silk", "nomad", "garden", "kjibek", "aurora", "noir", ...PHOTO_IDS]);
 const isPhoto = id => PHOTO_IDS.includes(id);
+// Backdrop for the envelope intro: the design's own photo, so the envelope lies in the same scene.
+export const envBg = id => (isPhoto(id) ? photoOg(id) : "");
 
 export const PREM_TPL = [
   ...PHOTO_TPL,

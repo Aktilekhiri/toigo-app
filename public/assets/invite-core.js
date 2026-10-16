@@ -1,7 +1,7 @@
 // Toigo — shared invitation renderer.
 // Used in the browser (constructor preview) and on the server (/i/:slug).
 // Pure functions only: no DOM access here.
-import { PREM, PREM_TPL, premCover, premOrn, premFinale } from "./invite-premium.js";
+import { PREM, PREM_TPL, premCover, premOrn, premFinale, envBg } from "./invite-premium.js";
 
 export const TYPES = {
   uylonuu: { ky: "Үйлөнүү той", ru: "Свадьба", names: "pair" },
@@ -353,7 +353,9 @@ function seatLine(d, guest, T) {
 const SEAL = '<svg viewBox="0 0 40 24" aria-hidden="true"><path d="M20 23C20 13 15 6 9 6C4 6 2 10 3.5 13C5 16 9.5 15.5 9.5 12.5C9.5 10.5 7.5 9.5 6.3 10.6M20 23C20 13 25 6 31 6C36 6 38 10 36.5 13C35 16 30.5 15.5 30.5 12.5C30.5 10.5 32.5 9.5 33.7 10.6M20 23V2M17 5L20 2L23 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
 function envelope(d, T, guest) {
   const who = names(d).replace('<span class="amp">&amp;</span>', " & ");
-  return `<div class="env" data-act="open" role="button" tabindex="0" aria-label="${esc(T.P("env_tap"))}">
+  const bg = envBg(d.tpl);
+  return `<div class="env${bg ? " env-ph" : ""}" data-act="open" role="button" tabindex="0" aria-label="${esc(T.P("env_tap"))}">
+    ${bg ? `<div class="env-bg" aria-hidden="true"><img src="${esc(bg)}" alt="" decoding="async"></div>` : ""}
     <div class="env-in">
       <p class="env-for">${guest ? `<b class="env-guest">${esc(guest.name)}</b>` : ""}${T.L("env_for")}</p>
       <div class="env-box">
