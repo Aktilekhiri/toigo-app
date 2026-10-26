@@ -91,7 +91,7 @@ function header(lang, m) {
 <header class="hdr"><div class="wrap">
   <a class="brand" href="${home}" aria-label="Тойго">${HORN}Тойго</a>
   <nav class="nav" aria-label="${lang === "ky" ? "Негизги меню" : "Основное меню"}">
-    <a href="${a("#designs")}">${N.designs}</a><a href="${a("#how")}">${N.how}</a><a href="${a("#faq")}">${N.faq}</a><a href="${a("#support")}">${N.support}</a>
+    <a href="${a("#designs")}">${N.designs}</a><a href="${a("#how")}">${N.how}</a><a href="${a("#faq")}">${N.faq}</a><a href="${a("#price")}">${N.support}</a>
   </nav>
   <div class="lang" role="group" aria-label="Тил / Язык">
     <a href="${m.alt ? m.alt.ky : "/"}" hreflang="ky" lang="ky" ${lang === "ky" ? 'aria-current="true"' : ""}>KG</a>
@@ -101,24 +101,20 @@ function header(lang, m) {
 </div></header>`;
 }
 
-function supportBlock(lang) {
-  const S = C[lang].support;
-  return `<section class="sec support" id="support" aria-labelledby="sup-h"><div class="wrap sup">
+function priceBlock(lang) {
+  const P = C[lang].price;
+  return `<section class="sec price" id="price" aria-labelledby="price-h"><div class="wrap prc">
   <div>
-    <div class="eyebrow">${HORN}${S.k}</div>
-    <h2 id="sup-h" style="margin-top:14px">${S.h}</h2>
-    <p>${S.p}</p>
-    <div class="pay-row"><span>${S.phone}</span><code id="pay-phone">+996 702 ••• •••</code><button type="button" class="btn btn-g btn-sm" data-pay="show" data-show="${S.show}" data-hide="${S.hide}">${S.show}</button><button type="button" class="btn btn-g btn-sm" data-pay="copy" data-done="${S.copied}">${S.copy}</button></div>
-    <div class="pay-row"><span>${S.to}</span><b>${SUPPORT.name}</b></div>
-    <div class="acts"><a class="btn btn-gold" href="${SUPPORT.paypal}" target="_blank" rel="noopener">${S.paypal}</a></div>
+    <div class="eyebrow">${HORN}${P.k}</div>
+    <h2 id="price-h" style="margin-top:14px">${P.h}</h2>
+    <p>${P.p}</p>
+    <p class="prc-pay">${P.pay}</p>
   </div>
-  <div>
-    <div class="qrs">
-      <figure><img src="/img/qr-mbank.jpg" alt="MBank QR" width="300" height="423" loading="lazy">MBank</figure>
-      <figure><img src="/img/qr-obank.png" alt="O!Bank QR" width="300" height="423" loading="lazy">O!Bank</figure>
-      <figure><img src="/img/qr-paypal.png" alt="PayPal QR" width="300" height="360" loading="lazy">PayPal</figure>
-    </div>
-    <p style="font-size:13px;margin-top:12px">${S.qr}</p>
+  <div class="prc-cards">
+    <div class="prc-card"><span>${P.free}</span><b>${P.freeP}</b><ul>${P.freeList.map(x => `<li>${x}</li>`).join("")}</ul></div>
+    <div class="prc-card prc-main"><span>${P.per}</span><b>${P.sum}</b>
+      <ul>${P.list.map(x => `<li>${x.replace("{n}", TPL.length)}</li>`).join("")}</ul>
+      <a class="btn btn-p" href="${u(lang, "/create/")}">${P.btn}</a></div>
   </div>
 </div></section>`;
 }
@@ -129,7 +125,7 @@ function footer(lang) {
   <div class="cols">
     <div><a class="brand" href="${u(lang, "/")}">${HORN}Тойго</a><p style="margin-top:12px;max-width:36ch">${F.tag}</p></div>
     <div><h3>${F.types}</h3><ul>${CATS.map(c => `<li><a href="${u(lang, `/toi/${c.path}/`)}">${TYPES[c.id][lang]}</a></li>`).join("")}</ul></div>
-    <div><h3>${F.site}</h3><ul><li><a href="${u(lang, "/create/")}">${N.create}</a></li><li><a href="${u(lang, "/manage/")}">${N.mine}</a></li><li><a href="${u(lang, "/")}#faq">${N.faq}</a></li><li><a href="#support">${N.support}</a></li><li><a href="${u(lang, "/privacy/")}">${F.privacy}</a></li></ul></div>
+    <div><h3>${F.site}</h3><ul><li><a href="${u(lang, "/create/")}">${N.create}</a></li><li><a href="${u(lang, "/manage/")}">${N.mine}</a></li><li><a href="${u(lang, "/")}#faq">${N.faq}</a></li><li><a href="${u(lang, "/")}#price">${N.support}</a></li><li><a href="${u(lang, "/privacy/")}">${F.privacy}</a></li></ul></div>
   </div>
   <div class="copy"><span>© ${new Date().getFullYear()} Тойго. ${F.rights}</span><span><a href="/" lang="ky">Кыргызча</a> · <a href="/ru/" lang="ru">Русский</a></span></div>
 </div></footer>
@@ -142,7 +138,7 @@ ${header(lang, m)}
 <main id="main">
 ${body}
 </main>
-${m.noSupport ? "" : supportBlock(lang)}
+${m.noSupport ? "" : priceBlock(lang)}
 ${footer(lang)}
 </body>
 </html>`;
@@ -211,7 +207,7 @@ function homePage(lang) {
     { "@context": "https://schema.org", "@type": "WebSite", name: "Тойго", url: O + "/", inLanguage: ["ky", "ru"] },
     { "@context": "https://schema.org", "@type": "Organization", name: "Тойго", url: O + "/", logo: O + "/icon-512.png" },
     { "@context": "https://schema.org", "@type": "WebApplication", name: "Тойго", url: O + u(lang, "/create/"), applicationCategory: "LifestyleApplication", operatingSystem: "Any",
-      inLanguage: lang, description: H.desc, offers: { "@type": "Offer", price: "0", priceCurrency: "KGS" } },
+      inLanguage: lang, description: H.desc, offers: [{ "@type": "Offer", name: C[lang].price.free, price: "0", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].price.per, price: "500", priceCurrency: "KGS" }] },
     faqLd(C[lang].faq)
   ];
   const cat = id => CATS.find(c => c.id === id);
@@ -305,6 +301,32 @@ ${bandSec(lang)}`;
   write(u(lang, p), page(lang, { title: T.title, desc, path: alt[lang], alt, jsonld }, body));
 }
 
+function payPanel(lang) {
+  const S = UI[lang];
+  return `<section class="pay" id="pay" hidden aria-labelledby="pay-h">
+      <h3 id="pay-h">${S.pay_h}</h3><p>${S.pay_p}</p>
+      <div class="pay-step" id="pay-form">
+        <h4>${S.pay_s1}</h4>
+        <div class="qrs qrs2">
+          <figure><img src="/img/qr-mbank.jpg" alt="MBank QR" width="300" height="423" loading="lazy">MBank</figure>
+          <figure><img src="/img/qr-obank.png" alt="O!Bank QR" width="300" height="423" loading="lazy">O!Bank</figure>
+        </div>
+        <div class="pay-row"><span>${S.pay_phone}</span><code id="pay-phone">+996 702 ••• •••</code><button type="button" class="btn btn-g btn-sm" data-pay="show" data-show="${S.pay_show}" data-hide="${S.pay_hide}">${S.pay_show}</button><button type="button" class="btn btn-g btn-sm" data-pay="copy" data-done="${S.pay_copied}">${S.pay_copy}</button></div>
+        <div class="pay-row"><span>${S.pay_to}</span><b>${SUPPORT.name}</b></div>
+        <p class="hint">${S.pay_abroad} <a href="${SUPPORT.paypal}" target="_blank" rel="noopener">${S.pay_pp}</a></p>
+        <h4>${S.pay_s2}</h4>
+        <div class="fld w"><label for="pay-rc">${S.pay_rc}</label><input id="pay-rc" type="file" accept="image/*,application/pdf"></div>
+        <div class="fld w"><label for="pay-ct">${S.pay_contact}</label><input id="pay-ct" type="text" maxlength="80" autocomplete="tel" placeholder="${S.pay_contact_ph}"></div>
+        <button type="button" class="btn btn-gold" id="pay-send">${S.pay_send}</button>
+        <h4>${S.pay_s3}</h4><p class="hint">${S.pay_s3p}</p>
+      </div>
+      <p class="pay-msg" id="pay-msg" aria-live="polite"></p>
+      <details class="pay-key"><summary>${S.pay_have}</summary>
+        <div class="copyrow"><input id="pay-key" type="text" maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="${S.pay_key_ph}" aria-label="${S.pay_have}"><button type="button" class="btn btn-p btn-sm" id="pay-act">${S.pay_act}</button></div>
+      </details>
+    </section>`;
+}
+
 function createPage(lang) {
   const K = C[lang].create, S = UI[lang];
   const p = "/create/", alt = { ky: p, ru: "/ru" + p };
@@ -357,8 +379,10 @@ function createPage(lang) {
       <div class="fld w"><label class="sw"><input id="f-music" name="music" type="checkbox" checked>${S.l_music}</label><label class="sw"><input id="f-fx" name="fx" type="checkbox" checked>${S.l_fx}</label></div>
       ${f("track", S.l_track, `<select id="f-track" name="track">${TRACKS.map(t => `<option value="${t.id}">${t[lang]}</option>`).join("")}</select>`, "", S.h_track)}
     </fieldset>
+    <div class="acc" id="acc" hidden></div>
     <div class="submit-row"><button class="btn btn-p" type="submit" id="save">${S.save}</button><span class="form-msg" id="form-msg" aria-live="polite"></span></div>
     <div id="done" hidden></div>
+    ${payPanel(lang)}
   </form>
   <div class="pv" aria-label="${S.preview_note}">
     <div class="phone"><div class="scr" id="preview"></div></div>
@@ -367,7 +391,7 @@ function createPage(lang) {
 </div></section>
 <script type="application/json" id="i18n">${JSON.stringify({ lang, ui: S, home: u(lang, "/"), manage: u(lang, "/manage/") })}</script>
 <script type="module" src="/assets/create.js?v=${V}"></script>`;
-  write(u(lang, p), page(lang, { title: K.title, desc: K.desc, path: alt[lang], alt, noSupport: false }, body));
+  write(u(lang, p), page(lang, { title: K.title, desc: K.desc, path: alt[lang], alt, noSupport: true }, body));
 }
 
 function managePage(lang) {

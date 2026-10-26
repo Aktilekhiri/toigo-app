@@ -8,6 +8,7 @@ import * as media from "../functions/media/[id].js";
 import * as invPage from "../functions/i/[slug].js";
 import * as sitemap from "../functions/sitemap.xml.js";
 import * as robots from "../functions/robots.txt.js";
+import * as pay from "../functions/api/pay.js";
 
 const ROUTES = [
   [/^\/api\/invitations\/?$/, invitations, []],
@@ -25,6 +26,7 @@ const METHOD = { GET: "onRequestGet", HEAD: "onRequestGet", POST: "onRequestPost
 
 async function route(request, env, ctx) {
   const url = new URL(request.url);
+  if (/^\/api\/(access|activate|order|tg|setup)\/?$/.test(url.pathname)) return pay.handle(request, env, url);
   for (const [re, mod, names] of ROUTES) {
     const m = re.exec(url.pathname);
     if (!m) continue;

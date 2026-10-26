@@ -11,8 +11,8 @@
   gtag('config', 'G-RSYZ3T9W8C');
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Чакыруу түзүү — акысыз | Тойго</title>
-<meta name="description" content="Онлайн чакыруу конструктору: дизайн, аттар, күн, жер, программа, сүрөттөр жана конок жообу. Акысыз жана катталбастан.">
+<title>Чакыруу түзүү | Тойго</title>
+<meta name="description" content="Онлайн чакыруу конструктору: дизайн, аттар, күн, жер, программа, сүрөттөр жана конок жообу. Биринчи чакыруу акысыз, катталбастан.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="__ORIGIN__/create/">
 <link rel="alternate" hreflang="ky" href="__ORIGIN__/create/">
@@ -21,8 +21,8 @@
 <meta name="theme-color" content="#FFFFFF">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Тойго">
-<meta property="og:title" content="Чакыруу түзүү — акысыз | Тойго">
-<meta property="og:description" content="Онлайн чакыруу конструктору: дизайн, аттар, күн, жер, программа, сүрөттөр жана конок жообу. Акысыз жана катталбастан.">
+<meta property="og:title" content="Чакыруу түзүү | Тойго">
+<meta property="og:description" content="Онлайн чакыруу конструктору: дизайн, аттар, күн, жер, программа, сүрөттөр жана конок жообу. Биринчи чакыруу акысыз, катталбастан.">
 <meta property="og:url" content="__ORIGIN__/create/">
 <meta property="og:image" content="__ORIGIN__/img/og-ky.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
@@ -34,9 +34,9 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/yeseva-one-cyrillic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/rubik-cyrillic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=mvayfvr9">
-<link rel="stylesheet" href="/assets/site.css?v=mvayfvr9">
-<link rel="stylesheet" href="/assets/invite.css?v=mvayfvr9">
+<link rel="stylesheet" href="/assets/fonts.css?v=mvplg8j0">
+<link rel="stylesheet" href="/assets/site.css?v=mvplg8j0">
+<link rel="stylesheet" href="/assets/invite.css?v=mvplg8j0">
 <script type="importmap">{"imports":{"three":"/assets/vendor/three.module.min.js"}}</script>
 
 </head>
@@ -45,7 +45,7 @@
 <header class="hdr"><div class="wrap">
   <a class="brand" href="/" aria-label="Тойго"><svg class="orn" viewBox="0 0 40 24" aria-hidden="true"><path d="M20 23C20 13 15 6 9 6C4 6 2 10 3.5 13C5 16 9.5 15.5 9.5 12.5C9.5 10.5 7.5 9.5 6.3 10.6M20 23C20 13 25 6 31 6C36 6 38 10 36.5 13C35 16 30.5 15.5 30.5 12.5C30.5 10.5 32.5 9.5 33.7 10.6M20 23V2M17 5L20 2L23 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Тойго</a>
   <nav class="nav" aria-label="Негизги меню">
-    <a href="/#designs">Дизайндар</a><a href="/#how">Кантип иштейт</a><a href="/#faq">Суроолор</a><a href="/#support">Колдоо</a>
+    <a href="/#designs">Дизайндар</a><a href="/#how">Кантип иштейт</a><a href="/#faq">Суроолор</a><a href="/#price">Баасы</a>
   </nav>
   <div class="lang" role="group" aria-label="Тил / Язык">
     <a href="/create/" hreflang="ky" lang="ky" aria-current="true">KG</a>
@@ -101,43 +101,49 @@
       <div class="fld w"><label class="sw"><input id="f-music" name="music" type="checkbox" checked>Фондук музыка</label><label class="sw"><input id="f-fx" name="fx" type="checkbox" checked>Анимация (көпөлөктөр, гүл, жылдыздар…)</label></div>
       <div class="fld " id="w-track"><label for="f-track">Кайсы музыка</label><select id="f-track" name="track"><option value="komuz">Комуз (Тойго)</option><option value="atlas">Atlas Kyrgyzstan</option><option value="m3">Обон 3</option><option value="m4">Обон 4</option></select><span class="hint">Алдын ала көрүүдөгү ♪ баскычы менен угуп көрүңүз.</span></div>
     </fieldset>
+    <div class="acc" id="acc" hidden></div>
     <div class="submit-row"><button class="btn btn-p" type="submit" id="save">Чакыруу түзүү</button><span class="form-msg" id="form-msg" aria-live="polite"></span></div>
     <div id="done" hidden></div>
+    <section class="pay" id="pay" hidden aria-labelledby="pay-h">
+      <h3 id="pay-h">Түбөлүк жетүү — 500 сом</h3><p>Бир жолу төлөйсүз жана каалагандай чакыруу түзөсүз. Жазылуу жок. Чакырууңуздун долбоору сакталып турат.</p>
+      <div class="pay-step" id="pay-form">
+        <h4>1. QR аркылуу 500 сом төлөңүз</h4>
+        <div class="qrs qrs2">
+          <figure><img src="/img/qr-mbank.jpg" alt="MBank QR" width="300" height="423" loading="lazy">MBank</figure>
+          <figure><img src="/img/qr-obank.png" alt="O!Bank QR" width="300" height="423" loading="lazy">O!Bank</figure>
+        </div>
+        <div class="pay-row"><span>MBank жана O!Bank:</span><code id="pay-phone">+996 702 ••• •••</code><button type="button" class="btn btn-g btn-sm" data-pay="show" data-show="Көрсөтүү" data-hide="Жашыруу">Көрсөтүү</button><button type="button" class="btn btn-g btn-sm" data-pay="copy" data-done="Көчүрүлдү">Көчүрүү</button></div>
+        <div class="pay-row"><span>Алуучу:</span><b>Актилек К.</b></div>
+        <p class="hint">Чет өлкөдөн? PayPal аркылуу $6 төлөп, чекти ушул жерге жөнөтүңүз. <a href="https://www.paypal.com/ncp/payment/22SJHEYSCCUY8" target="_blank" rel="noopener">PayPal менен төлөө</a></p>
+        <h4>2. Чекти жөнөтүңүз</h4>
+        <div class="fld w"><label for="pay-rc">Төлөм чеги (скриншот)</label><input id="pay-rc" type="file" accept="image/*,application/pdf"></div>
+        <div class="fld w"><label for="pay-ct">Telegram же WhatsApp</label><input id="pay-ct" type="text" maxlength="80" autocomplete="tel" placeholder="@username же +996…"></div>
+        <button type="button" class="btn btn-gold" id="pay-send">Чекти жөнөтүү</button>
+        <h4>3. Ачкычты алыңыз</h4><p class="hint">Төлөмдү текшеребиз жана ачкыч ушул жерде өзү пайда болот. Адатта бир сааттын ичинде. Баракчаны жаап койсоңуз болот.</p>
+      </div>
+      <p class="pay-msg" id="pay-msg" aria-live="polite"></p>
+      <details class="pay-key"><summary>Менде ачкыч бар</summary>
+        <div class="copyrow"><input id="pay-key" type="text" maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="TOI-XXXX-XXXX-XXXX" aria-label="Менде ачкыч бар"><button type="button" class="btn btn-p btn-sm" id="pay-act">Күйгүзүү</button></div>
+      </details>
+    </section>
   </form>
   <div class="pv" aria-label="Бул алдын ала көрүү">
     <div class="phone"><div class="scr" id="preview"></div></div>
     <span class="pv-note">Бул алдын ала көрүү</span>
   </div>
 </div></section>
-<script type="application/json" id="i18n">{"lang":"ky","ui":{"lg1":"Той жана дизайн","lg2":"Аттар","lg3":"Күн жана жер","lg4":"Мазмун","lg5":"Сүрөт жана кошумча","l_type":"Той түрү","l_tpl":"Дизайн","l_lang":"Чакыруунун тили","o_ky":"Кыргызча","o_ru":"Орусча","o_both":"Эки тилде","n_pair":"Күйөө бала","n_bride":"Келин","n_kyz":"Кыздын аты","n_child":"Баланын аты","n_jub":"Юбилярдын аты","n_bday":"Аты","l_hosts":"Той ээлери","ph_hosts":"Мисалы: Асановдор үй-бүлөсү","l_date":"Күнү","l_time":"Саат","l_venue":"Той өтүүчү жай","ph_venue":"Мисалы: «Шумкар» той үйү","l_addr":"Дареги","l_age":"Жашы","ph_age":"Мисалы: 60","h_age":"Милдеттүү эмес. Кээ бир дизайндарда чоң сан болуп чыгат.","l_ready":"Даяр тексттер:","l_hall":"Зал (баарына бирдей)","ph_hall":"Мисалы: 1-зал","h_hall":"Милдеттүү эмес. Ар бир коноктун столун «Менин чакырууларым» баракчасындагы жеке чакырууларда жазасыз.","ph_addr":"Шаар, көчө, үй","h_addr":"Дарек боюнча 2GIS жана Google Maps шилтемелери өзү түзүлөт.","l_msg":"Конокторго кайрылуу","l_prog":"Программа","h_prog":"Ар бир сап: саат — иш-чара","l_dress":"Дресс-код","h_opt":"Милдеттүү эмес","l_photos":"Сүрөттөр","b_photos":"Сүрөт кошуу","h_photos":"6 сүрөткө чейин. Сүрөттөр автоматтык түрдө кичирейтилет.","l_dl":"Жоопту качанга чейин күтөсүз","l_phone":"Байланыш телефону","h_phone":"Коноктор WhatsApp аркылуу жаза алышат. Милдеттүү эмес.","l_music":"Фондук музыка","l_track":"Кайсы музыка","h_track":"Алдын ала көрүүдөгү ♪ баскычы менен угуп көрүңүз.","l_fx":"Анимация (көпөлөктөр, гүл, жылдыздар…)","inv_h":"Жеке чакыруулар","inv_p":"Конокторго ысымы менен чакыруу жибериңиз. Ар бирине өзүнчө шилтеме түзүлөт: чакыруу «Урматтуу Актилек…» деп башталат, ким ачканын жана ким жооп бергенин көрөсүз. Атын жазбасаңыз, жалпы шилтемени колдонуңуз.","inv_add_l":"Конокторду кошуу","inv_add_h":"Ар бир сап — бир конок. Үтүр аркылуу телефон жана стол (милдеттүү эмес): Актилек Казиев Кубанычбекович, +996 702 000 000, 16-стол","inv_seat":"Стол","inv_seat_ph":"мис. 16-стол","inv_saved":"Сакталды","inv_add":"Тизмеге кошуу","inv_none":"Азырынча жеке шилтемелер жок.","inv_th":"Конок","inv_st":"Абалы","inv_sent":"Ачыла элек","inv_open":"Ачты","inv_yes":"Келет","inv_no":"Келе албайт","inv_send":"Жөнөтүү","inv_copy":"Шилтеме","inv_text":"Урматтуу {name}! Сизди тоюбузга чакырабыз.\n{title}","inv_added":"Кошулду","inv_max":"Бир чакырууга 500 конокко чейин.","save":"Чакыруу түзүү","update":"Өзгөртүүлөрдү сактоо","saving":"Сакталууда…","uploading":"Жүктөлүүдө…","need_name":"Атын жазыңыз","net":"Сакталган жок. Интернетти текшерип, кайра басыңыз.","rate":"Өтө көп аракет болду. Бир сааттан кийин кайра аракет кылыңыз.","photo_fail":"Сүрөт жүктөлгөн жок. Башка сүрөт тандап көрүңүз.","photo_max":"Эң көп 6 сүрөт кошсо болот.","photo_wait":"Сүрөттөр жүктөлүп бүтө элек.","done_h":"Чакыруу даяр!","done_p":"Бул шилтемени конокторго жөнөтүңүз:","copy":"Көчүрүү","copied":"Көчүрүлдү","open":"Ачып көрүү","wa":"WhatsApp аркылуу жөнөтүү","tg":"Telegram","manage_h":"Башкаруу шилтемеси","manage_warn":"Бул шилтемени сактап коюңуз жана эч кимге бербеңиз. Ал аркылуу чакырууну өзгөртүп, коноктордун тизмесин көрөсүз. Шилтеме ушул түзмөктө да сакталды.","manage_open":"Коноктордун тизмесин ачуу","share_text":"Сиздерди тоюбузга чакырабыз!","updated":"Сакталды","load_fail":"Чакыруу табылган жок же шилтеме туура эмес.","edit_h1":"Чакырууну өзгөртүү","preview_note":"Бул алдын ала көрүү","m_none":"Бул түзмөктө азырынча чакыруу жок.","m_create":"Жаңы чакыруу түзүү","m_hint":"Башка түзмөктө түзгөн болсоңуз, башкаруу шилтемесин ошол жерден ачыңыз.","views":"Көрүүлөр","yes":"Келет","no":"Келе албайт","total":"Жалпы адам","th_name":"Аты","th_status":"Жооп","th_count":"Адам","th_note":"Каалоо","th_date":"Качан","del":"Өчүрүү","edit":"Өзгөртүү","csv":"Тизмени жүктөө (CSV)","del_inv":"Чакырууну өчүрүү","del_confirm":"Чакыруу, бардык жооптор жана сүрөттөр биротоло өчүрүлөт. Шилтеме иштебей калат.","del_yes":"Ооба, өчүрүү","cancel":"Жок","deleted":"Чакыруу өчүрүлдү.","no_answers":"Азырынча эч ким жооп бере элек. Шилтемени конокторго жөнөтүңүз.","link":"Чакыруунун шилтемеси","refresh":"Жаңылоо","bad_link":"Шилтеме туура эмес же чакыруу өчүрүлгөн.","answers":"Жооптор","loading":"Жүктөлүүдө…"},"home":"/","manage":"/manage/"}</script>
-<script type="module" src="/assets/create.js?v=mvayfvr9"></script>
+<script type="application/json" id="i18n">{"lang":"ky","ui":{"lg1":"Той жана дизайн","lg2":"Аттар","lg3":"Күн жана жер","lg4":"Мазмун","lg5":"Сүрөт жана кошумча","l_type":"Той түрү","l_tpl":"Дизайн","l_lang":"Чакыруунун тили","o_ky":"Кыргызча","o_ru":"Орусча","o_both":"Эки тилде","n_pair":"Күйөө бала","n_bride":"Келин","n_kyz":"Кыздын аты","n_child":"Баланын аты","n_jub":"Юбилярдын аты","n_bday":"Аты","l_hosts":"Той ээлери","ph_hosts":"Мисалы: Асановдор үй-бүлөсү","l_date":"Күнү","l_time":"Саат","l_venue":"Той өтүүчү жай","ph_venue":"Мисалы: «Шумкар» той үйү","l_addr":"Дареги","l_age":"Жашы","ph_age":"Мисалы: 60","h_age":"Милдеттүү эмес. Кээ бир дизайндарда чоң сан болуп чыгат.","l_ready":"Даяр тексттер:","l_hall":"Зал (баарына бирдей)","ph_hall":"Мисалы: 1-зал","h_hall":"Милдеттүү эмес. Ар бир коноктун столун «Менин чакырууларым» баракчасындагы жеке чакырууларда жазасыз.","ph_addr":"Шаар, көчө, үй","h_addr":"Дарек боюнча 2GIS жана Google Maps шилтемелери өзү түзүлөт.","l_msg":"Конокторго кайрылуу","l_prog":"Программа","h_prog":"Ар бир сап: саат — иш-чара","l_dress":"Дресс-код","h_opt":"Милдеттүү эмес","l_photos":"Сүрөттөр","b_photos":"Сүрөт кошуу","h_photos":"6 сүрөткө чейин. Сүрөттөр автоматтык түрдө кичирейтилет.","l_dl":"Жоопту качанга чейин күтөсүз","l_phone":"Байланыш телефону","h_phone":"Коноктор WhatsApp аркылуу жаза алышат. Милдеттүү эмес.","l_music":"Фондук музыка","l_track":"Кайсы музыка","h_track":"Алдын ала көрүүдөгү ♪ баскычы менен угуп көрүңүз.","l_fx":"Анимация (көпөлөктөр, гүл, жылдыздар…)","inv_h":"Жеке чакыруулар","inv_p":"Конокторго ысымы менен чакыруу жибериңиз. Ар бирине өзүнчө шилтеме түзүлөт: чакыруу «Урматтуу Актилек…» деп башталат, ким ачканын жана ким жооп бергенин көрөсүз. Атын жазбасаңыз, жалпы шилтемени колдонуңуз.","inv_add_l":"Конокторду кошуу","inv_add_h":"Ар бир сап — бир конок. Үтүр аркылуу телефон жана стол (милдеттүү эмес): Актилек Казиев Кубанычбекович, +996 702 000 000, 16-стол","inv_seat":"Стол","inv_seat_ph":"мис. 16-стол","inv_saved":"Сакталды","inv_add":"Тизмеге кошуу","inv_none":"Азырынча жеке шилтемелер жок.","inv_th":"Конок","inv_st":"Абалы","inv_sent":"Ачыла элек","inv_open":"Ачты","inv_yes":"Келет","inv_no":"Келе албайт","inv_send":"Жөнөтүү","inv_copy":"Шилтеме","inv_text":"Урматтуу {name}! Сизди тоюбузга чакырабыз.\n{title}","inv_added":"Кошулду","inv_max":"Бир чакырууга 500 конокко чейин.","save":"Чакыруу түзүү","update":"Өзгөртүүлөрдү сактоо","saving":"Сакталууда…","uploading":"Жүктөлүүдө…","need_name":"Атын жазыңыз","net":"Сакталган жок. Интернетти текшерип, кайра басыңыз.","rate":"Өтө көп аракет болду. Бир сааттан кийин кайра аракет кылыңыз.","photo_fail":"Сүрөт жүктөлгөн жок. Башка сүрөт тандап көрүңүз.","photo_max":"Эң көп 6 сүрөт кошсо болот.","photo_wait":"Сүрөттөр жүктөлүп бүтө элек.","done_h":"Чакыруу даяр!","done_p":"Бул шилтемени конокторго жөнөтүңүз:","copy":"Көчүрүү","copied":"Көчүрүлдү","open":"Ачып көрүү","wa":"WhatsApp аркылуу жөнөтүү","tg":"Telegram","manage_h":"Башкаруу шилтемеси","manage_warn":"Бул шилтемени сактап коюңуз жана эч кимге бербеңиз. Ал аркылуу чакырууну өзгөртүп, коноктордун тизмесин көрөсүз. Шилтеме ушул түзмөктө да сакталды.","manage_open":"Коноктордун тизмесин ачуу","share_text":"Сиздерди тоюбузга чакырабыз!","updated":"Сакталды","load_fail":"Чакыруу табылган жок же шилтеме туура эмес.","edit_h1":"Чакырууну өзгөртүү","preview_note":"Бул алдын ала көрүү","m_none":"Бул түзмөктө азырынча чакыруу жок.","m_create":"Жаңы чакыруу түзүү","m_hint":"Башка түзмөктө түзгөн болсоңуз, башкаруу шилтемесин ошол жерден ачыңыз.","views":"Көрүүлөр","yes":"Келет","no":"Келе албайт","total":"Жалпы адам","th_name":"Аты","th_status":"Жооп","th_count":"Адам","th_note":"Каалоо","th_date":"Качан","del":"Өчүрүү","edit":"Өзгөртүү","csv":"Тизмени жүктөө (CSV)","del_inv":"Чакырууну өчүрүү","del_confirm":"Чакыруу, бардык жооптор жана сүрөттөр биротоло өчүрүлөт. Шилтеме иштебей калат.","del_yes":"Ооба, өчүрүү","cancel":"Жок","deleted":"Чакыруу өчүрүлдү.","no_answers":"Азырынча эч ким жооп бере элек. Шилтемени конокторго жөнөтүңүз.","link":"Чакыруунун шилтемеси","refresh":"Жаңылоо","bad_link":"Шилтеме туура эмес же чакыруу өчүрүлгөн.","answers":"Жооптор","loading":"Жүктөлүүдө…","acc_free":"Биринчи чакыруу акысыз.","acc_used":"Акысыз чакыруу колдонулду. Кийинкилери үчүн — 500 сом бир жолу, түбөлүккө.","acc_ok":"Түбөлүк жетүү күйгүзүлгөн.","acc_buy":"Сатып алуу","pay_h":"Түбөлүк жетүү — 500 сом","pay_p":"Бир жолу төлөйсүз жана каалагандай чакыруу түзөсүз. Жазылуу жок. Чакырууңуздун долбоору сакталып турат.","pay_s1":"1. QR аркылуу 500 сом төлөңүз","pay_phone":"MBank жана O!Bank:","pay_to":"Алуучу:","pay_show":"Көрсөтүү","pay_hide":"Жашыруу","pay_copy":"Көчүрүү","pay_copied":"Көчүрүлдү","pay_abroad":"Чет өлкөдөн? PayPal аркылуу $6 төлөп, чекти ушул жерге жөнөтүңүз.","pay_pp":"PayPal менен төлөө","pay_s2":"2. Чекти жөнөтүңүз","pay_rc":"Төлөм чеги (скриншот)","pay_pick":"Файл тандоо","pay_contact":"Telegram же WhatsApp","pay_contact_ph":"@username же +996…","pay_send":"Чекти жөнөтүү","pay_s3":"3. Ачкычты алыңыз","pay_s3p":"Төлөмдү текшеребиз жана ачкыч ушул жерде өзү пайда болот. Адатта бир сааттын ичинде. Баракчаны жаап койсоңуз болот.","pay_have":"Менде ачкыч бар","pay_key_ph":"TOI-XXXX-XXXX-XXXX","pay_act":"Күйгүзүү","pay_wait":"Чек алынды. Төлөмдүн тастыкталышын күтүп жатабыз, ачкыч ушул жерде өзү чыгат.","pay_ok":"Төлөм тастыкталды! Сиздин ачкычыңыз:","pay_ok2":"Ачкычты сактап коюңуз: башка телефондо да ушул ачкыч менен киресиз (3 түзмөккө чейин). Эми «Чакыруу түзүү» баскычын басыңыз.","pay_no":"Төлөм тастыкталган жок. Ката болсо, Telegram аркылуу жазыңыз: @AktilekKaziev.","pay_need_rc":"Чектин файлын тандаңыз.","pay_need_ct":"Байланышуу үчүн Telegram же WhatsApp номериңизди жазыңыз.","pay_sending":"Чек жөнөтүлүүдө…","pay_often":"Өтө көп аракет. Бир сааттан кийин кайра жөнөтүңүз.","pay_big":"Чектин файлы 8 МБдан чоң. Кичирээк скриншот жөнөтүңүз.","pay_type":"Сүрөт (JPG, PNG) же PDF керек.","pay_notready":"Төлөм кабыл алуу азыр жөндөлүүдө. Telegram аркылуу жазыңыз: @AktilekKaziev.","pay_fail":"Чек жөнөтүлгөн жок. Кайра аракет кылыңыз.","key_bad":"Ачкыч табылган жок же өчүрүлгөн. Катасыз жазылганын текшериңиз.","key_dev":"Бул ачкыч 3 түзмөктө колдонулуп жатат. Телефонуңузду алмаштырсаңыз, бизге жазыңыз.","key_ok":"Ачкыч күйгүзүлдү. Түбөлүк жетүү ачылды.","need_pay":"Акысыз чакыруу колдонулду. Жаңы чакыруу түзүү үчүн түбөлүк жетүүнү сатып алыңыз, бул ылдыйда."},"home":"/","manage":"/manage/"}</script>
+<script type="module" src="/assets/create.js?v=mvplg8j0"></script>
 </main>
-<section class="sec support" id="support" aria-labelledby="sup-h"><div class="wrap sup">
-  <div>
-    <div class="eyebrow"><svg class="orn" viewBox="0 0 40 24" aria-hidden="true"><path d="M20 23C20 13 15 6 9 6C4 6 2 10 3.5 13C5 16 9.5 15.5 9.5 12.5C9.5 10.5 7.5 9.5 6.3 10.6M20 23C20 13 25 6 31 6C36 6 38 10 36.5 13C35 16 30.5 15.5 30.5 12.5C30.5 10.5 32.5 9.5 33.7 10.6M20 23V2M17 5L20 2L23 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Колдоо</div>
-    <h2 id="sup-h" style="margin-top:14px">Сайтты колдоо</h2>
-    <p>Тойго бардыгы үчүн акысыз. Эгер сайт сизге жардам берсе, автордун ишин каалаган сумма менен колдой аласыз: MBank, O!Bank же PayPal аркылуу.</p>
-    <div class="pay-row"><span>MBank жана O!Bank:</span><code id="pay-phone">+996 702 ••• •••</code><button type="button" class="btn btn-g btn-sm" data-pay="show" data-show="Көрсөтүү" data-hide="Жашыруу">Көрсөтүү</button><button type="button" class="btn btn-g btn-sm" data-pay="copy" data-done="Көчүрүлдү">Көчүрүү</button></div>
-    <div class="pay-row"><span>Алуучу:</span><b>Актилек К.</b></div>
-    <div class="acts"><a class="btn btn-gold" href="https://www.paypal.com/ncp/payment/22SJHEYSCCUY8" target="_blank" rel="noopener">PayPal аркылуу колдоо</a></div>
-  </div>
-  <div>
-    <div class="qrs">
-      <figure><img src="/img/qr-mbank.jpg" alt="MBank QR" width="300" height="423" loading="lazy">MBank</figure>
-      <figure><img src="/img/qr-obank.png" alt="O!Bank QR" width="300" height="423" loading="lazy">O!Bank</figure>
-      <figure><img src="/img/qr-paypal.png" alt="PayPal QR" width="300" height="360" loading="lazy">PayPal</figure>
-    </div>
-    <p style="font-size:13px;margin-top:12px">QR-кодду банк тиркемеси менен скандаңыз</p>
-  </div>
-</div></section>
+
 <footer class="ftr"><div class="wrap">
   <div class="cols">
-    <div><a class="brand" href="/"><svg class="orn" viewBox="0 0 40 24" aria-hidden="true"><path d="M20 23C20 13 15 6 9 6C4 6 2 10 3.5 13C5 16 9.5 15.5 9.5 12.5C9.5 10.5 7.5 9.5 6.3 10.6M20 23C20 13 25 6 31 6C36 6 38 10 36.5 13C35 16 30.5 15.5 30.5 12.5C30.5 10.5 32.5 9.5 33.7 10.6M20 23V2M17 5L20 2L23 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Тойго</a><p style="margin-top:12px;max-width:36ch">Тойго акысыз онлайн чакыруулар. Кыргызстан үчүн жасалган.</p></div>
+    <div><a class="brand" href="/"><svg class="orn" viewBox="0 0 40 24" aria-hidden="true"><path d="M20 23C20 13 15 6 9 6C4 6 2 10 3.5 13C5 16 9.5 15.5 9.5 12.5C9.5 10.5 7.5 9.5 6.3 10.6M20 23C20 13 25 6 31 6C36 6 38 10 36.5 13C35 16 30.5 15.5 30.5 12.5C30.5 10.5 32.5 9.5 33.7 10.6M20 23V2M17 5L20 2L23 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Тойго</a><p style="margin-top:12px;max-width:36ch">Тойго — тойго онлайн чакыруулар. Кыргызстан үчүн жасалган.</p></div>
     <div><h3>Той түрлөрү</h3><ul><li><a href="/toi/uylonuu-toi/">Үйлөнүү той</a></li><li><a href="/toi/kyz-uzatuu/">Кыз узатуу</a></li><li><a href="/toi/sunnot-toi/">Сүннөт той</a></li><li><a href="/toi/tushoo-kesuu/">Тушоо кесүү</a></li><li><a href="/toi/maarake/">Маараке</a></li><li><a href="/toi/tuulgan-kun/">Туулган күн</a></li></ul></div>
-    <div><h3>Сайт</h3><ul><li><a href="/create/">Чакыруу түзүү</a></li><li><a href="/manage/">Менин чакырууларым</a></li><li><a href="/#faq">Суроолор</a></li><li><a href="#support">Колдоо</a></li><li><a href="/privacy/">Купуялык саясаты</a></li></ul></div>
+    <div><h3>Сайт</h3><ul><li><a href="/create/">Чакыруу түзүү</a></li><li><a href="/manage/">Менин чакырууларым</a></li><li><a href="/#faq">Суроолор</a></li><li><a href="/#price">Баасы</a></li><li><a href="/privacy/">Купуялык саясаты</a></li></ul></div>
   </div>
   <div class="copy"><span>© 2026 Тойго. Бардык укуктар корголгон.</span><span><a href="/" lang="ky">Кыргызча</a> · <a href="/ru/" lang="ru">Русский</a></span></div>
 </div></footer>
-<script type="module" src="/assets/site.js?v=mvayfvr9"></script>
+<script type="module" src="/assets/site.js?v=mvplg8j0"></script>
 </body>
 </html>

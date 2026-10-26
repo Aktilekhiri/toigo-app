@@ -1,4 +1,6 @@
 name = "toigo-app"
+# Variables and secrets added in the Cloudflare dashboard are kept on deploys from GitHub.
+keep_vars = true
 main = "src/worker.js"
 compatibility_date = "2025-07-01"
 
