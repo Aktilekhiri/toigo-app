@@ -1,6 +1,6 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mvplg8j0";
-import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mvplg8j0";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mvpm4ykr";
+import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mvpm4ykr";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -256,7 +256,8 @@ async function loadAccess() {
     if (accKey() && a.keyError) store.del("toigo-key");
     Object.assign(access, { licensed: a.licensed, freeLeft: a.freeLeft, known: true });
     showAccess();
-    if (!a.licensed && !a.freeLeft && store.get("toigo-order")) { $("#pay").hidden = false; pollOrder(); }
+    if (!a.licensed && store.get("toigo-order")) { $("#pay").hidden = false; pollOrder(); }
+    if (location.hash === "#buy" && !a.licensed) openPay();
   } catch (_) {}
 }
 function licensed(key, text) {

@@ -111,10 +111,10 @@ function priceBlock(lang) {
     <p class="prc-pay">${P.pay}</p>
   </div>
   <div class="prc-cards">
-    <div class="prc-card"><span>${P.free}</span><b>${P.freeP}</b><ul>${P.freeList.map(x => `<li>${x}</li>`).join("")}</ul></div>
+    <div class="prc-card"><span>${P.free}</span><b>${P.freeP}</b><ul>${P.freeList.map(x => `<li>${x}</li>`).join("")}</ul><a class="btn btn-g" href="${u(lang, "/create/")}">${P.btn}</a></div>
     <div class="prc-card prc-main"><span>${P.per}</span><b>${P.sum}</b>
       <ul>${P.list.map(x => `<li>${x.replace("{n}", TPL.length)}</li>`).join("")}</ul>
-      <a class="btn btn-p" href="${u(lang, "/create/")}">${P.btn}</a></div>
+      <a class="btn btn-gold" href="${u(lang, "/create/")}#buy">${P.buy}</a></div>
   </div>
 </div></section>`;
 }

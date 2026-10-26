@@ -168,7 +168,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .prc-card ul{list-style:none;margin:10px 0 18px;padding:0;display:grid;gap:8px;font-size:15px}
 .prc-card li{padding-left:24px;position:relative}
 .prc-card li::before{content:"";position:absolute;left:2px;top:.5em;width:12px;height:7px;border-left:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(-45deg) translateY(-3px)}
-.prc-main .btn{align-self:flex-start;margin-top:auto}
+.prc-card .btn{align-self:flex-start;margin-top:auto}
 @media (max-width:860px){.prc{grid-template-columns:1fr;gap:28px}}
 @media (max-width:520px){.prc-cards{grid-template-columns:1fr}}
 /* Constructor: access status and payment panel */
