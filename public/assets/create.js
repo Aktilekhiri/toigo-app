@@ -1,6 +1,6 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mw4gx5rk";
-import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mw4gx5rk";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mw4hqq5n";
+import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mw4hqq5n";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -254,7 +254,7 @@ function showAccess() {
   } else {
     box.className = "acc used"; box.innerHTML = `<span>${S.acc_used}</span>${btn(S.acc_buy)}`;
   }
-  const go = $("#pay-go"); if (go) go.textContent = canRenew() ? S.pay_renew : S.pay_go;
+  setGoLabel();
   const kb = $("#pay-keybox");
   if (kb) {
     if (accKey() && (access.licensed || access.expires)) {
@@ -264,6 +264,12 @@ function showAccess() {
     } else kb.hidden = true;
   }
 }
+const planSel = () => document.querySelector('#pay input[name="plan"]:checked') || document.querySelector('#pay input[name="plan"]');
+function setGoLabel() {
+  const go = $("#pay-go"), pl = planSel(); if (!go || !pl) return;
+  go.textContent = (canRenew() || (accKey() && access.expires && !access.licensed) ? S.pay_renew : S.pay_go).replace("{p}", pl.dataset.price);
+}
+document.addEventListener("change", e => { if (e.target.matches('#pay input[name="plan"]')) setGoLabel(); });
 function openPay() {
   const p = $("#pay"); p.hidden = false;
   p.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -323,7 +329,7 @@ document.addEventListener("click", async e => {
     const b = $("#pay-go"); b.disabled = true; payMsg(S.pay_open);
     try {
       const renew = canRenew() || (accKey() && access.expires && !access.licensed);
-      const r = await fetch("/api/pay", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ device: DEVICE, key: renew ? accKey() : "", lang: LANG }) });
+      const r = await fetch("/api/pay", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ device: DEVICE, key: renew ? accKey() : "", lang: LANG, plan: planSel().value }) });
       const j = await r.json().catch(() => ({}));
       if (r.ok && j.url) { store.set("toigo-order", { id: j.id, token: j.token }); location.href = j.url; return; }
       payMsg(r.status === 409 ? S.pay_life : r.status === 429 ? S.pay_often : r.status === 503 ? S.pay_off : S.pay_err);

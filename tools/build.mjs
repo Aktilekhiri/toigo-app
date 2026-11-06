@@ -113,7 +113,7 @@ function priceBlock(lang) {
   <div class="prc-cards">
     <div class="prc-card"><span>${P.free}</span><b>${P.freeP}</b><ul>${P.freeList.map(x => `<li>${x}</li>`).join("")}</ul><a class="btn btn-g" href="${u(lang, "/create/")}">${P.btn}</a></div>
     <div class="prc-card prc-main"><span>${P.per}</span><b>${P.sum}</b>
-      <ul>${P.list.map(x => `<li>${x.replace("{n}", TPL.length)}</li>`).join("")}</ul>
+      <p class="prc-year">${P.year} <i>${P.yearNote}</i></p><ul>${P.list.map(x => `<li>${x.replace("{n}", TPL.length)}</li>`).join("")}</ul>
       <a class="btn btn-gold" href="${u(lang, "/create/")}#buy">${P.buy}</a></div>
   </div>
 </div></section>`;
@@ -222,7 +222,7 @@ function homePage(lang) {
     { "@context": "https://schema.org", "@type": "WebSite", name: "Тойго", url: O + "/", inLanguage: ["ky", "ru"] },
     { "@context": "https://schema.org", "@type": "Organization", name: "Тойго", url: O + "/", logo: O + "/icon-512.png" },
     { "@context": "https://schema.org", "@type": "WebApplication", name: "Тойго", url: O + u(lang, "/create/"), applicationCategory: "LifestyleApplication", operatingSystem: "Any",
-      inLanguage: lang, description: H.desc, offers: [{ "@type": "Offer", name: C[lang].price.free, price: "0", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].price.per, price: "300", priceCurrency: "KGS" }] },
+      inLanguage: lang, description: H.desc, offers: [{ "@type": "Offer", name: C[lang].price.free, price: "0", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].price.per, price: "100", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].price.year, price: "500", priceCurrency: "KGS" }] },
     faqLd(C[lang].faq)
   ];
   const cat = id => CATS.find(c => c.id === id);
@@ -320,7 +320,7 @@ function payPanel(lang) {
   const S = UI[lang];
   return `<section class="pay" id="pay" hidden aria-labelledby="pay-h">
       <h3 id="pay-h">${S.pay_h}</h3><p>${S.pay_p}</p>
-      <div class="pay-price"><b>300</b><span>${S.pay_per}</span></div>
+      <div class="plans" role="radiogroup" aria-label="${S.pay_h}">${Object.entries(S.plans).map(([id, [n, pr, per, note]], i) => `<label class="plan"><input type="radio" name="plan" value="${id}" data-price="${pr}"${i === 0 ? " checked" : ""}><span><em>${n}</em><b>${pr}</b><small>${per}</small>${note ? `<i>${note}</i>` : ""}</span></label>`).join("")}</div>
       <ul class="pay-list">${S.pay_list.map(x => `<li>${x}</li>`).join("")}</ul>
       <button type="button" class="btn btn-gold" id="pay-go">${S.pay_go}</button>
       <p class="hint">${S.pay_how}</p>

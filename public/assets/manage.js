@@ -1,5 +1,5 @@
 // Toigo — host page: guest answers, edit link, delete.
-import { titleOf, esc } from "/assets/invite-core.js?v=mw4gx5rk";
+import { titleOf, esc } from "/assets/invite-core.js?v=mw4hqq5n";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -61,7 +61,7 @@ async function load(slug, key) {
   <section class="invitees" aria-labelledby="inv-h">
     <h2 id="inv-h" style="font-size:26px;margin:8px 0 8px">${S.inv_h}</h2>
     <p style="color:var(--muted);max-width:62ch;margin:0 0 16px">${S.inv_p}</p>
-    <div class="fld" style="max-width:640px"><label for="inv-add">${S.inv_add_l}</label><textarea id="inv-add" rows="4" placeholder="Актилек Казиев Кубанычбекович, +996 702 000 000"></textarea><span class="hint">${S.inv_add_h}</span></div>
+    <div class="fld" style="max-width:640px"><label for="inv-add">${S.inv_add_l}</label><textarea id="inv-add" rows="4" placeholder="Азамат Асанов, +996 700 000 000"></textarea><span class="hint">${S.inv_add_h}</span></div>
     <div class="submit-row" style="margin:10px 0 18px"><button type="button" class="btn btn-p btn-sm" id="inv-add-btn">${S.inv_add}</button><span class="form-msg" id="inv-msg" aria-live="polite"></span></div>
     <div class="tbl">${invitees.length ? `<table><thead><tr><th>${S.inv_th}</th><th>${S.inv_seat}</th><th>${S.inv_st}</th><th></th></tr></thead><tbody>
       ${invitees.map(x => { const a = answerOf(x.id); const st = a ? `<span class="pill ${a.attending ? "y" : "x"}">${a.attending ? S.inv_yes : S.inv_no}${a.attending && a.guests > 1 ? " · " + a.guests : ""}</span>` : x.opens ? `<span class="pill o">${S.inv_open}</span>` : `<span class="pill s">${S.inv_sent}</span>`;

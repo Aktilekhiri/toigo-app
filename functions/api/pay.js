@@ -1,4 +1,4 @@
-// Toigo — paid access: first invitation free, then a subscription of 300 som for 30 days (key on 3 devices).
+// Toigo — paid access: first invitation free, then a subscription: 100 som / 30 days or 500 som / 365 days (key on 3 devices).
 // Payment is automatic through Finik (QR in any Kyrgyz bank app), the same account as diamond.kg and clip4k.app:
 // the site creates a payment, the person pays on the Finik page, Finik sends a signed webhook and the key
 // is issued (or extended) by itself. Lifetime keys sold earlier keep working without a date.
@@ -20,8 +20,9 @@ import { json } from "../../lib/server.js";
 import { finikReady, createFinikPayment, readFinikWebhook, PAY_MIN } from "./finik.js";
 
 export const FREE = 1;          // free invitations per device
-export const PRICE = 300;       // som per subscription period
-export const DAYS = 30;         // days per subscription period
+export const PLANS = { month: { price: 100, days: 30 }, year: { price: 500, days: 365 } };
+export const PRICE = PLANS.month.price;   // cheapest plan, shown when access is refused
+export const DAYS = PLANS.month.days;     // default days for /newkey
 const DAY = 864e5;
 const MAX_DEVICES = 3;          // devices per key
 const IP_FREE_30D = 4;          // free invitations from one IP in 30 days (clearing the browser does not reset it)
@@ -54,7 +55,7 @@ export async function ensure(env) {
   const cols = async t => (await env.DB.prepare(`PRAGMA table_info(${t})`).all()).results.map(c => c.name);
   const lc = await cols("pay_licenses"), oc = await cols("pay_orders");
   if (!lc.includes("expires")) await env.DB.prepare("ALTER TABLE pay_licenses ADD COLUMN expires INTEGER").run();   // NULL = lifetime
-  for (const [c, type] of [["amount", "REAL"], ["method", "TEXT"], ["pay_url", "TEXT"], ["fee", "REAL"], ["renew_key", "TEXT"]])
+  for (const [c, type] of [["amount", "REAL"], ["method", "TEXT"], ["pay_url", "TEXT"], ["fee", "REAL"], ["renew_key", "TEXT"], ["days", "INTEGER"]])
     if (!oc.includes(c)) await env.DB.prepare(`ALTER TABLE pay_orders ADD COLUMN ${c} ${type}`).run();
   ready = true;
 }
@@ -218,7 +219,7 @@ export async function handle(request, env, url) {
     const device = url.searchParams.get("device") || "", key = normKey(url.searchParams.get("key"));
     if (!DEV_RE.test(device)) return json({ error: "device" }, 400);
     const lic = key ? await licenseFor(env, key, device, false) : { ok: false };
-    return json({ licensed: lic.ok, expires: lic.expires || null, keyError: key && !lic.ok ? lic.reason : undefined, freeLeft: await freeLeft(env, device), free: FREE, price: PRICE, days: DAYS, pay: finikReady(env) });
+    return json({ licensed: lic.ok, expires: lic.expires || null, keyError: key && !lic.ok ? lic.reason : undefined, freeLeft: await freeLeft(env, device), free: FREE, plans: PLANS, pay: finikReady(env) });
   }
 
   if (p === "/api/activate" && request.method === "POST") {
@@ -239,6 +240,7 @@ export async function handle(request, env, url) {
     if (!finikReady(env)) return json({ error: "notready" }, 503);
     const b = await request.json().catch(() => ({}));
     const device = String(b.device || ""), key = b.key ? normKey(b.key) : "", lang = b.lang === "ru" ? "ru" : "ky";
+    const planId = PLANS[b.plan] ? b.plan : "month", plan = PLANS[planId];
     if (!DEV_RE.test(device)) return json({ error: "device" }, 400);
     let renew = null;
     if (key) {
@@ -251,11 +253,11 @@ export async function handle(request, env, url) {
     if (await ipCount(env, ip, "pay", 3600e3) >= 10) return json({ error: "often" }, 429);
     const id = "TG" + randStr(10), token = randStr(24);
     await env.DB.batch([
-      env.DB.prepare("INSERT INTO pay_orders (id, token, created, status, device, ip, amount, method, renew_key) VALUES (?, ?, ?, 'pending', ?, ?, ?, 'finik', ?)").bind(id, token, now(), device, ip, PRICE, renew),
+      env.DB.prepare("INSERT INTO pay_orders (id, token, created, status, device, ip, amount, method, renew_key, days) VALUES (?, ?, ?, 'pending', ?, ?, ?, 'finik', ?, ?)").bind(id, token, now(), device, ip, plan.price, renew, plan.days),
       env.DB.prepare("INSERT INTO pay_ipuse (ip, ts, kind) VALUES (?, ?, 'pay')").bind(ip, now())
     ]);
     const back = `${url.origin}${lang === "ru" ? "/ru" : ""}/create/?paid=${id}&t=${token}#buy`;
-    const r = await createFinikPayment(env, { id, amount: PRICE, description: `Тойго — ${renew ? "продление" : "подписка"} на ${DAYS} дней` }, back, `${url.origin}/api/finik/webhook`);
+    const r = await createFinikPayment(env, { id, amount: plan.price, description: `Тойго — ${renew ? "продление" : "подписка"} на ${planId === "year" ? "1 год" : plan.days + " дней"}` }, back, `${url.origin}/api/finik/webhook`);
     if (r.error) {
       await env.DB.prepare("UPDATE pay_orders SET status = 'failed' WHERE id = ?").bind(id).run();
       console.error("finik create", r.error);
@@ -280,10 +282,10 @@ export async function handle(request, env, url) {
     if (!o) { await notifyAdmin(env, `⚠️ Тойго/Finik: оплата ${paid} сом по неизвестному заказу ${id} (транзакция ${tx}). Проверьте в кабинете Finik.`); return new Response("ok"); }
     if (paid + 0.001 < (o.amount || PRICE)) { await notifyAdmin(env, `⚠️ Тойго/Finik: заказ ${id} оплачен не полностью: ${paid} из ${o.amount} сом. Ключ НЕ выдан.`); return new Response("ok"); }
     if (o.status === "approved") return new Response("ok");
-    const g = await grant(env, { key: o.renew_key, device: o.device, ref: id, note: "finik " + id });
+    const g = await grant(env, { key: o.renew_key, device: o.device, ref: id, note: "finik " + id, days: o.days || DAYS });
     const fee = Math.round(paid * Number(env.FINIK_FEE_PCT || 0.02) * 100) / 100;
     await env.DB.prepare("UPDATE pay_orders SET status = 'approved', license_key = ?, fee = ? WHERE id = ?").bind(g.key, fee, id).run();
-    await notifyAdmin(env, `💳 Тойго: оплата ${paid} сом (Finik)\n${g.renewed ? "🔁 Продление" : "🆕 Новая подписка"}: ${g.key}\nДействует ${g.expires ? "до " + fmtDate(g.expires) : "навсегда"}\nКомиссия ≈ ${fee} сом`);
+    await notifyAdmin(env, `💳 Тойго: оплата ${paid} сом (Finik)\n${g.renewed ? "🔁 Продление" : "🆕 Новая подписка"} (${(o.days || DAYS) >= 365 ? "год" : "месяц"}): ${g.key}\nДействует ${g.expires ? "до " + fmtDate(g.expires) : "навсегда"}\nКомиссия ≈ ${fee} сом`);
     return new Response("ok");
   }
 
