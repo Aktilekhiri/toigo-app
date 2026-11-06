@@ -1,6 +1,6 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mvpm4ykr";
-import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mvpm4ykr";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mw4g8zmv";
+import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mw4g8zmv";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -192,8 +192,8 @@ form.addEventListener("submit", async e => {
     if (!edit && (r.status === 402 || r.status === 409)) {
       const e = await r.json().catch(() => ({}));
       if (e.error === "badkey") { store.del("toigo-key"); }
-      msg.textContent = e.error === "devices" ? S.key_dev : S.need_pay;
-      access.licensed = false; access.freeLeft = 0; showAccess(); openPay(); return;
+      msg.textContent = e.error === "devices" ? S.key_dev : e.error === "expired" ? S.need_renew : S.need_pay;
+      access.licensed = false; access.freeLeft = 0; if (e.expires) access.expires = e.expires; showAccess(); openPay(); return;
     }
     if (!r.ok) throw 0;
     const res = await r.json();
@@ -229,20 +229,40 @@ function done(slug, key) {
   box.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-// ---------- access: first invitation free, then lifetime key (500 som) ----------
+// ---------- access: first invitation free, then a subscription (300 som / 30 days, Finik) ----------
 function newDevice() { const b = crypto.getRandomValues(new Uint8Array(16)); return [...b].map(x => x.toString(16).padStart(2, "0")).join(""); }
 const DEVICE = (() => { let v = store.get("toigo-dev"); if (!/^[0-9a-f]{32}$/.test(v || "")) { v = newDevice(); store.set("toigo-dev", v); } return v; })();
 const accKey = () => store.get("toigo-key") || "";
-const access = { licensed: false, freeLeft: 1, known: false };
+const access = { licensed: false, freeLeft: 1, known: false, expires: null, pay: true };
 const payMsg = t => { $("#pay-msg").textContent = t || ""; };
+const fmtD = ms => { const d = new Date(ms); return `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.${d.getFullYear()}`; };
+const tpl = (t, ms) => t.replace("{d}", fmtD(ms));
+const daysLeft = () => access.expires ? Math.ceil((access.expires - Date.now()) / 864e5) : Infinity;
+const canRenew = () => !!(accKey() && access.expires && (!access.licensed || daysLeft() <= 3));
 
 function showAccess() {
   const box = $("#acc"); if (!box || edit) { if (box) box.hidden = true; return; }
   box.hidden = !access.known;
-  box.className = "acc" + (access.licensed ? " ok" : access.freeLeft ? "" : " used");
-  box.innerHTML = access.licensed ? `<span>✓ ${S.acc_ok}</span>`
-    : access.freeLeft ? `<span>${S.acc_free}</span>`
-    : `<span>${S.acc_used}</span><button type="button" class="btn btn-gold btn-sm" data-open-pay>${S.acc_buy}</button>`;
+  const btn = t => `<button type="button" class="btn btn-gold btn-sm" data-open-pay>${t}</button>`;
+  if (access.licensed) {
+    box.className = "acc ok";
+    box.innerHTML = `<span>✓ ${access.expires ? tpl(S.acc_until, access.expires) : S.acc_ok}</span>${canRenew() ? btn(S.acc_renew) : ""}`;
+  } else if (access.freeLeft) {
+    box.className = "acc"; box.innerHTML = `<span>${S.acc_free}</span>`;
+  } else if (accKey() && access.expires) {
+    box.className = "acc used"; box.innerHTML = `<span>${tpl(S.acc_exp, access.expires)}</span>${btn(S.acc_renew)}`;
+  } else {
+    box.className = "acc used"; box.innerHTML = `<span>${S.acc_used}</span>${btn(S.acc_buy)}`;
+  }
+  const go = $("#pay-go"); if (go) go.textContent = canRenew() ? S.pay_renew : S.pay_go;
+  const kb = $("#pay-keybox");
+  if (kb) {
+    if (accKey() && (access.licensed || access.expires)) {
+      kb.hidden = false;
+      $("#pay-keyval").textContent = accKey();
+      $("#pay-keynote").textContent = access.licensed ? (access.expires ? tpl(S.acc_until, access.expires) : S.acc_ok) + " " + S.pay_ok2 : tpl(S.acc_exp, access.expires);
+    } else kb.hidden = true;
+  }
 }
 function openPay() {
   const p = $("#pay"); p.hidden = false;
@@ -253,53 +273,62 @@ async function loadAccess() {
     const r = await fetch(`/api/access?device=${DEVICE}&key=${encodeURIComponent(accKey())}`);
     if (!r.ok) return;
     const a = await r.json();
-    if (accKey() && a.keyError) store.del("toigo-key");
-    Object.assign(access, { licensed: a.licensed, freeLeft: a.freeLeft, known: true });
+    if (accKey() && a.keyError && a.keyError !== "expired") store.del("toigo-key");
+    Object.assign(access, { licensed: a.licensed, freeLeft: a.freeLeft, known: true, expires: a.expires || null, pay: a.pay !== false });
+    if (accKey() && a.keyError === "expired" && !access.expires) {
+      const x = await fetch("/api/activate", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ device: DEVICE, key: accKey() }) }).then(r => r.json()).catch(() => ({}));
+      if (x.expires) access.expires = x.expires;
+    }
     showAccess();
-    if (!a.licensed && store.get("toigo-order")) { $("#pay").hidden = false; pollOrder(); }
-    if (location.hash === "#buy" && !a.licensed) openPay();
   } catch (_) {}
 }
-function licensed(key, text) {
+function licensed(key, expires, text) {
   store.set("toigo-key", key); store.del("toigo-order");
-  access.licensed = true; showAccess();
-  $("#pay-form").hidden = true;
-  $("#pay-msg").innerHTML = `${esc(text)} <code class="keyout">${esc(key)}</code><br>${esc(S.pay_ok2)}`;
+  const active = !expires || expires > Date.now();
+  Object.assign(access, { licensed: active, expires: expires || null, known: true });
+  showAccess();
+  payMsg(active ? text : S.key_exp);
 }
-let polling = 0;
+
+// Return from the Finik page (?paid=ID&t=TOKEN) or an unfinished payment from an earlier visit.
+let polling = 0, tries = 0;
 async function pollOrder() {
   const o = store.get("toigo-order"); if (!o) return;
   clearTimeout(polling);
-  $("#pay-form").hidden = true; payMsg(S.pay_wait);
+  payMsg(S.pay_wait);
   try {
     const r = await fetch(`/api/order?id=${encodeURIComponent(o.id)}&token=${encodeURIComponent(o.token)}`);
-    if (r.status === 404) { store.del("toigo-order"); $("#pay-form").hidden = false; payMsg(""); return; }
-    const s2 = await r.json();
-    if (s2.status === "approved" && s2.key) {
-      const a = await fetch("/api/activate", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ device: DEVICE, key: s2.key }) });
-      if (a.ok) return licensed(s2.key, S.pay_ok);
-    }
-    if (s2.status === "rejected") { store.del("toigo-order"); $("#pay-form").hidden = false; payMsg(S.pay_no); return; }
+    if (r.status === 404) { store.del("toigo-order"); payMsg(""); return; }
+    const j = await r.json();
+    if (j.status === "approved" && j.key) return licensed(j.key, j.expires, S.pay_ok);
+    if (j.status === "expired" || j.status === "failed" || j.status === "rejected") { store.del("toigo-order"); payMsg(S.pay_no); return; }
   } catch (_) {}
-  polling = setTimeout(pollOrder, 10000);
+  tries++;
+  if (tries > 120) { payMsg(S.pay_slow); return; }
+  polling = setTimeout(pollOrder, tries < 20 ? 3000 : 10000);
 }
+function resumePayment() {
+  const q = new URLSearchParams(location.search), id = q.get("paid"), t = q.get("t");
+  if (id && t) {
+    store.set("toigo-order", { id, token: t });
+    history.replaceState(null, "", location.pathname + "#buy");
+  }
+  if (store.get("toigo-order")) { $("#pay").hidden = false; openPay(); pollOrder(); }
+}
+
 document.addEventListener("click", async e => {
   if (e.target.closest("[data-open-pay]")) { openPay(); return; }
-  if (e.target.closest("#pay-send")) {
-    const f = $("#pay-rc").files[0], ct = $("#pay-ct").value.trim();
-    if (!f) return payMsg(S.pay_need_rc);
-    if (ct.length < 3) return payMsg(S.pay_need_ct);
-    if (f.size > 8 << 20) return payMsg(S.pay_big);
-    if (!/^image\//.test(f.type) && f.type !== "application/pdf") return payMsg(S.pay_type);
-    const b = $("#pay-send"); b.disabled = true; payMsg(S.pay_sending);
+  if (e.target.closest("#pay-go")) {
+    if (!access.pay) return payMsg(S.pay_off);
+    const b = $("#pay-go"); b.disabled = true; payMsg(S.pay_open);
     try {
-      const fd = new FormData(); fd.set("receipt", f); fd.set("contact", ct); fd.set("device", DEVICE);
-      const r = await fetch("/api/order", { method: "POST", body: fd });
+      const renew = canRenew() || (accKey() && access.expires && !access.licensed);
+      const r = await fetch("/api/pay", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ device: DEVICE, key: renew ? accKey() : "", lang: LANG }) });
       const j = await r.json().catch(() => ({}));
-      if (r.ok && j.id) { store.set("toigo-order", { id: j.id, token: j.token }); pollOrder(); }
-      else payMsg(r.status === 429 ? S.pay_often : r.status === 413 ? S.pay_big : r.status === 415 ? S.pay_type : r.status === 503 ? S.pay_notready : S.pay_fail);
-    } catch (_) { payMsg(S.pay_fail); }
-    finally { b.disabled = false; }
+      if (r.ok && j.url) { store.set("toigo-order", { id: j.id, token: j.token }); location.href = j.url; return; }
+      payMsg(r.status === 409 ? S.pay_life : r.status === 429 ? S.pay_often : r.status === 503 ? S.pay_off : S.pay_err);
+    } catch (_) { payMsg(S.pay_err); }
+    b.disabled = false;
     return;
   }
   if (e.target.closest("#pay-act")) {
@@ -307,11 +336,12 @@ document.addEventListener("click", async e => {
     try {
       const r = await fetch("/api/activate", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ device: DEVICE, key }) });
       const j = await r.json().catch(() => ({}));
-      if (r.ok) return licensed(j.key, S.key_ok);
+      if (r.ok) return licensed(j.key, j.expires, S.key_ok);
+      if (r.status === 402 && j.error === "expired") { store.set("toigo-key", j.key); Object.assign(access, { licensed: false, expires: j.expires }); showAccess(); return payMsg(S.key_exp); }
       payMsg(r.status === 409 ? S.key_dev : r.status === 429 ? S.pay_often : S.key_bad);
-    } catch (_) { payMsg(S.pay_fail); }
+    } catch (_) { payMsg(S.pay_err); }
   }
 });
 
 startLive();
-init().then(loadAccess);
+init().then(async () => { await loadAccess(); resumePayment(); if (location.hash === "#buy" && (!access.licensed || canRenew())) openPay(); });

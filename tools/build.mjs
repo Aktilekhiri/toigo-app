@@ -207,7 +207,7 @@ function homePage(lang) {
     { "@context": "https://schema.org", "@type": "WebSite", name: "Тойго", url: O + "/", inLanguage: ["ky", "ru"] },
     { "@context": "https://schema.org", "@type": "Organization", name: "Тойго", url: O + "/", logo: O + "/icon-512.png" },
     { "@context": "https://schema.org", "@type": "WebApplication", name: "Тойго", url: O + u(lang, "/create/"), applicationCategory: "LifestyleApplication", operatingSystem: "Any",
-      inLanguage: lang, description: H.desc, offers: [{ "@type": "Offer", name: C[lang].price.free, price: "0", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].price.per, price: "500", priceCurrency: "KGS" }] },
+      inLanguage: lang, description: H.desc, offers: [{ "@type": "Offer", name: C[lang].price.free, price: "0", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].price.per, price: "300", priceCurrency: "KGS" }] },
     faqLd(C[lang].faq)
   ];
   const cat = id => CATS.find(c => c.id === id);
@@ -305,22 +305,12 @@ function payPanel(lang) {
   const S = UI[lang];
   return `<section class="pay" id="pay" hidden aria-labelledby="pay-h">
       <h3 id="pay-h">${S.pay_h}</h3><p>${S.pay_p}</p>
-      <div class="pay-step" id="pay-form">
-        <h4>${S.pay_s1}</h4>
-        <div class="qrs qrs2">
-          <figure><img src="/img/qr-mbank.jpg" alt="MBank QR" width="300" height="423" loading="lazy">MBank</figure>
-          <figure><img src="/img/qr-obank.png" alt="O!Bank QR" width="300" height="423" loading="lazy">O!Bank</figure>
-        </div>
-        <div class="pay-row"><span>${S.pay_phone}</span><code id="pay-phone">+996 702 ••• •••</code><button type="button" class="btn btn-g btn-sm" data-pay="show" data-show="${S.pay_show}" data-hide="${S.pay_hide}">${S.pay_show}</button><button type="button" class="btn btn-g btn-sm" data-pay="copy" data-done="${S.pay_copied}">${S.pay_copy}</button></div>
-        <div class="pay-row"><span>${S.pay_to}</span><b>${SUPPORT.name}</b></div>
-        <p class="hint">${S.pay_abroad} <a href="${SUPPORT.paypal}" target="_blank" rel="noopener">${S.pay_pp}</a></p>
-        <h4>${S.pay_s2}</h4>
-        <div class="fld w"><label for="pay-rc">${S.pay_rc}</label><input id="pay-rc" type="file" accept="image/*,application/pdf"></div>
-        <div class="fld w"><label for="pay-ct">${S.pay_contact}</label><input id="pay-ct" type="text" maxlength="80" autocomplete="tel" placeholder="${S.pay_contact_ph}"></div>
-        <button type="button" class="btn btn-gold" id="pay-send">${S.pay_send}</button>
-        <h4>${S.pay_s3}</h4><p class="hint">${S.pay_s3p}</p>
-      </div>
+      <div class="pay-price"><b>300</b><span>${S.pay_per}</span></div>
+      <ul class="pay-list">${S.pay_list.map(x => `<li>${x}</li>`).join("")}</ul>
+      <button type="button" class="btn btn-gold" id="pay-go">${S.pay_go}</button>
+      <p class="hint">${S.pay_how}</p>
       <p class="pay-msg" id="pay-msg" aria-live="polite"></p>
+      <div class="pay-keybox" id="pay-keybox" hidden><span>${S.pay_keyl}</span> <code class="keyout" id="pay-keyval"></code><p class="hint" id="pay-keynote"></p></div>
       <details class="pay-key"><summary>${S.pay_have}</summary>
         <div class="copyrow"><input id="pay-key" type="text" maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="${S.pay_key_ph}" aria-label="${S.pay_have}"><button type="button" class="btn btn-p btn-sm" id="pay-act">${S.pay_act}</button></div>
       </details>

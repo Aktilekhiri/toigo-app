@@ -26,7 +26,7 @@ const METHOD = { GET: "onRequestGet", HEAD: "onRequestGet", POST: "onRequestPost
 
 async function route(request, env, ctx) {
   const url = new URL(request.url);
-  if (/^\/api\/(access|activate|order|tg|setup)\/?$/.test(url.pathname)) return pay.handle(request, env, url);
+  if (/^\/api\/(access|activate|order|pay|finik\/webhook|tg|setup)\/?$/.test(url.pathname)) return pay.handle(request, env, url);
   for (const [re, mod, names] of ROUTES) {
     const m = re.exec(url.pathname);
     if (!m) continue;

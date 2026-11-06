@@ -352,3 +352,13 @@ td.n{font-variant-numeric:tabular-nums}
 .final-t h2{font-size:clamp(32px,4vw,52px);margin:16px 0 14px}
 @media (max-width:900px){.final .wrap{grid-template-columns:minmax(0,1fr);gap:32px}.collage{grid-template-rows:repeat(6,40px)}}
 @media (max-width:480px){.tile-links{gap:4px}.tile-links a{font-size:12px;padding:4px 9px}.tile-t b{font-size:20px}.tile.big .tile-t b{font-size:28px}}
+.pay-price{display:flex;align-items:baseline;gap:8px;margin-top:4px}
+.pay-price b{font-family:var(--fd);font-weight:500;font-size:46px;line-height:1;color:var(--gold)}
+.pay-price span{color:var(--muted);font-size:15px}
+.pay-list{list-style:none;margin:4px 0 8px;padding:0;display:grid;gap:8px;font-size:15px}
+.pay-list li{padding-left:24px;position:relative}
+.pay-list li::before{content:"";position:absolute;left:2px;top:.5em;width:12px;height:7px;border-left:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(-45deg) translateY(-3px)}
+.pay>.btn{align-self:flex-start}
+.pay-keybox{background:var(--paper);border-radius:12px;padding:12px 14px}
+.pay-keybox[hidden]{display:none}
+.pay-keybox .hint{margin:4px 0 0}
