@@ -119,6 +119,20 @@ function priceBlock(lang) {
 </div></section>`;
 }
 
+// Mobile bottom navigation (like diamond.kg): always within thumb reach on phones.
+const BN_IC = {
+  home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+  designs: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/>',
+  create: '<path d="M12 5v14M5 12h14"/>',
+  mine: '<rect x="4" y="3.5" width="16" height="17" rx="2.5"/><path d="M8 8.5h8M8 12.5h8M8 16.5h5"/>',
+  price: '<path d="M20.5 12.6 12.6 20.5a2 2 0 0 1-2.8 0l-6.3-6.3a2 2 0 0 1-.6-1.4V5.5a2 2 0 0 1 2-2h7.3a2 2 0 0 1 1.4.6l6.3 6.3a2 2 0 0 1 0 2.8z"/><circle cx="8" cy="8" r="1.4"/>'
+};
+function bottomNav(lang, m) {
+  const N = C[lang].nav, home = u(lang, "/");
+  const items = [["home", home], ["designs", home + "#designs"], ["create", u(lang, "/create/")], ["mine", u(lang, "/manage/")], ["price", home + "#price"]];
+  return `<nav class="bnav" aria-label="${N.bnLabel}">${items.map(([id, href], i) => `<a class="bn-i${id === "create" ? " bn-c" : ""}${m.nav === id ? " on" : ""}" href="${href}"${m.nav === id ? ' aria-current="page"' : ""}><span class="bn-ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${BN_IC[id]}</svg></span><span class="bn-tx">${N.bn[i]}</span></a>`).join("")}</nav>`;
+}
+
 function footer(lang) {
   const F = C[lang].footer, N = C[lang].nav;
   return `<footer class="ftr"><div class="wrap">
@@ -140,6 +154,7 @@ ${body}
 </main>
 ${m.noSupport ? "" : priceBlock(lang)}
 ${footer(lang)}
+${bottomNav(lang, m)}
 </body>
 </html>`;
 
@@ -264,7 +279,7 @@ ${faqSec(lang, C[lang].faq).replace('class="sec"', 'class="sec paper"')}
     <div class="acts"><a class="btn btn-p" href="${u(lang, "/create/")}">${N.create}</a><a class="btn btn-g" href="#designs">${H.btn2}</a></div>
   </div>
 </div></section>`;
-  write(u(lang, "/"), page(lang, { title: H.title, desc: H.desc, path: alt[lang], alt, jsonld, isHome: true }, body));
+  write(u(lang, "/"), page(lang, { title: H.title, desc: H.desc, path: alt[lang], alt, jsonld, isHome: true, nav: "home" }, body));
 }
 
 function catPage(lang, cat) {
@@ -381,7 +396,7 @@ function createPage(lang) {
 </div></section>
 <script type="application/json" id="i18n">${JSON.stringify({ lang, ui: S, home: u(lang, "/"), manage: u(lang, "/manage/") })}</script>
 <script type="module" src="/assets/create.js?v=${V}"></script>`;
-  write(u(lang, p), page(lang, { title: K.title, desc: K.desc, path: alt[lang], alt, noSupport: true }, body));
+  write(u(lang, p), page(lang, { title: K.title, desc: K.desc, path: alt[lang], alt, noSupport: true, nav: "create" }, body));
 }
 
 function managePage(lang) {
@@ -392,7 +407,7 @@ function managePage(lang) {
 <section class="sec" style="padding-top:28px"><div class="wrap" id="app"><p class="empty">${UI[lang].loading}</p></div></section>
 <script type="application/json" id="i18n">${JSON.stringify({ lang, ui: UI[lang], create: u(lang, "/create/") })}</script>
 <script type="module" src="/assets/manage.js?v=${V}"></script>`;
-  write(u(lang, p), page(lang, { title: K.title, desc: K.title, path: alt[lang], alt, noindex: true }, body));
+  write(u(lang, p), page(lang, { title: K.title, desc: K.title, path: alt[lang], alt, noindex: true, nav: "mine" }, body));
 }
 
 function demoPage(lang, t) {
