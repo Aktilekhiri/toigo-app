@@ -410,3 +410,6 @@ td.n{font-variant-numeric:tabular-nums}
 .cu-note{margin:-6px 0 0}
 .cu-done{max-width:760px}
 @media (max-width:860px){.cu-top{grid-template-columns:1fr;gap:24px}}
+.btn-tg{background:#2AABEE;color:#fff;gap:8px}
+.btn-tg:hover{background:#229ED9}
+.btn-tg svg{flex:none}

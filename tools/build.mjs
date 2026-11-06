@@ -27,6 +27,8 @@ const ICON = {
   phone: '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
   link: '<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/>'
 };
+const TG_URL = "https://t.me/toigoapp";
+const TG_SVG = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M21.4 4.2 2.9 11.3c-1.3.5-1.2 1.2-.2 1.5l4.7 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.4l2.3-2.2 4.7 3.5c.9.5 1.5.2 1.7-.8l3.1-14.5c.3-1.3-.5-1.9-1.4-1.6zM9.6 14.1l8.3-5.3c.4-.2.7-.1.4.2l-7 6.4-.3 3.1z"/></svg>';
 const icon = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
 
 function sampleData(tplId, typeId, lang) {
@@ -140,7 +142,7 @@ function footer(lang) {
   <div class="cols">
     <div><a class="brand" href="${u(lang, "/")}">${HORN}Тойго</a><p style="margin-top:12px;max-width:36ch">${F.tag}</p></div>
     <div><h3>${F.types}</h3><ul>${CATS.map(c => `<li><a href="${u(lang, `/toi/${c.path}/`)}">${TYPES[c.id][lang]}</a></li>`).join("")}</ul></div>
-    <div><h3>${F.site}</h3><ul><li><a href="${u(lang, "/create/")}">${N.create}</a></li><li><a href="${u(lang, "/manage/")}">${N.mine}</a></li><li><a href="${u(lang, "/custom/")}">${N.custom}</a></li><li><a href="${u(lang, "/")}#faq">${N.faq}</a></li><li><a href="${u(lang, "/")}#price">${N.support}</a></li><li><a href="${u(lang, "/privacy/")}">${F.privacy}</a></li></ul></div>
+    <div><h3>${F.site}</h3><ul><li><a href="${u(lang, "/create/")}">${N.create}</a></li><li><a href="${u(lang, "/manage/")}">${N.mine}</a></li><li><a href="${u(lang, "/custom/")}">${N.custom}</a></li><li><a href="${TG_URL}" target="_blank" rel="noopener">${N.tg}</a></li><li><a href="${u(lang, "/")}#faq">${N.faq}</a></li><li><a href="${u(lang, "/")}#price">${N.support}</a></li><li><a href="${u(lang, "/privacy/")}">${F.privacy}</a></li></ul></div>
   </div>
   <div class="copy"><span>© ${new Date().getFullYear()} Тойго. ${F.rights}</span><span><a href="/" lang="ky">Кыргызча</a> · <a href="/ru/" lang="ru">Русский</a></span></div>
 </div></footer>
@@ -235,7 +237,7 @@ function homePage(lang) {
     <div class="eyebrow">${HORN}${H.eyebrow}</div>
     <h1>${H.h1}</h1>
     <p class="lead">${H.lead}</p>
-    <div class="acts"><a class="btn btn-p" href="${u(lang, "/create/")}">${N.create}</a><a class="btn btn-g" href="#designs">${H.btn2}</a></div>
+    <div class="acts"><a class="btn btn-p" href="${u(lang, "/create/")}">${N.create}</a><a class="btn btn-g" href="#designs">${H.btn2}</a><a class="btn btn-tg" href="${TG_URL}" target="_blank" rel="noopener">${TG_SVG}${N.tg}</a></div>
     <div class="facts">${H.facts.map(f => `<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join("")}</div>
   </div>
   <div class="stage" aria-hidden="true">
@@ -277,7 +279,7 @@ ${faqSec(lang, C[lang].faq).replace('class="sec"', 'class="sec paper"')}
     <div class="eyebrow">${HORN}Тойго</div>
     <h2 id="final-h">${H.final_h}</h2>
     <p class="lead">${H.final_p}</p>
-    <div class="acts"><a class="btn btn-p" href="${u(lang, "/create/")}">${N.create}</a><a class="btn btn-g" href="#designs">${H.btn2}</a></div>
+    <div class="acts"><a class="btn btn-p" href="${u(lang, "/create/")}">${N.create}</a><a class="btn btn-g" href="#designs">${H.btn2}</a><a class="btn btn-tg" href="${TG_URL}" target="_blank" rel="noopener">${TG_SVG}${N.tg}</a></div>
   </div>
 </div></section>`;
   write(u(lang, "/"), page(lang, { title: H.title, desc: H.desc, path: alt[lang], alt, jsonld, isHome: true, nav: "home" }, body));
