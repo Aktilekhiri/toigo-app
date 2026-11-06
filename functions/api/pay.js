@@ -21,6 +21,9 @@ import { finikReady, createFinikPayment, readFinikWebhook, PAY_MIN } from "./fin
 
 export const FREE = 1;          // free invitations per device
 export const PLANS = { month: { price: 100, days: 30 }, year: { price: 500, days: 365 } };
+// Individual invitation: we design and fill in the invitation for the client (1–3 days); includes a month of subscription.
+export const CUSTOM = { price: 400, days: 30 };
+const CUSTOM_FILES = 5, CUSTOM_FILE_MAX = 4 << 20;
 export const PRICE = PLANS.month.price;   // cheapest plan, shown when access is refused
 export const DAYS = PLANS.month.days;     // default days for /newkey
 const DAY = 864e5;
@@ -50,12 +53,13 @@ export async function ensure(env) {
     env.DB.prepare("CREATE TABLE IF NOT EXISTS pay_free (device TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0, ip TEXT, last INTEGER)"),
     env.DB.prepare("CREATE TABLE IF NOT EXISTS pay_ipuse (ip TEXT NOT NULL, ts INTEGER NOT NULL, kind TEXT NOT NULL)"),
     env.DB.prepare("CREATE INDEX IF NOT EXISTS pay_ipuse_ip ON pay_ipuse(ip, kind, ts)"),
-    env.DB.prepare("CREATE TABLE IF NOT EXISTS pay_payments (tx_id TEXT PRIMARY KEY, order_id TEXT NOT NULL, amount REAL NOT NULL, created INTEGER NOT NULL)")
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS pay_payments (tx_id TEXT PRIMARY KEY, order_id TEXT NOT NULL, amount REAL NOT NULL, created INTEGER NOT NULL)"),
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS pay_files (id INTEGER PRIMARY KEY AUTOINCREMENT, order_id TEXT NOT NULL, mime TEXT NOT NULL, bytes BLOB NOT NULL, created INTEGER NOT NULL)")
   ]);
   const cols = async t => (await env.DB.prepare(`PRAGMA table_info(${t})`).all()).results.map(c => c.name);
   const lc = await cols("pay_licenses"), oc = await cols("pay_orders");
   if (!lc.includes("expires")) await env.DB.prepare("ALTER TABLE pay_licenses ADD COLUMN expires INTEGER").run();   // NULL = lifetime
-  for (const [c, type] of [["amount", "REAL"], ["method", "TEXT"], ["pay_url", "TEXT"], ["fee", "REAL"], ["renew_key", "TEXT"], ["days", "INTEGER"]])
+  for (const [c, type] of [["amount", "REAL"], ["method", "TEXT"], ["pay_url", "TEXT"], ["fee", "REAL"], ["renew_key", "TEXT"], ["days", "INTEGER"], ["kind", "TEXT"], ["brief", "TEXT"]])
     if (!oc.includes(c)) await env.DB.prepare(`ALTER TABLE pay_orders ADD COLUMN ${c} ${type}`).run();
   ready = true;
 }
@@ -198,9 +202,10 @@ async function handleTg(request, env) {
         (SELECT COALESCE(SUM(amount - COALESCE(fee, 0)), 0) FROM pay_orders WHERE method = 'finik' AND status = 'approved' AND created > ?) AS net30,
         (SELECT COUNT(*) FROM pay_orders WHERE method = 'finik' AND status = 'approved') AS paidAll,
         (SELECT COALESCE(SUM(amount - COALESCE(fee, 0)), 0) FROM pay_orders WHERE method = 'finik' AND status = 'approved') AS netAll,
+        (SELECT COUNT(*) FROM pay_orders WHERE kind = 'custom' AND status = 'approved' AND created > ?) AS custom30,
         (SELECT COUNT(*) FROM pay_free) AS freedev, (SELECT COUNT(*) FROM invitations) AS inv,
-        (SELECT COUNT(*) FROM invitations WHERE created_at > ?) AS inv30`).bind(now(), since, since, since).first();
-      await reply(`Активных подписок: ${a.subs}\nКлючей навсегда: ${a.forever}\n\nОплат Finik за 30 дней: ${a.paid30} (на счёт ≈ ${Math.round(a.net30)} сом после 2%)\nВсего оплат Finik: ${a.paidAll} (≈ ${Math.round(a.netAll)} сом)\n\nПриглашений: ${a.inv} (за 30 дней ${a.inv30})\nУстройств с бесплатным приглашением: ${a.freedev}`);
+        (SELECT COUNT(*) FROM invitations WHERE created_at > ?) AS inv30`).bind(now(), since, since, since, since).first();
+      await reply(`Активных подписок: ${a.subs}\nКлючей навсегда: ${a.forever}\n\nОплат Finik за 30 дней: ${a.paid30} (на счёт ≈ ${Math.round(a.net30)} сом после 2%)\nИндивидуальных приглашений за 30 дней: ${a.custom30}\nВсего оплат Finik: ${a.paidAll} (≈ ${Math.round(a.netAll)} сом)\n\nПриглашений: ${a.inv} (за 30 дней ${a.inv30})\nУстройств с бесплатным приглашением: ${a.freedev}`);
     } else if (isAdmin(env, chat) && /^\/revoke\b/.test(t)) {
       const key = normKey(t.replace(/^\/revoke\s*/, ""));
       const r = await env.DB.prepare("UPDATE pay_licenses SET revoked = 1 WHERE key = ?").bind(key).run();
@@ -208,6 +213,29 @@ async function handleTg(request, env) {
     }
   }
   return json({ ok: true });
+}
+
+// Paid individual invitation: send the brief and photos to the admin, then drop the photos from the database.
+const TYPE_RU = { uylonuu: "Свадьба", kyz: "Кыз узатуу", sunnot: "Сүннөт той", tushoo: "Тушоо кесүү", maarake: "Юбилей", tuulgan: "День рождения" };
+const LANG_RU = { ky: "кыргызский", ru: "русский", both: "два языка" };
+async function notifyCustom(env, o, g, paid, fee) {
+  let b = {}; try { b = JSON.parse(o.brief || "{}"); } catch (_) {}
+  const lines = [
+    `🎨 Тойго: ИНДИВИДУАЛЬНОЕ приглашение, оплачено ${paid} сом (Finik)`, `Заказ ${o.id} · сделать за 1–3 дня`,
+    `👤 Связь: ${b.contact || o.contact || "—"}`, `🎉 Той: ${TYPE_RU[b.type] || b.type || "—"}`, `💍 Имена: ${b.names || "—"}`,
+    b.date && `📅 Дата: ${b.date}`, b.place && `📍 Место: ${b.place}`, b.lang && `🌐 Язык: ${LANG_RU[b.lang] || b.lang}`,
+    b.style && `🎨 Стиль, цвета: ${b.style}`, b.wishes && `📝 Пожелания: ${b.wishes}`,
+    `🔑 Ключ клиента (месяц подписки): ${g.key}${g.expires ? " до " + fmtDate(g.expires) : ""}`, `Комиссия ≈ ${fee} сом`
+  ].filter(Boolean);
+  await notifyAdmin(env, lines.join("\n").slice(0, 4000));
+  const { results } = await env.DB.prepare("SELECT id, mime, bytes FROM pay_files WHERE order_id = ? ORDER BY id").bind(o.id).all();
+  if (results.length && env.TG_ADMIN_CHAT) {
+    const fd = new FormData(); fd.set("chat_id", String(env.TG_ADMIN_CHAT).trim());
+    fd.set("media", JSON.stringify(results.map((f, i) => ({ type: "photo", media: `attach://p${i}`, ...(i === 0 ? { caption: `Фото к заказу ${o.id}` } : {}) }))));
+    results.forEach((f, i) => fd.set(`p${i}`, new Blob([new Uint8Array(f.bytes)], { type: f.mime }), `p${i}.jpg`));
+    const r = await tg(env, results.length > 1 ? "sendMediaGroup" : "sendPhoto", results.length > 1 ? fd : (() => { const f1 = new FormData(); f1.set("chat_id", String(env.TG_ADMIN_CHAT).trim()); f1.set("caption", `Фото к заказу ${o.id}`); f1.set("photo", new Blob([new Uint8Array(results[0].bytes)], { type: results[0].mime }), "p0.jpg"); return f1; })()).catch(() => ({ ok: false }));
+    if (r.ok) await env.DB.prepare("DELETE FROM pay_files WHERE order_id = ?").bind(o.id).run();
+  }
 }
 
 // ---------- routes ----------
@@ -219,7 +247,7 @@ export async function handle(request, env, url) {
     const device = url.searchParams.get("device") || "", key = normKey(url.searchParams.get("key"));
     if (!DEV_RE.test(device)) return json({ error: "device" }, 400);
     const lic = key ? await licenseFor(env, key, device, false) : { ok: false };
-    return json({ licensed: lic.ok, expires: lic.expires || null, keyError: key && !lic.ok ? lic.reason : undefined, freeLeft: await freeLeft(env, device), free: FREE, plans: PLANS, pay: finikReady(env) });
+    return json({ licensed: lic.ok, expires: lic.expires || null, keyError: key && !lic.ok ? lic.reason : undefined, freeLeft: await freeLeft(env, device), free: FREE, plans: PLANS, custom: CUSTOM, pay: finikReady(env) });
   }
 
   if (p === "/api/activate" && request.method === "POST") {
@@ -267,6 +295,46 @@ export async function handle(request, env, url) {
     return json({ id, token, url: r.url });
   }
 
+  // Individual invitation: brief + up to 5 photos, then Finik payment of 400 som (includes a month of subscription)
+  if (p === "/api/custom" && request.method === "POST") {
+    if (!finikReady(env)) return json({ error: "notready" }, 503);
+    const ip = await ipHash(request, env);
+    if (await ipCount(env, ip, "custom", 3600e3) >= 5) return json({ error: "often" }, 429);
+    const fd = await request.formData().catch(() => null);
+    if (!fd) return json({ error: "form" }, 400);
+    const g = k => String(fd.get(k) || "").trim();
+    const device = g("device"), lang = g("lang") === "ru" ? "ru" : "ky", key = g("key") ? normKey(g("key")) : "";
+    if (!DEV_RE.test(device)) return json({ error: "device" }, 400);
+    const brief = { type: g("type").slice(0, 30), names: g("names").slice(0, 160), date: g("date").slice(0, 20), place: g("place").slice(0, 200), style: g("style").slice(0, 300), wishes: g("wishes").slice(0, 2000), contact: g("contact").slice(0, 80), lang: g("ilang").slice(0, 10) };
+    if (brief.contact.length < 3) return json({ error: "contact" }, 400);
+    if (brief.names.length < 2) return json({ error: "names" }, 400);
+    const files = fd.getAll("photos").filter(f => f && typeof f !== "string" && f.size).slice(0, CUSTOM_FILES);
+    for (const f of files) {
+      if (!/^image\/(jpeg|png|webp)$/.test(f.type)) return json({ error: "photo-type" }, 415);
+      if (f.size > CUSTOM_FILE_MAX) return json({ error: "photo-big" }, 413);
+    }
+    let renew = null;
+    if (key) { const lic = await getLicense(env, key); if (lic && lic.expires) renew = key; }
+    const id = "TC" + randStr(10), token = randStr(24);
+    const fileRows = await Promise.all(files.map(async f => env.DB.prepare("INSERT INTO pay_files (order_id, mime, bytes, created) VALUES (?, ?, ?, ?)").bind(id, f.type, new Uint8Array(await f.arrayBuffer()), now())));
+    await env.DB.batch([
+      env.DB.prepare("INSERT INTO pay_orders (id, token, created, status, contact, device, ip, amount, method, renew_key, days, kind, brief) VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, 'finik', ?, ?, 'custom', ?)").bind(id, token, now(), brief.contact, device, ip, CUSTOM.price, renew, CUSTOM.days, JSON.stringify(brief)),
+      env.DB.prepare("INSERT INTO pay_ipuse (ip, ts, kind) VALUES (?, ?, 'custom')").bind(ip, now()),
+      ...fileRows
+    ]);
+    // Unpaid briefs' photos are removed after two days.
+    await env.DB.prepare("DELETE FROM pay_files WHERE created < ? AND order_id IN (SELECT id FROM pay_orders WHERE status != 'approved')").bind(now() - 2 * DAY).run().catch(() => {});
+    const back = `${url.origin}${lang === "ru" ? "/ru" : ""}/custom/?paid=${id}&t=${token}#order`;
+    const r = await createFinikPayment(env, { id, amount: CUSTOM.price, description: "Тойго — индивидуальное приглашение" }, back, `${url.origin}/api/finik/webhook`);
+    if (r.error) {
+      await env.DB.prepare("UPDATE pay_orders SET status = 'failed' WHERE id = ?").bind(id).run();
+      console.error("finik create", r.error);
+      return json({ error: "finik", detail: r.error }, 502);
+    }
+    await env.DB.prepare("UPDATE pay_orders SET pay_url = ? WHERE id = ?").bind(r.url, id).run();
+    return json({ id, token, url: r.url });
+  }
+
   // Finik sends a signed notification after the payment
   if (p === "/api/finik/webhook" && request.method === "POST") {
     if (!env.FINIK_PUBLIC_KEY) return new Response("off", { status: 503 });
@@ -285,7 +353,8 @@ export async function handle(request, env, url) {
     const g = await grant(env, { key: o.renew_key, device: o.device, ref: id, note: "finik " + id, days: o.days || DAYS });
     const fee = Math.round(paid * Number(env.FINIK_FEE_PCT || 0.02) * 100) / 100;
     await env.DB.prepare("UPDATE pay_orders SET status = 'approved', license_key = ?, fee = ? WHERE id = ?").bind(g.key, fee, id).run();
-    await notifyAdmin(env, `💳 Тойго: оплата ${paid} сом (Finik)\n${g.renewed ? "🔁 Продление" : "🆕 Новая подписка"} (${(o.days || DAYS) >= 365 ? "год" : "месяц"}): ${g.key}\nДействует ${g.expires ? "до " + fmtDate(g.expires) : "навсегда"}\nКомиссия ≈ ${fee} сом`);
+    if (o.kind === "custom") await notifyCustom(env, o, g, paid, fee);
+    else await notifyAdmin(env, `💳 Тойго: оплата ${paid} сом (Finik)\n${g.renewed ? "🔁 Продление" : "🆕 Новая подписка"} (${(o.days || DAYS) >= 365 ? "год" : "месяц"}): ${g.key}\nДействует ${g.expires ? "до " + fmtDate(g.expires) : "навсегда"}\nКомиссия ≈ ${fee} сом`);
     return new Response("ok");
   }
 

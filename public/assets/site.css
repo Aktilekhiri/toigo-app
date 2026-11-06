@@ -392,3 +392,21 @@ td.n{font-variant-numeric:tabular-nums}
 .plan input:focus-visible+span{outline:2px solid var(--gold);outline-offset:2px}
 .prc-year{margin:4px 0 0;font-size:15px;font-weight:500;color:var(--ink)}
 .prc-year i{font-style:normal;font-size:12px;background:var(--gold-soft);color:var(--gold);border-radius:99px;padding:2px 8px;margin-left:4px}
+/* Individual invitation */
+.prc-custom{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding:20px 24px;border-radius:18px;background:#fff;border:1px dashed var(--gold);color:var(--ink);text-decoration:none}
+.prc-custom span{display:flex;flex-direction:column;gap:4px;color:var(--muted);font-size:15px}
+.prc-custom b{font-family:var(--fd);font-weight:500;font-size:22px;color:var(--ink)}
+.prc-custom em{font-style:normal;font-weight:500;color:var(--gold);white-space:nowrap}
+.prc-custom:hover{border-style:solid}
+.cu-top{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.9fr);gap:40px;align-items:start}
+.cu-top h1{margin-top:14px}
+.cu-steps{list-style:none;counter-reset:s;padding:0;margin:22px 0 0;display:grid;gap:14px}
+.cu-steps li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;column-gap:12px}
+.cu-steps li::before{content:counter(s);grid-row:span 2;width:34px;height:34px;border-radius:50%;background:var(--gold-soft);color:var(--gold);display:grid;place-items:center;font-weight:500}
+.cu-steps b{font-weight:500}
+.cu-steps span{color:var(--muted);font-size:15px}
+.cu-card .prc-year{margin-top:6px}
+.cu-wrap{max-width:760px}
+.cu-note{margin:-6px 0 0}
+.cu-done{max-width:760px}
+@media (max-width:860px){.cu-top{grid-template-columns:1fr;gap:24px}}

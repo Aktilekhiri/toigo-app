@@ -116,6 +116,7 @@ function priceBlock(lang) {
       <p class="prc-year">${P.year} <i>${P.yearNote}</i></p><ul>${P.list.map(x => `<li>${x.replace("{n}", TPL.length)}</li>`).join("")}</ul>
       <a class="btn btn-gold" href="${u(lang, "/create/")}#buy">${P.buy}</a></div>
   </div>
+  <a class="prc-custom" href="${u(lang, "/custom/")}"><span><b>${C[lang].custom.cta}</b>${C[lang].custom.ctaP}</span><em>${C[lang].custom.ctaBtn} →</em></a>
 </div></section>`;
 }
 
@@ -139,7 +140,7 @@ function footer(lang) {
   <div class="cols">
     <div><a class="brand" href="${u(lang, "/")}">${HORN}Тойго</a><p style="margin-top:12px;max-width:36ch">${F.tag}</p></div>
     <div><h3>${F.types}</h3><ul>${CATS.map(c => `<li><a href="${u(lang, `/toi/${c.path}/`)}">${TYPES[c.id][lang]}</a></li>`).join("")}</ul></div>
-    <div><h3>${F.site}</h3><ul><li><a href="${u(lang, "/create/")}">${N.create}</a></li><li><a href="${u(lang, "/manage/")}">${N.mine}</a></li><li><a href="${u(lang, "/")}#faq">${N.faq}</a></li><li><a href="${u(lang, "/")}#price">${N.support}</a></li><li><a href="${u(lang, "/privacy/")}">${F.privacy}</a></li></ul></div>
+    <div><h3>${F.site}</h3><ul><li><a href="${u(lang, "/create/")}">${N.create}</a></li><li><a href="${u(lang, "/manage/")}">${N.mine}</a></li><li><a href="${u(lang, "/custom/")}">${N.custom}</a></li><li><a href="${u(lang, "/")}#faq">${N.faq}</a></li><li><a href="${u(lang, "/")}#price">${N.support}</a></li><li><a href="${u(lang, "/privacy/")}">${F.privacy}</a></li></ul></div>
   </div>
   <div class="copy"><span>© ${new Date().getFullYear()} Тойго. ${F.rights}</span><span><a href="/" lang="ky">Кыргызча</a> · <a href="/ru/" lang="ru">Русский</a></span></div>
 </div></footer>
@@ -326,6 +327,7 @@ function payPanel(lang) {
       <p class="hint">${S.pay_how}</p>
       <p class="pay-msg" id="pay-msg" aria-live="polite"></p>
       <div class="pay-keybox" id="pay-keybox" hidden><span>${S.pay_keyl}</span> <code class="keyout" id="pay-keyval"></code><p class="hint" id="pay-keynote"></p></div>
+      <p class="hint">${C[lang].custom.cta} <a href="${u(lang, "/custom/")}">${C[lang].custom.ctaBtn} — 400 сом</a></p>
       <details class="pay-key"><summary>${S.pay_have}</summary>
         <div class="copyrow"><input id="pay-key" type="text" maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="${S.pay_key_ph}" aria-label="${S.pay_have}"><button type="button" class="btn btn-p btn-sm" id="pay-act">${S.pay_act}</button></div>
       </details>
@@ -426,6 +428,47 @@ ${renderInvitation(d, { mode: "preview", pf: "demo" })}
   write(u(lang, p), html);
 }
 
+function customPage(lang) {
+  const K = C[lang].custom, S = UI[lang];
+  const p = "/custom/", alt = { ky: p, ru: "/ru" + p };
+  if (lang === "ky") PAGES.push({ ky: alt.ky, ru: alt.ru, freq: "monthly", prio: "0.8" });
+  const f = (id, label, input, cls = "", hint = "") => `<div class="fld ${cls}"><label for="c-${id}">${label}</label>${input}${hint ? `<span class="hint">${hint}</span>` : ""}</div>`;
+  const body = `
+<section class="page-h"><div class="wrap cu-top">
+  <div>
+    <div class="eyebrow">${HORN}${K.k}</div>
+    <h1>${K.h1}</h1><p class="lead">${K.lead}</p>
+    <ol class="cu-steps">${K.steps.map(([h, t]) => `<li><b>${h}</b><span>${t}</span></li>`).join("")}</ol>
+  </div>
+  <div class="prc-card prc-main cu-card"><span>${K.k}</span><b>${K.price}</b><p class="prc-year"><i>${K.priceNote}</i></p>
+    <ul>${K.inc.map(x => `<li>${x}</li>`).join("")}</ul><a class="btn btn-gold" href="#order">${K.btn}</a></div>
+</div></section>
+<section class="sec" id="order" style="padding-top:12px"><div class="wrap cu-wrap">
+  <form class="f" id="cform" novalidate>
+    <fieldset><legend>${K.form_h}</legend>
+      ${f("type", K.l_type, `<select id="c-type" name="type">${Object.keys(TYPES).map(k => `<option value="${k}">${TYPES[k][lang]}</option>`).join("")}</select>`)}
+      ${f("ilang", K.l_lang, `<select id="c-ilang" name="ilang"><option value="ky">${S.o_ky}</option><option value="ru"${lang === "ru" ? " selected" : ""}>${S.o_ru}</option><option value="both">${S.o_both}</option></select>`)}
+      ${f("names", K.l_names, `<input id="c-names" name="names" type="text" maxlength="160" autocomplete="off" placeholder="${K.ph_names}" required>`, "w")}
+      ${f("date", K.l_date, `<input id="c-date" name="date" type="date">`)}
+      ${f("place", K.l_place, `<input id="c-place" name="place" type="text" maxlength="200" autocomplete="off" placeholder="${K.ph_place}">`)}
+      ${f("style", K.l_style, `<input id="c-style" name="style" type="text" maxlength="300" autocomplete="off" placeholder="${K.ph_style}">`, "w")}
+      ${f("wishes", K.l_wishes, `<textarea id="c-wishes" name="wishes" maxlength="2000" rows="4" placeholder="${K.ph_wishes}"></textarea>`, "w", K.h_wishes)}
+      <div class="fld w"><span class="lbl">${K.l_photos}</span><div class="thumbs" id="c-thumbs"></div>
+        <label class="up" for="c-photos"><span aria-hidden="true">+</span>${K.b_photos}</label><input id="c-photos" type="file" accept="image/*" multiple hidden>
+        <span class="hint">${K.h_photos}</span></div>
+      ${f("contact", K.l_contact, `<input id="c-contact" name="contact" type="text" maxlength="80" autocomplete="tel" placeholder="${K.ph_contact}" required>`, "w")}
+    </fieldset>
+    <p class="hint cu-note">${K.note}</p>
+    <div class="submit-row"><button class="btn btn-gold" type="submit" id="c-send">${K.btn}</button><span class="form-msg" id="c-msg" aria-live="polite"></span></div>
+    <p class="hint">${K.how}</p>
+  </form>
+  <div class="pay cu-done" id="c-done" hidden><p class="pay-msg" id="c-dmsg"></p><div class="pay-keybox" id="c-keybox" hidden><span>${K.keyl}</span> <code class="keyout" id="c-key"></code><p class="hint">${K.keyh}</p></div></div>
+</div></section>
+<script type="application/json" id="i18n">${JSON.stringify({ lang, t: K })}</script>
+<script type="module" src="/assets/custom.js?v=${V}"></script>`;
+  write(u(lang, p), page(lang, { title: K.title, desc: K.desc, path: alt[lang], alt, noSupport: true, nav: "custom" }, body));
+}
+
 function privacyPage(lang) {
   const K = C[lang].privacy;
   const p = "/privacy/", alt = { ky: p, ru: "/ru" + p };
@@ -456,6 +499,7 @@ for (const lang of ["ky", "ru"]) {
   createPage(lang);
   managePage(lang);
   TPL.forEach(t => demoPage(lang, t));
+  customPage(lang);
   privacyPage(lang);
 }
 notFound();
