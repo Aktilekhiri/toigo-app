@@ -118,7 +118,7 @@ function priceBlock(lang) {
       <ul>${P.list.map(x => `<li>${x.replace("{n}", TPL.length)}</li>`).join("")}</ul>
       <a class="btn btn-gold" href="${u(lang, "/create/")}#buy">${P.buy}</a></div>
   </div>
-  <a class="prc-custom" href="${u(lang, "/custom/")}"><span><b>${C[lang].custom.cta}</b>${C[lang].custom.ctaP}</span><em>${C[lang].custom.ctaBtn} →</em></a>
+  <a class="prc-custom" href="${u(lang, "/custom/")}"><i class="prc-tag">${lang === "ru" ? "Под ключ" : "Даяр кылып беребиз"}</i><span><b>${C[lang].custom.cta}</b>${C[lang].custom.ctaP}</span><em><strong>400 сом</strong><u>${C[lang].custom.ctaBtn} →</u></em></a>
 </div></section>`;
 }
 
