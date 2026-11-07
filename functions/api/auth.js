@@ -12,7 +12,7 @@
 // SESSION_SECRET (optional; TG_SECRET is used when it is missing), TG_BOT_TOKEN (for Telegram sign-in).
 import { json } from "../../lib/server.js";
 
-const DEFAULT_GOOGLE_CLIENT_ID = "98998507136-5eda7u7us7vv104dtaaajfnabk4ivaj4.apps.googleusercontent.com";
+const DEFAULT_GOOGLE_CLIENT_ID = "518817395915-no7t3fbhk2c29na7p5p6skkgv57cu2f0.apps.googleusercontent.com";
 const SESSION_DAYS = 90;
 const enc = new TextEncoder();
 const now = () => Date.now();
