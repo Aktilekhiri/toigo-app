@@ -112,5 +112,48 @@ export const ILLUS = {
     <g stroke="#D9AE5C" stroke-width="1"><path d="M47 46l3.2-2M47 50l3.2-2M58.4 42l3.2-2M58.4 46l3.2-2M58.4 50l3.2-2M69.8 46l3.2-2M69.8 50l3.2-2"/></g>
     <circle cx="48.6" cy="37" r="6" fill="url(#b-f)"/><circle cx="60" cy="33" r="6" fill="url(#b-f)"/><circle cx="71.4" cy="37" r="6" fill="url(#b-f)"/>
     <g fill="#FFE17A"><path d="M48.6 34q2 2.5 0 5q-2-2.5 0-5z"/><path d="M60 30q2 2.5 0 5q-2-2.5 0-5z"/><path d="M71.4 34q2 2.5 0 5q-2-2.5 0-5z"/></g>
-    ${spark(34, 18, .8, "#F3D58E")}${spark(84, 52, .6)}${spark(16, 64, .7)}${spark(104, 74, .7, "#F3D58E")}`, "Торт")
+    ${spark(34, 18, .8, "#F3D58E")}${spark(84, 52, .6)}${spark(16, 64, .7)}${spark(104, 74, .7, "#F3D58E")}`, "Торт"),
+
+  // Üy toi: a house with a warm window, a key and a ribbon.
+  uy: svg(`<defs>${bg("h-bg", "#FBF5EA", "#E8D8BE")}${gold("h-g")}
+    <linearGradient id="h-w" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E9DCC6"/><stop offset=".5" stop-color="#FFFBF3"/><stop offset="1" stop-color="#DCCBB0"/></linearGradient>
+    <radialGradient id="h-l" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#FFF3C4"/><stop offset="1" stop-color="#F2B85A"/></radialGradient></defs>
+    <rect width="120" height="120" fill="url(#h-bg)"/>
+    <ellipse cx="60" cy="96" rx="40" ry="5" fill="#8C6A43" opacity=".22"/>
+    <path d="M28 58L60 32L92 58" fill="none" stroke="#A4553E" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+    <rect x="34" y="56" width="52" height="38" fill="url(#h-w)"/>
+    <rect x="76" y="36" width="7" height="14" fill="#A4553E"/>
+    <rect x="41" y="64" width="14" height="12" rx="1.5" fill="url(#h-l)"/><path d="M48 64v12M41 70h14" stroke="#C9A15A" stroke-width="1"/>
+    <path d="M64 94V72Q64 66 70 66Q76 66 76 72V94Z" fill="#8C4A35"/><circle cx="73" cy="81" r="1.2" fill="url(#h-g)"/>
+    <path d="M34 60h52" stroke="#C9B392" stroke-width="1"/>
+    <g transform="rotate(-25 96 82)"><circle cx="92" cy="82" r="5" fill="none" stroke="url(#h-g)" stroke-width="2.4"/><path d="M97 82h14M106 82v4M110 82v3" stroke="url(#h-g)" stroke-width="2.4" stroke-linecap="round"/></g>
+    ${spark(22, 34, .9, "#D9AE5C")}${spark(100, 28, .7, "#D9AE5C")}${spark(18, 78, .6, "#D9AE5C")}`, "Үй"),
+
+  // Sherine: a dastorkon with a teapot, bowls and boorsok, under string lights.
+  sherine: svg(`<defs>${bg("e-bg", "#1E4A3C", "#0B1F18")}${gold("e-g")}
+    <linearGradient id="e-p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7F0E2"/><stop offset="1" stop-color="#D9CCB3"/></linearGradient></defs>
+    <rect width="120" height="120" fill="url(#e-bg)"/>
+    <path d="M10 26Q35 40 60 26Q85 40 110 26" fill="none" stroke="#D9B977" stroke-width=".7" opacity=".8"/>
+    <g fill="#FFE3A3"><circle cx="20" cy="31" r="2"/><circle cx="35" cy="34.5" r="2"/><circle cx="50" cy="30" r="2"/><circle cx="70" cy="30" r="2"/><circle cx="85" cy="34.5" r="2"/><circle cx="100" cy="31" r="2"/></g>
+    <ellipse cx="60" cy="88" rx="46" ry="12" fill="#8E2A42"/><ellipse cx="60" cy="86" rx="46" ry="12" fill="none" stroke="url(#e-g)" stroke-width="1.2"/>
+    <path d="M44 74Q44 60 56 60H62Q74 60 74 74Q74 82 59 82Q44 82 44 74Z" fill="url(#e-p)"/>
+    <path d="M74 66Q84 62 86 56" fill="none" stroke="url(#e-p)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M44 68Q36 68 38 76" fill="none" stroke="url(#e-p)" stroke-width="2.4"/>
+    <ellipse cx="59" cy="60" rx="7" ry="2" fill="#D9CCB3"/><circle cx="59" cy="56.5" r="2.2" fill="url(#e-g)"/>
+    <path d="M47 70h24" stroke="#3E7A9C" stroke-width="2.2"/><path d="M48 74h22" stroke="url(#e-g)" stroke-width="1"/>
+    <path d="M22 86Q22 80 30 80Q38 80 38 86Z" fill="url(#e-p)"/><path d="M23 84h14" stroke="#3E7A9C" stroke-width="1.4"/>
+    <path d="M82 86Q82 80 90 80Q98 80 98 86Z" fill="url(#e-p)"/><path d="M83 84h14" stroke="#3E7A9C" stroke-width="1.4"/>
+    <g fill="#D99A4E"><rect x="52" y="88" width="5" height="4" rx="1"/><rect x="59" y="89" width="5" height="4" rx="1"/><rect x="66" y="88" width="5" height="4" rx="1"/></g>
+    ${spark(16, 56, .8, "#F3D58E")}${spark(104, 60, .7, "#F3D58E")}${spark(60, 16, .7, "#F3D58E")}`, "Дасторкон"),
+
+  // Custom event: a gift box with a gold bow and sparkles.
+  custom: svg(`<defs>${bg("c-bg", "#FFFCF6", "#EDE3D2")}${gold("c-g")}
+    <linearGradient id="c-b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E9DA"/><stop offset="1" stop-color="#D8C6AA"/></linearGradient></defs>
+    <rect width="120" height="120" fill="url(#c-bg)"/>
+    <ellipse cx="60" cy="96" rx="34" ry="5" fill="#8C6A43" opacity=".2"/>
+    <rect x="32" y="58" width="56" height="36" rx="3" fill="url(#c-b)"/>
+    <rect x="28" y="48" width="64" height="12" rx="2.5" fill="#F7F0E2" stroke="#D2C1A3"/>
+    <rect x="56" y="48" width="8" height="46" fill="url(#c-g)"/>
+    <path d="M60 48Q44 30 40 40Q37 48 60 48ZM60 48Q76 30 80 40Q83 48 60 48Z" fill="none" stroke="url(#c-g)" stroke-width="3.2" stroke-linejoin="round"/>
+    ${spark(24, 30, 1.1, "#D9AE5C")}${spark(96, 26, .9, "#D9AE5C")}${spark(100, 66, .7, "#D9AE5C")}${spark(18, 70, .7, "#D9AE5C")}${spark(60, 20, .6, "#D9AE5C")}`, "Белек")
 };

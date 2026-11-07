@@ -113,9 +113,9 @@ function priceBlock(lang) {
     <p class="prc-pay">${P.pay}</p>
   </div>
   <div class="prc-cards">
-    <div class="prc-card"><span>${P.free}</span><b>${P.freeP}</b><ul>${P.freeList.map(x => `<li>${x}</li>`).join("")}</ul><a class="btn btn-g" href="${u(lang, "/create/")}">${P.btn}</a></div>
+    <div class="prc-card"><span>${P.free}</span><b>${P.freeP}</b><p class="prc-year"><i>${P.freeNote}</i></p><ul>${P.freeList.map(x => `<li>${x}</li>`).join("")}</ul><a class="btn btn-g" href="${u(lang, "/create/")}#buy">${P.btn}</a></div>
     <div class="prc-card prc-main"><span>${P.per}</span><b>${P.sum}</b>
-      <p class="prc-year">${P.year} <i>${P.yearNote}</i></p><ul>${P.list.map(x => `<li>${x.replace("{n}", TPL.length)}</li>`).join("")}</ul>
+      <ul>${P.list.map(x => `<li>${x.replace("{n}", TPL.length)}</li>`).join("")}</ul>
       <a class="btn btn-gold" href="${u(lang, "/create/")}#buy">${P.buy}</a></div>
   </div>
   <a class="prc-custom" href="${u(lang, "/custom/")}"><span><b>${C[lang].custom.cta}</b>${C[lang].custom.ctaP}</span><em>${C[lang].custom.ctaBtn} →</em></a>
@@ -214,7 +214,7 @@ const faqLd = items => ({ "@context": "https://schema.org", "@type": "FAQPage", 
 const PAGES = [];
 
 const PH = (name, alt, w, h, cls = "", lazy = true) => `<img class="${cls}" src="/img/ph/${name}.webp" srcset="/img/ph/${name}-s.webp ${w > h ? 720 : 480}w, /img/ph/${name}.webp ${w}w" sizes="(max-width:700px) 92vw, 46vw" width="${w}" height="${h}" alt="${esc(alt)}"${lazy ? ' loading="lazy"' : ' fetchpriority="high"'} decoding="async">`;
-const OTHER = ["sunnot", "tushoo", "maarake"];
+const OTHER = ["sunnot", "tushoo", "maarake", "uy", "sherine", "custom"];
 
 function homePage(lang) {
   const H = C[lang].home, N = C[lang].nav, K = C[lang].cat;
@@ -225,7 +225,7 @@ function homePage(lang) {
     { "@context": "https://schema.org", "@type": "WebSite", name: "Тойго", url: O + "/", inLanguage: ["ky", "ru"] },
     { "@context": "https://schema.org", "@type": "Organization", name: "Тойго", url: O + "/", logo: O + "/icon-512.png" },
     { "@context": "https://schema.org", "@type": "WebApplication", name: "Тойго", url: O + u(lang, "/create/"), applicationCategory: "LifestyleApplication", operatingSystem: "Any",
-      inLanguage: lang, description: H.desc, offers: [{ "@type": "Offer", name: C[lang].price.free, price: "0", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].price.per, price: "100", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].price.year, price: "500", priceCurrency: "KGS" }] },
+      inLanguage: lang, description: H.desc, offers: [{ "@type": "Offer", name: C[lang].price.per, price: "150", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].price.year, price: "500", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].custom.k, price: "400", priceCurrency: "KGS" }] },
     faqLd(C[lang].faq)
   ];
   const cat = id => CATS.find(c => c.id === id);
@@ -359,6 +359,7 @@ function createPage(lang) {
       </div></div>
     </fieldset>
     <fieldset><legend>${S.lg2}</legend>
+      ${f("title", S.l_title, `<input id="f-title" name="title" type="text" maxlength="60" autocomplete="off" placeholder="${S.ph_title}">`, "w", S.h_title)}
       ${f("n1", S.n_pair, `<input id="f-n1" name="n1" type="text" maxlength="60" autocomplete="off" required>`)}
       ${f("n2", S.n_bride, `<input id="f-n2" name="n2" type="text" maxlength="60" autocomplete="off">`)}
       ${f("hosts", S.l_hosts, `<input id="f-hosts" name="hosts" type="text" maxlength="120" autocomplete="off" placeholder="${S.ph_hosts}">`, "w")}
@@ -461,6 +462,7 @@ function customPage(lang) {
       ${f("contact", K.l_contact, `<input id="c-contact" name="contact" type="text" maxlength="80" autocomplete="tel" placeholder="${K.ph_contact}" required>`, "w")}
     </fieldset>
     <p class="hint cu-note">${K.note}</p>
+    <div class="acc login" id="c-login" hidden></div>
     <div class="submit-row"><button class="btn btn-gold" type="submit" id="c-send">${K.btn}</button><span class="form-msg" id="c-msg" aria-live="polite"></span></div>
     <p class="hint">${K.how}</p>
   </form>

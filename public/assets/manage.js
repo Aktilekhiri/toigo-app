@@ -1,5 +1,6 @@
 // Toigo — host page: guest answers, edit link, delete.
-import { titleOf, esc } from "/assets/invite-core.js?v=mw4l37xl";
+import { session, renderLogin, onAuthChange, syncInvites, userLine } from "/assets/auth.js?v=mw6acjxe";
+import { titleOf, esc } from "/assets/invite-core.js?v=mw6acjxe";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -15,11 +16,15 @@ const m = /^([a-z0-9-]+)\.([a-z0-9]+)$/.exec(location.hash.slice(1));
 
 function list() {
   const mine = store.get("toigo-mine") || [];
-  app.innerHTML = mine.length
+  const acct = session() ? `<p class="acc ok" style="margin-bottom:16px">${userLine()}</p>` : `<div class="acc login" id="m-login" style="margin-bottom:20px"></div>`;
+  app.innerHTML = acct + (mine.length
     ? `<div class="mine">${mine.map(x => `<a href="#${esc(x.slug)}.${esc(x.key)}"><span><b>${esc(x.title)}</b><br><small style="color:var(--muted)">/i/${esc(x.slug)}</small></span><span aria-hidden="true">→</span></a>`).join("")}</div>
        <p style="margin-top:20px"><a class="btn btn-p" href="${CFG.create}">${S.m_create}</a></p>`
-    : `<div class="empty"><p>${S.m_none}</p><p style="margin-top:8px">${S.m_hint}</p><p style="margin-top:20px"><a class="btn btn-p" href="${CFG.create}">${S.m_create}</a></p></div>`;
+    : `<div class="empty"><p>${S.m_none}</p><p style="margin-top:8px">${S.m_hint}</p><p style="margin-top:20px"><a class="btn btn-p" href="${CFG.create}">${S.m_create}</a></p></div>`);
+  const lb = document.getElementById("m-login"); if (lb) renderLogin(lb, { title: S.m_login_h, text: S.m_login });
 }
+onAuthChange(() => { if (!/^([a-z0-9-]+)\.([a-z0-9]+)$/.test(location.hash.slice(1))) list(); });
+if (session()) syncInvites().then(() => { if (!/^([a-z0-9-]+)\.([a-z0-9]+)$/.test(location.hash.slice(1))) list(); });
 
 async function load(slug, key) {
   app.innerHTML = `<p class="empty">${S.loading}</p>`;

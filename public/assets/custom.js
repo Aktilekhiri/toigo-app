@@ -1,4 +1,5 @@
 // Toigo — individual invitation order: brief + photos → Finik payment (400 som, includes a month of subscription).
+import { session, authHeaders, renderLogin, onAuthChange } from "/assets/auth.js?v=mw6acjxe";
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const T = CFG.t, LANG = CFG.lang;
 const $ = s => document.querySelector(s);
@@ -47,19 +48,28 @@ $("#cform").addEventListener("submit", async e => {
   const fm = e.target, val = n => fm.elements[n].value.trim();
   if (val("names").length < 2) { msg(T.need_names); fm.elements.names.focus(); return; }
   if (val("contact").length < 3) { msg(T.need_contact); fm.elements.contact.focus(); return; }
+  if (!session()) { showLogin(); return; }
   const btn = $("#c-send"); btn.disabled = true; msg(T.sending);
   try {
     const fd = new FormData();
     ["type", "ilang", "names", "date", "place", "style", "wishes", "contact"].forEach(n => fd.set(n, val(n)));
     fd.set("device", DEVICE); fd.set("lang", LANG); fd.set("key", store.get("toigo-key") || "");
     photos.forEach((p, i) => fd.append("photos", p.blob, `photo${i}.jpg`));
-    const r = await fetch("/api/custom", { method: "POST", body: fd });
+    const r = await fetch("/api/custom", { method: "POST", headers: authHeaders(), body: fd });
+    if (r.status === 401) { btn.disabled = false; showLogin(); return; }
     const j = await r.json().catch(() => ({}));
     if (r.ok && j.url) { store.set("toigo-custom", { id: j.id, token: j.token }); location.href = j.url; return; }
     msg(r.status === 429 ? T.often : r.status === 503 ? T.off : r.status === 413 || r.status === 415 ? T.photo_big : j.error === "contact" ? T.need_contact : j.error === "names" ? T.need_names : T.err);
   } catch { msg(T.err); }
   btn.disabled = false;
 });
+
+function showLogin() {
+  const b = $("#c-login"); b.hidden = false; msg(T.need_login);
+  if (!b.dataset.on) { b.dataset.on = "1"; renderLogin(b, { title: T.login_h, text: T.login_p }); }
+  b.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+onAuthChange(() => { if (session()) { $("#c-login").hidden = true; msg(T.logged); } });
 
 // ---------- return from Finik (?paid=ID&t=TOKEN) ----------
 let tries = 0;

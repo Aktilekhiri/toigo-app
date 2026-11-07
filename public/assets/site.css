@@ -413,3 +413,17 @@ td.n{font-variant-numeric:tabular-nums}
 .btn-tg{background:#2AABEE;color:#fff;gap:8px}
 .btn-tg:hover{background:#229ED9}
 .btn-tg svg{flex:none}
+/* Sign-in box (Google / Telegram) */
+.acc.login{display:block;background:#fff;border:1px solid var(--gold);padding:18px}
+.auth-box{display:flex;flex-direction:column;gap:8px}
+.auth-h{font-family:var(--fd);font-weight:400;font-size:22px}
+.auth-p{margin:0;color:var(--muted);font-size:15px}
+.auth-btns{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:6px;min-height:44px}
+.auth-or{font-size:13px;color:var(--muted)}
+.auth-g,.auth-tg{min-height:40px;display:flex;align-items:center}
+.auth-off{font-size:13px;color:var(--muted)}
+.auth-msg{margin:0;font-size:14px;color:var(--no)}
+.auth-msg:empty{display:none}
+.auth-user{display:inline-flex;align-items:center;gap:8px;margin-left:auto;font-size:14px;color:var(--ink2)}
+.auth-user img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+.auth-out{border:0;background:none;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:13px;padding:0 0 0 4px}

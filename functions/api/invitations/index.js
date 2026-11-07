@@ -1,6 +1,7 @@
 import { clean, baseSlug } from "../../../public/assets/invite-core.js";
 import { json, err, randomId, sha256, allow, readJson, dbMissing } from "../../../lib/server.js";
 import { canCreate, useFree, PRICE } from "../pay.js";
+import { sealKey } from "../auth.js";
 
 // POST /api/invitations  → create an invitation. Returns { slug, key }.
 export async function onRequestPost({ request, env }) {
@@ -22,8 +23,8 @@ export async function onRequestPost({ request, env }) {
     slug = `${base}-${randomId(4)}`;
   }
   const key = randomId(24), now = Date.now();
-  const res = await env.DB.prepare("INSERT INTO invitations (slug, key_hash, data, created_at, updated_at) VALUES (?, ?, ?, ?, ?)")
-    .bind(slug, await sha256(key), JSON.stringify(data), now, now).run();
+  const res = await env.DB.prepare("INSERT INTO invitations (slug, key_hash, data, created_at, updated_at, user_id, key_enc) VALUES (?, ?, ?, ?, ?, ?, ?)")
+    .bind(slug, await sha256(key), JSON.stringify(data), now, now, gate.user ? gate.user.id : null, await sealKey(env, key)).run();
   const id = res.meta.last_row_id;
   await useFree(env, gate);
   if (data.photos.length) {

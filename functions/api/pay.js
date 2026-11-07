@@ -18,9 +18,10 @@
 //   TG_BOT_TOKEN, TG_ADMIN_CHAT, TG_SECRET — Telegram bot for notifications and admin commands
 import { json } from "../../lib/server.js";
 import { finikReady, createFinikPayment, readFinikWebhook, PAY_MIN } from "./finik.js";
+import { userFromRequest, attachKey, ensureAuth } from "./auth.js";
 
 export const FREE = 1;          // free invitations per device
-export const PLANS = { month: { price: 100, days: 30 }, year: { price: 500, days: 365 } };
+export const PLANS = { month: { price: 150, days: 30 }, year: { price: 500, days: 365 } };
 // Individual invitation: we design and fill in the invitation for the client (1–3 days); includes a month of subscription.
 export const CUSTOM = { price: 400, days: 30 };
 const CUSTOM_FILES = 5, CUSTOM_FILE_MAX = 4 << 20;
@@ -59,7 +60,7 @@ export async function ensure(env) {
   const cols = async t => (await env.DB.prepare(`PRAGMA table_info(${t})`).all()).results.map(c => c.name);
   const lc = await cols("pay_licenses"), oc = await cols("pay_orders");
   if (!lc.includes("expires")) await env.DB.prepare("ALTER TABLE pay_licenses ADD COLUMN expires INTEGER").run();   // NULL = lifetime
-  for (const [c, type] of [["amount", "REAL"], ["method", "TEXT"], ["pay_url", "TEXT"], ["fee", "REAL"], ["renew_key", "TEXT"], ["days", "INTEGER"], ["kind", "TEXT"], ["brief", "TEXT"]])
+  for (const [c, type] of [["amount", "REAL"], ["method", "TEXT"], ["pay_url", "TEXT"], ["fee", "REAL"], ["renew_key", "TEXT"], ["days", "INTEGER"], ["kind", "TEXT"], ["brief", "TEXT"], ["user_id", "TEXT"]])
     if (!oc.includes(c)) await env.DB.prepare(`ALTER TABLE pay_orders ADD COLUMN ${c} ${type}`).run();
   ready = true;
 }
@@ -76,6 +77,14 @@ async function getLicense(env, key) {
   if (!r || r.revoked) return null;
   return { key: r.key, devices: JSON.parse(r.devices || "[]"), expires: r.expires || null, expired: !!(r.expires && r.expires < now()) };
 }
+
+// { expires } for a valid (not revoked) key, expires = null for lifetime keys; null when the key is unknown.
+export async function keyInfo(env, key) {
+  await ensure(env);
+  const lic = await getLicense(env, normKey(key));
+  return lic ? { expires: lic.expires } : null;
+}
+const activeInfo = i => !!(i && (i.expires === null || i.expires > Date.now()));
 
 // Is the key valid for this device? Binds a new device when asked and there is room.
 export async function licenseFor(env, key, device, bind) {
@@ -121,29 +130,15 @@ async function ipCount(env, ip, kind, sinceMs) {
 // Called by POST /api/invitations before creating. Returns { ok } or { ok:false, status, error }.
 export async function canCreate(env, request) {
   await ensure(env);
-  const device = request.headers.get("x-device") || "", key = normKey(request.headers.get("x-toigo-key"));
-  if (!DEV_RE.test(device)) return { ok: false, status: 400, error: "device" };
-  if (key) {
-    const r = await licenseFor(env, key, device, true);
-    if (r.ok) return { ok: true, licensed: true };
-    if (r.reason === "devices") return { ok: false, status: 409, error: "devices" };
-    if (r.reason === "badkey") return { ok: false, status: 402, error: "badkey" };
-    // expired key: the device may still have its free invitation
-    if (await freeLeft(env, device) <= 0) return { ok: false, status: 402, error: "expired", expires: r.expires };
-  } else if (await freeLeft(env, device) <= 0) return { ok: false, status: 402, error: "pay" };
-  const ip = await ipHash(request, env);
-  if (await ipCount(env, ip, "free", 30 * 864e5) >= IP_FREE_30D) return { ok: false, status: 402, error: "pay" };
-  return { ok: true, licensed: false, device, ip };
+  const user = await userFromRequest(request, env);
+  if (!user) return { ok: false, status: 401, error: "login" };
+  const info = user.license_key ? await keyInfo(env, user.license_key) : null;
+  if (activeInfo(info)) return { ok: true, licensed: true, user };
+  return { ok: false, status: 402, error: info ? "expired" : "pay", expires: info ? info.expires : null };
 }
 
-// Called after a free invitation was created.
-export async function useFree(env, gate) {
-  if (gate.licensed) return;
-  await env.DB.batch([
-    env.DB.prepare("INSERT INTO pay_free (device, used, ip, last) VALUES (?, 1, ?, ?) ON CONFLICT(device) DO UPDATE SET used = used + 1, ip = excluded.ip, last = excluded.last").bind(gate.device, gate.ip, now()),
-    env.DB.prepare("INSERT INTO pay_ipuse (ip, ts, kind) VALUES (?, ?, 'free')").bind(gate.ip, now())
-  ]);
-}
+// Kept for compatibility: there is no free invitation any more.
+export async function useFree() {}
 
 // ---------- Telegram ----------
 async function tg(env, method, body) {
@@ -244,44 +239,45 @@ export async function handle(request, env, url) {
   const p = url.pathname.replace(/\/$/, "");
 
   if (p === "/api/access" && request.method === "GET") {
-    const device = url.searchParams.get("device") || "", key = normKey(url.searchParams.get("key"));
-    if (!DEV_RE.test(device)) return json({ error: "device" }, 400);
-    const lic = key ? await licenseFor(env, key, device, false) : { ok: false };
-    return json({ licensed: lic.ok, expires: lic.expires || null, keyError: key && !lic.ok ? lic.reason : undefined, freeLeft: await freeLeft(env, device), free: FREE, plans: PLANS, custom: CUSTOM, pay: finikReady(env) });
+    const user = await userFromRequest(request, env);
+    const info = user && user.license_key ? await keyInfo(env, user.license_key) : null;
+    return json({ login: !!user, licensed: activeInfo(info), expires: info ? info.expires : null, key: user ? user.license_key || null : null, plans: PLANS, custom: CUSTOM, pay: finikReady(env) });
   }
 
+  // Attach an older TOI key to the signed-in account
   if (p === "/api/activate" && request.method === "POST") {
-    const b = await request.json().catch(() => ({}));
-    const device = String(b.device || ""), key = normKey(b.key);
-    if (!DEV_RE.test(device)) return json({ error: "device" }, 400);
+    const user = await userFromRequest(request, env);
+    if (!user) return json({ error: "login" }, 401);
     const ip = await ipHash(request, env);
     if (await ipCount(env, ip, "activate", 3600e3) >= 20) return json({ error: "often" }, 429);
     await env.DB.prepare("INSERT INTO pay_ipuse (ip, ts, kind) VALUES (?, ?, 'activate')").bind(ip, now()).run();
-    const r = await licenseFor(env, key, device, true);
-    if (r.ok) return json({ ok: true, key, expires: r.expires || null });
-    if (r.reason === "expired") return json({ error: "expired", key, expires: r.expires }, 402);
-    return json({ error: r.reason }, r.reason === "devices" ? 409 : 404);
+    const b = await request.json().catch(() => ({}));
+    const key = normKey(b.key), info = await keyInfo(env, key);
+    if (!info) return json({ error: "badkey" }, 404);
+    await attachKey(env, user.id, key);
+    if (!activeInfo(info)) return json({ error: "expired", key, expires: info.expires }, 402);
+    return json({ ok: true, key, expires: info.expires });
   }
 
   // Subscription payment through Finik: a new key (no key given) or renewal of the given key
   if (p === "/api/pay" && request.method === "POST") {
     if (!finikReady(env)) return json({ error: "notready" }, 503);
+    const user = await userFromRequest(request, env);
+    if (!user) return json({ error: "login" }, 401);
     const b = await request.json().catch(() => ({}));
-    const device = String(b.device || ""), key = b.key ? normKey(b.key) : "", lang = b.lang === "ru" ? "ru" : "ky";
+    const device = DEV_RE.test(String(b.device || "")) ? String(b.device) : "", lang = b.lang === "ru" ? "ru" : "ky";
     const planId = PLANS[b.plan] ? b.plan : "month", plan = PLANS[planId];
-    if (!DEV_RE.test(device)) return json({ error: "device" }, 400);
     let renew = null;
-    if (key) {
-      const lic = await getLicense(env, key);
-      if (!lic) return json({ error: "badkey" }, 404);
-      if (!lic.expires) return json({ error: "lifetime" }, 409);
-      renew = key;
+    if (user.license_key) {
+      const lic = await getLicense(env, user.license_key);
+      if (lic && !lic.expires) return json({ error: "lifetime" }, 409);
+      if (lic) renew = user.license_key;
     }
     const ip = await ipHash(request, env);
     if (await ipCount(env, ip, "pay", 3600e3) >= 10) return json({ error: "often" }, 429);
     const id = "TG" + randStr(10), token = randStr(24);
     await env.DB.batch([
-      env.DB.prepare("INSERT INTO pay_orders (id, token, created, status, device, ip, amount, method, renew_key, days) VALUES (?, ?, ?, 'pending', ?, ?, ?, 'finik', ?, ?)").bind(id, token, now(), device, ip, plan.price, renew, plan.days),
+      env.DB.prepare("INSERT INTO pay_orders (id, token, created, status, device, ip, amount, method, renew_key, days, user_id, contact) VALUES (?, ?, ?, 'pending', ?, ?, ?, 'finik', ?, ?, ?, ?)").bind(id, token, now(), device, ip, plan.price, renew, plan.days, user.id, user.email || user.name || ""),
       env.DB.prepare("INSERT INTO pay_ipuse (ip, ts, kind) VALUES (?, ?, 'pay')").bind(ip, now())
     ]);
     const back = `${url.origin}${lang === "ru" ? "/ru" : ""}/create/?paid=${id}&t=${token}#buy`;
@@ -298,13 +294,14 @@ export async function handle(request, env, url) {
   // Individual invitation: brief + up to 5 photos, then Finik payment of 400 som (includes a month of subscription)
   if (p === "/api/custom" && request.method === "POST") {
     if (!finikReady(env)) return json({ error: "notready" }, 503);
+    const user = await userFromRequest(request, env);
+    if (!user) return json({ error: "login" }, 401);
     const ip = await ipHash(request, env);
     if (await ipCount(env, ip, "custom", 3600e3) >= 5) return json({ error: "often" }, 429);
     const fd = await request.formData().catch(() => null);
     if (!fd) return json({ error: "form" }, 400);
     const g = k => String(fd.get(k) || "").trim();
-    const device = g("device"), lang = g("lang") === "ru" ? "ru" : "ky", key = g("key") ? normKey(g("key")) : "";
-    if (!DEV_RE.test(device)) return json({ error: "device" }, 400);
+    const device = DEV_RE.test(g("device")) ? g("device") : "", lang = g("lang") === "ru" ? "ru" : "ky", key = user.license_key || "";
     const brief = { type: g("type").slice(0, 30), names: g("names").slice(0, 160), date: g("date").slice(0, 20), place: g("place").slice(0, 200), style: g("style").slice(0, 300), wishes: g("wishes").slice(0, 2000), contact: g("contact").slice(0, 80), lang: g("ilang").slice(0, 10) };
     if (brief.contact.length < 3) return json({ error: "contact" }, 400);
     if (brief.names.length < 2) return json({ error: "names" }, 400);
@@ -318,7 +315,7 @@ export async function handle(request, env, url) {
     const id = "TC" + randStr(10), token = randStr(24);
     const fileRows = await Promise.all(files.map(async f => env.DB.prepare("INSERT INTO pay_files (order_id, mime, bytes, created) VALUES (?, ?, ?, ?)").bind(id, f.type, new Uint8Array(await f.arrayBuffer()), now())));
     await env.DB.batch([
-      env.DB.prepare("INSERT INTO pay_orders (id, token, created, status, contact, device, ip, amount, method, renew_key, days, kind, brief) VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, 'finik', ?, ?, 'custom', ?)").bind(id, token, now(), brief.contact, device, ip, CUSTOM.price, renew, CUSTOM.days, JSON.stringify(brief)),
+      env.DB.prepare("INSERT INTO pay_orders (id, token, created, status, contact, device, ip, amount, method, renew_key, days, kind, brief, user_id) VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, 'finik', ?, ?, 'custom', ?, ?)").bind(id, token, now(), brief.contact, device, ip, CUSTOM.price, renew, CUSTOM.days, JSON.stringify(brief), user.id),
       env.DB.prepare("INSERT INTO pay_ipuse (ip, ts, kind) VALUES (?, ?, 'custom')").bind(ip, now()),
       ...fileRows
     ]);
@@ -353,6 +350,14 @@ export async function handle(request, env, url) {
     const g = await grant(env, { key: o.renew_key, device: o.device, ref: id, note: "finik " + id, days: o.days || DAYS });
     const fee = Math.round(paid * Number(env.FINIK_FEE_PCT || 0.02) * 100) / 100;
     await env.DB.prepare("UPDATE pay_orders SET status = 'approved', license_key = ?, fee = ? WHERE id = ?").bind(g.key, fee, id).run();
+    if (o.user_id) {
+      await ensureAuth(env);
+      const u = await env.DB.prepare("SELECT license_key FROM users WHERE id = ?").bind(o.user_id).first();
+      const cur = u && u.license_key ? await getLicense(env, u.license_key) : null;
+      // the account gets the paid key unless it already holds a lifetime key or a key that lasts longer
+      if (u && (!cur || cur.key === g.key || (cur.expires && g.expires && cur.expires <= g.expires)))
+        await env.DB.prepare("UPDATE users SET license_key = ? WHERE id = ?").bind(g.key, o.user_id).run();
+    }
     if (o.kind === "custom") await notifyCustom(env, o, g, paid, fee);
     else await notifyAdmin(env, `💳 Тойго: оплата ${paid} сом (Finik)\n${g.renewed ? "🔁 Продление" : "🆕 Новая подписка"} (${(o.days || DAYS) >= 365 ? "год" : "месяц"}): ${g.key}\nДействует ${g.expires ? "до " + fmtDate(g.expires) : "навсегда"}\nКомиссия ≈ ${fee} сом`);
     return new Response("ok");

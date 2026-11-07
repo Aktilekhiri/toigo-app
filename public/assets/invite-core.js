@@ -9,8 +9,13 @@ export const TYPES = {
   sunnot:  { ky: "Сүннөт той", ru: "Сүннөт той", names: "child" },
   tushoo:  { ky: "Тушоо кесүү", ru: "Тушоо кесүү", names: "child" },
   maarake: { ky: "Маараке", ru: "Юбилей", names: "jub" },
-  tuulgan: { ky: "Туулган күн", ru: "День рождения", names: "bday" }
+  tuulgan: { ky: "Туулган күн", ru: "День рождения", names: "bday" },
+  uy:      { ky: "Үй той", ru: "Новоселье", names: "host" },
+  sherine: { ky: "Шерине", ru: "Шерине", names: "host" },
+  custom:  { ky: "Башка той", ru: "Своё событие", names: "bday" }
 };
+// Types for which the person writes the event name themselves.
+export const OPEN_TYPES = ["custom"];
 
 // Types with two names (groom & bride).
 export const isPair = t => !!(TYPES[t] && TYPES[t].names === "pair");
@@ -34,6 +39,15 @@ export const TPL = [
   { id: "anar",    name: { ky: "Анар",      ru: "Анар" },      desc: { ky: "Анар түсү, алтын чекиттер. Кыз узатууга ылайык.", ru: "Гранатовый цвет и золотые точки. Для кыз узатуу." }, types: ["kyz","uylonuu","maarake"] },
   { id: "asman",   name: { ky: "Көк асман", ru: "Көк асман" }, desc: { ky: "Ачык асман жана ак булуттар. Балдар тою үчүн.", ru: "Светлое небо и облака. Для детских тоев." }, types: ["sunnot","tushoo","tuulgan"] }
 ];
+
+// Designs offered for the newer toi types; every design also fits a custom event.
+const EXTRA_TYPES = {
+  uy: ["muras", "ivorygold", "bloom", "jailoo", "heritage", "akkalpak", "jibek", "wclake", "mountain", "shyrdak", "silk", "garden"],
+  sherine: ["emnight", "noir", "golden", "jailoo", "shyrdak", "muras", "alatoo", "nomad", "pop", "akjol", "lens"]
+};
+TPL.forEach(t => {
+  t.types = [...new Set([...t.types, ...Object.keys(EXTRA_TYPES).filter(k => EXTRA_TYPES[k].includes(t.id)), "custom"])];
+});
 
 export const IV = {
   ky: { inv: "Сиздерди тоюбузга чакырабыз", cd: "Тойго чейин калды", d: "күн", h: "саат", m: "мүнөт", s: "секунд",
@@ -123,6 +137,36 @@ export const TYPE_TEXT = {
           msgs: ["Друзья! Хочу отметить свой день рождения вместе с вами. Очень жду каждого из вас!", "Дорогой гость! Хочу встретить новый год жизни в кругу самых близких. Вас ждут тёплая атмосфера и весёлый вечер.", "Торт, музыка и хорошее настроение уже готовы — не хватает только вас! Приходите на мой день рождения."],
           prog: "18:00 — Встреча гостей\n18:30 — Праздничный стол\n20:00 — Торт и поздравления" }
   }
+  ,uy: {
+    ky: { inv: "Сиздерди үй тоюбузга чакырабыз", cd: "Үй тойго чейин калды", n1: "Асановдор үй-бүлөсү", n2: "",
+          msg: "Урматтуу туугандар жана досторубуз! Жаңы үйгө көчүп келдик. Ушул кубанычыбызды бөлүшүп, жаңы үйүбүзгө ак батаңыздарды берүүгө чакырабыз.",
+          msgs: ["Урматтуу туугандар жана досторубуз! Жаңы үйгө көчүп келдик. Ушул кубанычыбызды бөлүшүп, жаңы үйүбүзгө ак батаңыздарды берүүгө чакырабыз.", "Кымбаттуу жакындарыбыз! Жаңы үйүбүздүн босогосун биринчилерден болуп аттап, дасторконубуздан даам татып кетиңиздер.", "Урматтуу коноктор! Үй тоюбузга келип, шаңыбызга шаң кошуңуздар. Жаңы үйүбүз береке менен толсун!"],
+          prog: "18:00 — Конокторду тосуу\n18:30 — Дасторкон\n19:30 — Бата жана каалоо-тилектер\n22:00 — Коштошуу" },
+    ru: { inv: "Приглашаем вас на новоселье", cd: "До новоселья осталось", n1: "Семья Асановых", n2: "",
+          msg: "Дорогие родные и друзья! Мы переехали в новый дом и хотим разделить с вами эту радость. Приходите благословить наш новый дом!",
+          msgs: ["Дорогие родные и друзья! Мы переехали в новый дом и хотим разделить с вами эту радость. Приходите благословить наш новый дом!", "Дорогие близкие! Будем рады, если вы одними из первых переступите порог нашего нового дома и разделите с нами праздничный стол.", "Дорогие гости! Приглашаем на наше новоселье. Пусть новый дом будет полон тепла и достатка!"],
+          prog: "18:00 — Встреча гостей\n18:30 — Праздничный стол\n19:30 — Бата и пожелания\n22:00 — Завершение" }
+  },
+  sherine: {
+    ky: { inv: "Сиздерди шеринеге чакырабыз", cd: "Шеринеге чейин калды", n1: "Нурлан", n2: "",
+          msg: "Урматтуу досторубуз! Бул жолку шерине биздин үйдө. Чогулуп, сагынышып, жылуу маек куралы!",
+          msgs: ["Урматтуу досторубуз! Бул жолку шерине биздин үйдө. Чогулуп, сагынышып, жылуу маек куралы!", "Достор! Кезектеги шерине келди. Баарыңарды күтөбүз, дасторкон даяр!", "Кымбаттуу шерине мүчөлөрү! Бул жолу биз тосуп алабыз. Келгиле, бирге кеч өткөрөлү!"],
+          prog: "19:00 — Чогулуу\n19:30 — Дасторкон\n21:00 — Оюн-зоок, ыр-музыка" },
+    ru: { inv: "Приглашаем вас на шерине", cd: "До шерине осталось", n1: "Нурлан", n2: "",
+          msg: "Дорогие друзья! В этот раз шерине у нас. Соберёмся, пообщаемся и проведём тёплый вечер вместе!",
+          msgs: ["Дорогие друзья! В этот раз шерине у нас. Соберёмся, пообщаемся и проведём тёплый вечер вместе!", "Друзья! Очередное шерине уже скоро. Ждём всех, стол накрыт!", "Дорогие участники шерине! В этот раз встречаем мы. Приходите, проведём вечер вместе!"],
+          prog: "19:00 — Сбор гостей\n19:30 — Праздничный стол\n21:00 — Игры, песни и музыка" }
+  },
+  custom: {
+    ky: { inv: "Сиздерди майрамыбызга чакырабыз", cd: "Майрамга чейин калды", n1: "Айбек", n2: "",
+          msg: "Урматтуу туугандар жана досторубуз! Бул кубанычтуу күндү сиздер менен бирге белгилегибиз келет. Келиңиздер, күтөбүз!",
+          msgs: ["Урматтуу туугандар жана досторубуз! Бул кубанычтуу күндү сиздер менен бирге белгилегибиз келет. Келиңиздер, күтөбүз!", "Кымбаттуу коноктор! Майрамыбызга келип, шаңыбызга шаң кошуңуздар.", "Достор! Бул күндү сиздерсиз элестете албайбыз. Баарыңарды күтөбүз!"],
+          prog: "18:00 — Конокторду тосуу\n19:00 — Майрам башталат\n22:00 — Коштошуу" },
+    ru: { inv: "Приглашаем вас на наш праздник", cd: "До праздника осталось", n1: "Айбек", n2: "",
+          msg: "Дорогие родные и друзья! Хотим отметить этот радостный день вместе с вами. Приходите, ждём!",
+          msgs: ["Дорогие родные и друзья! Хотим отметить этот радостный день вместе с вами. Приходите, ждём!", "Дорогие гости! Приходите на наш праздник и разделите с нами радость.", "Друзья! Этот день без вас не представить. Ждём каждого!"],
+          prog: "18:00 — Встреча гостей\n19:00 — Начало праздника\n22:00 — Завершение" }
+  }
 };
 
 export const DEFAULTS = {
@@ -165,6 +209,7 @@ export function clean(input) {
   d.tpl = TPL.some(t => t.id === i.tpl) ? i.tpl : "alatoo";
   d.lang = ["ky", "ru", "both"].includes(i.lang) ? i.lang : "ky";
   d.n1 = str(i.n1, 60); d.n2 = str(i.n2, 60); d.hosts = str(i.hosts, 120);
+  d.title = d.type === "custom" ? str(i.title, 60) : "";
   d.date = /^\d{4}-\d{2}-\d{2}$/.test(i.date || "") ? i.date : "";
   d.time = /^\d{2}:\d{2}$/.test(i.time || "") ? i.time : "";
   d.dl = /^\d{4}-\d{2}-\d{2}$/.test(i.dl || "") ? i.dl : "";
@@ -195,7 +240,7 @@ export function eventTs(d) {
 export function titleOf(d, lang) {
   const L = lang === "both" ? "ky" : lang;
   const who = isPair(d.type) ? [d.n1, d.n2].filter(Boolean).join(" & ") : d.n1;
-  return `${who || "…"} — ${TYPES[d.type][L]}`;
+  return `${who || "…"} — ${d.type === "custom" && d.title ? d.title : TYPES[d.type][L]}`;
 }
 
 const HORN = '<svg class="orn" aria-hidden="true" viewBox="0 0 40 24"><path d="M20 23C20 13 15 6 9 6C4 6 2 10 3.5 13C5 16 9.5 15.5 9.5 12.5C9.5 10.5 7.5 9.5 6.3 10.6M20 23C20 13 25 6 31 6C36 6 38 10 36.5 13C35 16 30.5 15.5 30.5 12.5C30.5 10.5 32.5 9.5 33.7 10.6M20 23V2M17 5L20 2L23 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
@@ -223,6 +268,7 @@ function mk(lang) {
     P: k => both ? `${IV.ky[k]} / ${IV.ru[k]}` : IV[lang][k],
     TT: (t, k) => { const o = TYPE_TEXT[t] || TYPE_TEXT.uylonuu; return both ? `${o.ky[k]}<span class="alt">${o.ru[k]}</span>` : o[lang][k]; },
     type: t => { const o = TYPES[t]; return both ? (o.ky === o.ru ? o.ky : `${o.ky}<span class="alt">${o.ru}</span>`) : o[lang]; },
+    typeOf: d => (d.type === "custom" && d.title ? esc(d.title) : null),
     date: s => both ? `${longDate(s, "ky")}<span class="alt">${longDate(s, "ru")}</span>` : longDate(s, lang),
     wd: s => both ? `${weekday(s, "ky")} / ${weekday(s, "ru")}` : weekday(s, lang),
     deadline: s => {
@@ -245,7 +291,7 @@ export const invClass = (tpl, type) => `inv t-${tpl}${NEW_TPL.has(tpl) ? " nw" :
 const ruYears = n => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? "год" : a >= 2 && a <= 4 && (b < 12 || b > 14) ? "года" : "лет"; };
 function ageWord(n, lang) { return lang === "ru" ? ruYears(n) : lang === "both" ? `жаш / ${ruYears(n)}` : "жаш"; }
 const hasAge = d => d.age && (d.type === "maarake" || d.type === "tuulgan");
-function eyebrow(d, T) { return T.type(d.type) + (hasAge(d) && !["golden","pop","editorial"].includes(d.tpl) ? ` · ${d.age} ${ageWord(d.age, d.lang)}` : ""); }
+function eyebrow(d, T) { return (T.typeOf(d) || T.type(d.type)) + (hasAge(d) && !["golden","pop","editorial"].includes(d.tpl) ? ` · ${d.age} ${ageWord(d.age, d.lang)}` : ""); }
 function dparts(d) {
   const p = parseD(d.date); if (!p) return null;
   const L = d.lang === "ru" ? "ru" : "ky";
@@ -300,12 +346,12 @@ function coverNew(d, T, opts) {
     case "anarp": return `<div class="cv"><div class="ap-frame"></div>${["tl","tr","bl","br"].map(c => `<span class="cn ${c}">${CORNER}</span>`).join("")}<div class="fl">${FLOWER}</div>${ey}${nm}<div class="dt">${longD}</div>${sub}</div>`;
     case "emerald": return `<div class="cv"><div class="em-card"><div class="st">${STAR8}</div>${ey}${nm}<div class="ivr"><i></i><b></b><i></i></div><div class="dt">${dot}</div>${sub}</div></div>`;
     case "steps": return `<div class="cv"><span class="sun"></span><svg class="cloud c1" viewBox="0 0 120 50" aria-hidden="true">${CLOUD}</svg><svg class="cloud c2" viewBox="0 0 120 50" aria-hidden="true">${CLOUD}</svg>${ey}${nm}<div class="dt">${p ? `${p.day} ${d.lang === "ru" ? p.mon : p.monKy}` : ""}</div>${sub}${FEET}<svg class="hills" viewBox="0 0 400 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 60C80 20 150 30 220 52S340 70 400 40V90H0Z" fill="#A9C3A0" opacity=".55"/><path d="M0 72C90 48 170 60 250 74S350 80 400 66V90H0Z" fill="#8FB089"/></svg></div>`;
-    case "golden": return `<div class="cv">${burst()}<div class="ey">${T.type(d.type)}</div>${hasAge(d) ? `<div class="big">${d.age}</div><div class="bigl">${ageWord(d.age, d.lang)}</div>` : `<div class="dia">${DIAMOND}</div>`}${nm}<div class="dt">${dot}</div>${sub}</div>`;
-    case "pop": return `<div class="cv">${BALLOONS}<span class="cf"></span><div class="ey">${T.type(d.type)}</div>${hasAge(d) ? `<div class="big">${d.age}</div>` : ""}${nm}<div class="dt">${p ? `${p.day} ${d.lang === "ru" ? p.mon : p.monKy}${d.time ? " · " + esc(d.time) : ""}` : ""}</div><div class="sub">${esc(T.wd(d.date))}</div></div>`;
+    case "golden": return `<div class="cv">${burst()}<div class="ey">${(T.typeOf(d) || T.type(d.type))}</div>${hasAge(d) ? `<div class="big">${d.age}</div><div class="bigl">${ageWord(d.age, d.lang)}</div>` : `<div class="dia">${DIAMOND}</div>`}${nm}<div class="dt">${dot}</div>${sub}</div>`;
+    case "pop": return `<div class="cv">${BALLOONS}<span class="cf"></span><div class="ey">${(T.typeOf(d) || T.type(d.type))}</div>${hasAge(d) ? `<div class="big">${d.age}</div>` : ""}${nm}<div class="dt">${p ? `${p.day} ${d.lang === "ru" ? p.mon : p.monKy}${d.time ? " · " + esc(d.time) : ""}` : ""}</div><div class="sub">${esc(T.wd(d.date))}</div></div>`;
     case "heritage": return `<div class="cv"><div class="hb">${kyal(16)}</div><div class="hg"><div class="hl">${ey}${nm}</div>${p ? `<div class="hd"><b>${p.dd}</b><span>${d.lang === "ru" ? p.mon : p.monKy}</span><span>${p.y}</span></div>` : ""}</div>${sub}<div class="hb bot">${kyal(16)}</div></div>`;
     case "botanical": return `<div class="cv"><span class="lf tl">${BRANCH}</span><span class="lf br">${BRANCH}</span>${photo ? `<div class="ph"><img src="${esc(photo)}" alt=""></div>` : `<div class="wr">${WREATH}<span>${esc(initials(d))}</span></div>`}${ey}${nm}<div class="dt">${longD}</div>${sub}</div>`;
     case "midnight": return `<div class="cv">${stars()}<span class="moon"></span>${ey}${nm}<div class="spk">${SPARK}</div><div class="dt">${dot}</div>${sub}</div>`;
-    case "editorial": return `<div class="cv"><div class="ey">${T.type(d.type)}</div>${hasAge(d) ? `<div class="big">${d.age}</div>` : ""}${nm}<div class="edd">${p ? `<b>${p.dd}.${p.mm}</b><span>${p.y}</span>` : ""}<span>${when(d, T)}</span></div><span class="bar"></span></div>`;
+    case "editorial": return `<div class="cv"><div class="ey">${(T.typeOf(d) || T.type(d.type))}</div>${hasAge(d) ? `<div class="big">${d.age}</div>` : ""}${nm}<div class="edd">${p ? `<b>${p.dd}.${p.mm}</b><span>${p.y}</span>` : ""}<span>${when(d, T)}</span></div><span class="bar"></span></div>`;
   }
   return "";
 }

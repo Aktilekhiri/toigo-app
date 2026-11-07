@@ -77,7 +77,10 @@ const FX = {
   sunnot:  { n: 26, kinds: ["star"], colors: ["#F2C46B", "#FFE3A3", "#FFFFFF"], dir: 1 },
   tushoo:  { n: 18, kinds: ["bubble"], colors: ["#9CCBF0", "#FFFFFF", "#F7C58A"], dir: -1 },
   maarake: { n: 30, kinds: ["spark"], colors: ["#E2BE77", "#FFF0C8", "#C99A4B"], dir: -1 },
-  tuulgan: { n: 34, kinds: ["confetti"], colors: ["#FF6B8B", "#FFC94A", "#4CC9F0", "#7BD389", "#B794F6"], dir: 1 }
+  tuulgan: { n: 34, kinds: ["confetti"], colors: ["#FF6B8B", "#FFC94A", "#4CC9F0", "#7BD389", "#B794F6"], dir: 1 },
+  uy:      { n: 24, kinds: ["spark"], colors: ["#E2BE77", "#FFF0C8", "#C99A4B"], dir: -1 },
+  sherine: { n: 26, kinds: ["star"], colors: ["#F2C46B", "#FFE3A3", "#FFFFFF"], dir: 1 },
+  custom:  { n: 24, kinds: ["spark", "petal"], colors: ["#E2BE77", "#F6B3C2", "#FFF0C8"], dir: 1 }
 };
 const REDUCE = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const fxList = new Set();

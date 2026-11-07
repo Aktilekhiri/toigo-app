@@ -1,6 +1,6 @@
 // Toigo — small behaviors shared by site pages.
-import { renderInvitation } from "/assets/invite-core.js?v=mw4l37xl";
-import { startLive } from "/assets/invite-live.js?v=mw4l37xl";
+import { renderInvitation } from "/assets/invite-core.js?v=mw6acjxe";
+import { startLive } from "/assets/invite-live.js?v=mw6acjxe";
 
 // Copy buttons: <button data-copy="#selector" data-done="Copied">
 document.addEventListener("click", async e => {
@@ -38,12 +38,12 @@ if (hp) {
 // Hero: 3D rings, loaded after the page is ready so the first paint stays fast.
 const media = document.getElementById("heroMedia");
 if (media) {
-  const go = () => import("/assets/rings.js?v=mw4l37xl").then(m => m.mountRings(media, { shift: getComputedStyle(document.querySelector(".stage .phone")).display !== "none" })).catch(() => {});
+  const go = () => import("/assets/rings.js?v=mw6acjxe").then(m => m.mountRings(media, { shift: getComputedStyle(document.querySelector(".stage .phone")).display !== "none" })).catch(() => {});
   if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1500 }); else setTimeout(go, 300);
 }
 
 // Catalog filter (home): chips with data-filter="" | type | "other"
-const OTHER = ["sunnot", "tushoo", "maarake"];
+const OTHER = ["sunnot", "tushoo", "maarake", "uy", "sherine"];
 document.addEventListener("click", e => {
   const c = e.target.closest(".chip-f"); if (!c) return;
   const f = c.dataset.filter;
