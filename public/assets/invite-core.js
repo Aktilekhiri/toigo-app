@@ -192,12 +192,13 @@ export function baseSlug(d) {
 }
 
 // Server-side and client-side cleaning: whitelist fields, clamp lengths.
-// Background tracks. "komuz" is Toigo's own; the others are royalty-free tracks chosen by the owner.
+// Background tracks. "komuz" is Toigo's own; the others are tracks chosen by the owner ("bailandym" is a commercial song added at the owner's request).
 export const TRACKS = [
   { id: "komuz", file: "toi-music-3", ky: "Комуз (Тойго)", ru: "Комуз (Тойго)" },
   { id: "atlas", file: "toi-atlas-1", ky: "Atlas Kyrgyzstan", ru: "Atlas Kyrgyzstan" },
   { id: "m3", file: "toi-melody-3", ky: "Обон 3", ru: "Мелодия 3" },
-  { id: "m4", file: "toi-melody-4", ky: "Обон 4", ru: "Мелодия 4" }
+  { id: "m4", file: "toi-melody-4", ky: "Обон 4", ru: "Мелодия 4" },
+  { id: "bailandym", file: "toi-bailandym", ky: "Байландым (Freeman 996)", ru: "Байландым (Freeman 996)" }
 ];
 export const trackFile = id => (TRACKS.find(t => t.id === id) || TRACKS[0]).file;
 
