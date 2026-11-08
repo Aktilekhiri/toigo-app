@@ -1,6 +1,7 @@
 import { renderInvitation, titleOf, longDate, TYPES, esc } from "../../public/assets/invite-core.js";
 import { VERSION } from "../../lib/pages.js";
 import { PREM_THEME } from "../../public/assets/invite-premium.js";
+import { ogVersion } from "../api/og.js";
 
 const notFound = origin => new Response(`<!doctype html><html lang="ky"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Чакыруу табылган жок</title>
 <style>body{font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;padding:16px;text-align:center;color:#16191D;background:#fff}a{color:#16191D}</style></head>
@@ -27,7 +28,10 @@ export async function onRequestGet({ request, env, params, waitUntil }) {
   const title = guest ? (lang === "ky" ? `${guest.name}, сизди чакырабыз — ${titleOf(d, d.lang)}` : `${guest.name}, приглашаем вас — ${titleOf(d, d.lang)}`) : titleOf(d, d.lang);
   const descParts = [longDate(d.date, lang), d.time, d.venue].filter(Boolean);
   const desc = (lang === "ky" ? "Сиздерди тоюбузга чакырабыз. " : "Приглашаем вас на наш праздник. ") + descParts.join(" · ");
-  const ogImage = d.photos && d.photos.length ? `${origin}/media/${d.photos[0]}` : `${origin}/img/og-${d.tpl}.png`;
+  // Preview card: the image drawn from this invitation's own cover; older invitations fall back to their
+  // first photo or the Toigo card (never the design sample, which shows example names).
+  const ogV = await ogVersion(env, row.id);
+  const ogImage = ogV ? `${origin}/og/${row.slug}.jpg?v=${ogV}` : d.photos && d.photos.length ? `${origin}/media/${d.photos[0]}` : `${origin}/img/og-${lang}.png`;
   const pageUrl = `${origin}/i/${row.slug}${guest ? "/" + guest.code : ""}`;
   const body = renderInvitation(d, { mode: "live", slug: row.slug, pf: "g", guest });
   const themeColor = { ivory: "#FAF7F0", anarp: "#6E1735", emerald: "#124B40", steps: "#DCEEF8", golden: "#171717", pop: "#FFF9F3", heritage: "#842E3A", botanical: "#FFFFFF", midnight: "#0B1428", editorial: "#FFFFFF", alatoo: "#1D2742", akkalpak: "#FFFFFF", shyrdak: "#7E2A20", jibek: "#E3E8DF", anar: "#5B1626", asman: "#DCEAF4", ...PREM_THEME }[d.tpl] || "#FFFFFF";
@@ -47,7 +51,7 @@ export async function onRequestGet({ request, env, params, waitUntil }) {
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${pageUrl}">
-<meta property="og:image" content="${ogImage}">
+<meta property="og:image" content="${ogImage}">${ogV ? `\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">` : ""}
 <meta property="og:locale" content="${lang === "ky" ? "ky_KG" : "ru_RU"}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">

@@ -47,13 +47,13 @@ def site_og(lang):
     horn(d, 112, 120, 34, gold)
     Font("yeseva-one", 64).draw(d, (165, 82), "Тойго", ink)
     if lang == "ky":
-        l1, l2, sub = "Онлайн чакыруулар", "акысыз жана 5 мүнөттө", "Үйлөнүү той · Кыз узатуу · Сүннөт той · Тушоо кесүү · Маараке"
+        l1, l2, sub = "Онлайн чакыруулар", "5 мүнөттө даяр", "Үйлөнүү той · Кыз узатуу · Сүннөт той · Тушоо кесүү · Маараке"
     else:
-        l1, l2, sub = "Онлайн-приглашения", "на той бесплатно", "Свадьба · Кыз узатуу · Сүннөт той · Тушоо кесүү · Юбилей"
+        l1, l2, sub = "Онлайн-приглашения", "на той за 5 минут", "Свадьба · Кыз узатуу · Сүннөт той · Тушоо кесүү · Юбилей"
     big = Font("yeseva-one", 54)
     big.draw(d, (80, 250), l1, ink); big.draw(d, (80, 318), l2, gold)
     Font("rubik", 20).draw(d, (82, 430), sub, mut)
-    Font("rubik", 24, "500").draw(d, (82, 520), "toigo.app   ·   KG · RU   ·   0 сом", ink)
+    Font("rubik", 24, "500").draw(d, (82, 520), "toigo.app   ·   KG · RU   ·   " + ("айына 150 сом" if lang == "ky" else "150 сом в месяц"), ink)
     # phone card on the right
     px, py, pw, ph = 860, 70, 270, 520
     d.rounded_rectangle([px, py, px + pw, py + ph], 38, fill="#0E1318")
@@ -61,12 +61,11 @@ def site_og(lang):
     # mountains
     d.polygon([(px + 10, py + ph - 10), (px + 10, py + ph - 120), (px + 70, py + ph - 180), (px + 120, py + ph - 130), (px + 180, py + ph - 210), (px + pw - 10, py + ph - 120), (px + pw - 10, py + ph - 10)], fill="#2A3555")
     horn(d, px + pw / 2, py + 120, 18, "#D2AE62", 2)
-    Font("rubik", 14, "500").draw(d, (px + pw / 2, py + 160), "ҮЙЛӨНҮҮ ТОЙ" if lang == "ky" else "СВАДЬБА", "#D2AE62", "m")
-    nf = Font("yeseva-one", 38)
-    nf.draw(d, (px + pw / 2, py + 195), "Айбек", "#EFEBE3", "m")
-    Font("yeseva-one", 26).draw(d, (px + pw / 2, py + 245), "&", "#D2AE62", "m")
-    nf.draw(d, (px + pw / 2, py + 280), "Айзада", "#EFEBE3", "m")
-    Font("yeseva-one", 22).draw(d, (px + pw / 2, py + 345), "12 · 06 · 2027", "#D2AE62", "m")
+    # no example names here: this card is also the fallback preview of real invitations
+    nf = Font("yeseva-one", 34)
+    for i, line in enumerate(["Сизди", "тойго", "чакырабыз"] if lang == "ky" else ["Приглашаем", "вас", "на праздник"]):
+        nf.draw(d, (px + pw / 2, py + 180 + i * 48), line, "#EFEBE3", "m")
+    Font("rubik", 18, "500").draw(d, (px + pw / 2, py + 365), "toigo.app", "#D2AE62", "m")
     im.save(f"public/img/og-{lang}.png", optimize=True)
 
 TPLC = {

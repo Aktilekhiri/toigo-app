@@ -1,7 +1,7 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mw84pvyf";
-import { session, authHeaders, renderLogin, onAuthChange, userLine, syncInvites } from "/assets/auth.js?v=mw84pvyf";
-import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mw84pvyf";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mw86mvaz";
+import { session, authHeaders, renderLogin, onAuthChange, userLine, syncInvites } from "/assets/auth.js?v=mw86mvaz";
+import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mw86mvaz";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -206,6 +206,8 @@ form.addEventListener("submit", async e => {
     if (!edit) { store.del("toigo-draft-" + LANG); edit = { slug, key }; history.replaceState(null, "", `#edit=${slug}.${key}`); }
     btn.textContent = S.update;
     done(slug, key);
+    // Preview card for WhatsApp/Telegram, drawn from this cover (in the background; the link works without it).
+    import("/assets/og-card.js?v=mw86mvaz").then(m => m.makeOgCard(clean(d), slug, key, photoUrl)).catch(() => {});
   } catch { msg.textContent = S.net; }
   finally { btn.disabled = false; if (btn.textContent === S.saving) btn.textContent = label; }
 });
@@ -213,7 +215,7 @@ form.addEventListener("submit", async e => {
 function done(slug, key) {
   const link = `${location.origin}/i/${slug}`;
   const manage = `${location.origin}${CFG.manage}#${slug}.${key}`;
-  const text = `${S.share_text} ${titleOf(d, d.lang)}\n${link}`;
+  const msgText = `${S.share_text}\n${titleOf(d, d.lang)}`, text = `${msgText}\n\n${link}`;
   const box = $("#done");
   box.className = "done"; box.hidden = false;
   box.innerHTML = `<h3>${S.done_h}</h3>
@@ -221,7 +223,7 @@ function done(slug, key) {
     <div class="copyrow"><input id="out-link" type="text" readonly value="${esc(link)}" aria-label="${S.link}"><button type="button" class="btn btn-p btn-sm" data-copy="#out-link" data-done="${S.copied}">${S.copy}</button></div>
     <div class="copyrow">
       <a class="btn btn-gold btn-sm" href="https://wa.me/?text=${encodeURIComponent(text)}" target="_blank" rel="noopener">${S.wa}</a>
-      <a class="btn btn-g btn-sm" href="https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(S.share_text)}" target="_blank" rel="noopener">${S.tg}</a>
+      <a class="btn btn-g btn-sm" href="https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(msgText)}" target="_blank" rel="noopener">${S.tg}</a>
       <a class="btn btn-g btn-sm" href="${esc(link)}" target="_blank" rel="noopener">${S.open}</a>
     </div>
     <div class="warn"><b>${S.manage_h}.</b> ${S.manage_warn}</div>

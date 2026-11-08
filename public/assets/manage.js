@@ -1,6 +1,6 @@
 // Toigo — host page: guest answers, edit link, delete.
-import { session, renderLogin, onAuthChange, syncInvites, userLine } from "/assets/auth.js?v=mw84pvyf";
-import { titleOf, esc } from "/assets/invite-core.js?v=mw84pvyf";
+import { session, renderLogin, onAuthChange, syncInvites, userLine } from "/assets/auth.js?v=mw86mvaz";
+import { titleOf, esc } from "/assets/invite-core.js?v=mw86mvaz";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -37,6 +37,8 @@ async function load(slug, key) {
   } catch { app.innerHTML = `<div class="empty"><p>${S.net}</p><p style="margin-top:16px"><button class="btn btn-g" type="button" id="retry">${S.refresh}</button></p></div>`; document.getElementById("retry").onclick = () => load(slug, key); return; }
 
   const d = res.data, g = res.guests, invitees = res.invitees || [];
+  // Invitations made before preview cards existed get theirs the first time the owner opens this page.
+  if (!res.og && !window.__ogTried) { window.__ogTried = 1; import("/assets/og-card.js?v=mw86mvaz").then(m => m.makeOgCard(d, slug, key, id => `/media/${id}`)).catch(() => {}); }
   const answerOf = id => g.find(x => x.guest_id === id);
   const title = titleOf(d, d.lang);
   document.getElementById("mh1").textContent = title;
@@ -46,7 +48,7 @@ async function load(slug, key) {
   const yes = g.filter(x => x.attending), no = g.filter(x => !x.attending);
   const people = yes.reduce((a, x) => a + (x.guests || 1), 0);
   const link = `${location.origin}/i/${slug}`;
-  const share = `https://wa.me/?text=${encodeURIComponent(`${S.share_text} ${title}\n${link}`)}`;
+  const share = `https://wa.me/?text=${encodeURIComponent(`${S.share_text}\n${title}\n\n${link}`)}`;
 
   app.innerHTML = `
   <div class="copyrow" style="margin-bottom:16px"><input id="m-link" type="text" readonly value="${esc(link)}" aria-label="${S.link}"><button type="button" class="btn btn-p btn-sm" data-copy="#m-link" data-done="${S.copied}">${S.copy}</button></div>

@@ -10,10 +10,13 @@ import * as sitemap from "../functions/sitemap.xml.js";
 import * as robots from "../functions/robots.txt.js";
 import * as pay from "../functions/api/pay.js";
 import * as auth from "../functions/api/auth.js";
+import * as og from "../functions/api/og.js";
 
 const ROUTES = [
   [/^\/api\/invitations\/?$/, invitations, []],
   [/^\/api\/invitations\/([a-z0-9-]+)\/?$/, invitation, ["slug"]],
+  [/^\/api\/invitations\/([a-z0-9-]+)\/og\/?$/, og, ["slug"]],
+  [/^\/og\/([a-z0-9-]+)\.jpg$/, og, ["slug"]],
   [/^\/api\/rsvp\/([a-z0-9-]+)\/?$/, rsvp, ["slug"]],
   [/^\/api\/photos\/?$/, photos, []],
   [/^\/media\/([a-z0-9]+)$/, media, ["id"]],

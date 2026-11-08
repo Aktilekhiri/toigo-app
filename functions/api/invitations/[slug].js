@@ -1,5 +1,6 @@
 import { clean } from "../../../public/assets/invite-core.js";
 import { json, err, readJson, checkKey, dbMissing, allow, randomId } from "../../../lib/server.js";
+import { deleteOg, ogVersion } from "../og.js";
 
 const keyOf = request => request.headers.get("x-edit-key") || "";
 
@@ -11,7 +12,7 @@ export async function onRequestGet({ request, env, params }) {
   if (!row) return err("not_found", 404);
   const { results } = await env.DB.prepare("SELECT id, name, attending, guests, note, guest_id, created_at FROM rsvps WHERE invitation_id = ? ORDER BY created_at DESC").bind(row.id).all();
   const inv = await env.DB.prepare("SELECT id, code, name, phone, seat, opens, opened_at, created_at FROM guests WHERE invitation_id = ? ORDER BY id").bind(row.id).all();
-  return json({ slug: row.slug, data: JSON.parse(row.data), views: row.views, created_at: row.created_at, updated_at: row.updated_at, guests: results, invitees: inv.results });
+  return json({ slug: row.slug, data: JSON.parse(row.data), og: await ogVersion(env, row.id), views: row.views, created_at: row.created_at, updated_at: row.updated_at, guests: results, invitees: inv.results });
 }
 
 // PUT /api/invitations/:slug  → update data
@@ -44,6 +45,7 @@ export async function onRequestDelete({ request, env, params }) {
     env.DB.prepare("DELETE FROM guests WHERE invitation_id = ?").bind(row.id),
     env.DB.prepare("DELETE FROM invitations WHERE id = ?").bind(row.id)
   ]);
+  await deleteOg(env, row.id);
   return json({ ok: true });
 }
 
