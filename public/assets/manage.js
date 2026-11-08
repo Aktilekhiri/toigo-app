@@ -1,6 +1,6 @@
 // Toigo — host page: guest answers, edit link, delete.
-import { session, renderLogin, onAuthChange, syncInvites, userLine } from "/assets/auth.js?v=mw7zs8l1";
-import { titleOf, esc } from "/assets/invite-core.js?v=mw7zs8l1";
+import { session, renderLogin, onAuthChange, syncInvites, userLine } from "/assets/auth.js?v=mw84noyp";
+import { titleOf, esc } from "/assets/invite-core.js?v=mw84noyp";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
