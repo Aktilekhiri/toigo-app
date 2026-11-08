@@ -33,7 +33,20 @@ export async function onRequestGet({ request, env, params, waitUntil }) {
   const ogV = await ogVersion(env, row.id);
   const ogImage = ogV ? `${origin}/og/${row.slug}.jpg?v=${ogV}` : d.photos && d.photos.length ? `${origin}/media/${d.photos[0]}` : `${origin}/img/og-${lang}.png`;
   const pageUrl = `${origin}/i/${row.slug}${guest ? "/" + guest.code : ""}`;
-  const body = renderInvitation(d, { mode: "live", slug: row.slug, pf: "g", guest });
+  // Opening screen: one tap opens the invitation full screen (where the browser allows it) and starts the music.
+  const ky = lang === "ky";
+  const spType = d.type === "custom" && d.title ? d.title : (TYPES[d.type] ? TYPES[d.type][ky ? "ky" : "ru"] : "");
+  const spNames = d.n2 ? `${esc(d.n1)}<span class="sp-amp">&amp;</span>${esc(d.n2)}` : esc(d.n1);
+  const splash = `<div class="sp" role="dialog" aria-modal="true" aria-label="${esc(title)}">
+  <div class="sp-in">${guest ? `<p class="sp-g">${ky ? "Урматтуу" : "Дорогой гость"} ${esc(guest.name)}!</p>` : ""}
+    <p class="sp-ey">${esc(spType)}</p>
+    <p class="sp-nm">${spNames}</p>
+    ${d.date ? `<p class="sp-dt">${esc(longDate(d.date, lang))}</p>` : ""}
+    <button type="button" class="sp-go" data-act="open">${ky ? "Чакырууну ачуу" : "Открыть приглашение"}</button>
+    ${d.music ? `<p class="sp-mu">♪ ${ky ? "музыка менен" : "с музыкой"}</p>` : ""}
+  </div></div>
+  <button type="button" class="sp-x" data-act="exitfs" hidden aria-label="${ky ? "Толук экрандан чыгуу" : "Выйти из полноэкранного режима"}">×</button>`;
+  const body = renderInvitation(d, { mode: "live", slug: row.slug, pf: "g", guest }).replace(/(<div class="inv[^"]*"[^>]*>)/, `$1${splash}`);
   const themeColor = { ivory: "#FAF7F0", anarp: "#6E1735", emerald: "#124B40", steps: "#DCEEF8", golden: "#171717", pop: "#FFF9F3", heritage: "#842E3A", botanical: "#FFFFFF", midnight: "#0B1428", editorial: "#FFFFFF", alatoo: "#1D2742", akkalpak: "#FFFFFF", shyrdak: "#7E2A20", jibek: "#E3E8DF", anar: "#5B1626", asman: "#DCEAF4", ...PREM_THEME }[d.tpl] || "#FFFFFF";
 
   const html = `<!doctype html>
@@ -58,7 +71,7 @@ export async function onRequestGet({ request, env, params, waitUntil }) {
 <link rel="stylesheet" href="/assets/fonts.css?v=${VERSION}">
 <link rel="stylesheet" href="/assets/invite.css?v=${VERSION}">
 </head>
-<body class="inv-page">
+<body class="inv-page sp-wait">
 ${body}
 <script type="module">
 import { startLive } from "/assets/invite-live.js?v=${VERSION}";

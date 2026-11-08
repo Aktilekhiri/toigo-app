@@ -1,5 +1,5 @@
 // Toigo — individual invitation order: brief + photos → Finik payment (400 som, includes a month of subscription).
-import { session, authHeaders, renderLogin, onAuthChange } from "/assets/auth.js?v=mw86xbrx";
+import { session, authHeaders, renderLogin, onAuthChange } from "/assets/auth.js?v=mw878xqj";
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const T = CFG.t, LANG = CFG.lang;
 const $ = s => document.querySelector(s);

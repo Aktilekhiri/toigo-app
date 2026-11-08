@@ -148,12 +148,29 @@ function scanFx() {
 
 let started = false;
 
+// Opening screen: full screen where allowed (not on iPhone), music on, then reveal the cover.
+const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+function exitFs() { try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch {} }
+function openInvite(btn) {
+  const root = document.documentElement, req = root.requestFullscreen || root.webkitRequestFullscreen;
+  if (req) { try { const p = req.call(root, { navigationUI: "hide" }); if (p && p.catch) p.catch(() => {}); } catch {} }
+  const mb = document.querySelector(".inv .mus");
+  if (mb && mb.getAttribute("aria-pressed") !== "true") toggleMusic(mb);
+  const sp = btn.closest(".sp"); sp.classList.add("out"); document.body.classList.remove("sp-wait");
+  setTimeout(() => sp.remove(), 800);
+}
+function syncFs() { const x = document.querySelector(".inv .sp-x"); if (x) x.hidden = !fsEl(); }
+document.addEventListener("fullscreenchange", syncFs);
+document.addEventListener("webkitfullscreenchange", syncFs);
+
 export function startLive() {
   if (started) return; started = true;
   tick(); setInterval(tick, 1000);
   scanFx(); setInterval(scanFx, 400);
   document.addEventListener("click", e => {
     { const mb = e.target.closest(".inv [data-act=music]"); if (mb) { toggleMusic(mb); return; } }
+    { const op = e.target.closest(".inv [data-act=open]"); if (op) { openInvite(op); return; } }
+    { const xb = e.target.closest(".inv [data-act=exitfs]"); if (xb) { exitFs(); return; } }
     const z = e.target.closest(".inv [data-act=zoom]");
     if (z) {
       const lb = document.createElement("div"); lb.className = "lb"; lb.tabIndex = -1;

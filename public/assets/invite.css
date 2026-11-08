@@ -852,3 +852,23 @@
 
 .inv.pr .mus{background:rgba(255,255,255,.78);color:#2A2622;border-color:rgba(255,255,255,.7);box-shadow:0 4px 14px -6px rgba(0,0,0,.35)}
 .inv.pr .mus[aria-pressed="true"]{background:var(--ia);color:var(--ion);border-color:var(--ia)}
+
+/* Opening screen of a live invitation (tap → full screen + music) */
+.inv .sp{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:32px 28px calc(32px + env(safe-area-inset-bottom,0px));background:var(--ib);color:var(--if);transition:opacity .7s ease,visibility .7s}
+.inv .sp::before{content:"";position:absolute;inset:18px;border:1px solid var(--il,rgba(0,0,0,.12));border-radius:22px;pointer-events:none}
+.inv .sp-in{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;max-width:420px;text-align:center;animation:inv-rise .9s ease both}
+.inv .sp-g{margin:0 0 6px;font-size:15px;color:var(--im)}
+.inv .sp-ey{margin:0;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--ia);font-weight:500}
+.inv .sp-nm{margin:6px 0 0;font-family:var(--fd);font-size:clamp(40px,12vw,64px);line-height:1.05;overflow-wrap:anywhere}
+.inv .sp-amp{display:block;font-size:.5em;margin:4px 0;color:var(--ia)}
+.inv .sp-dt{margin:4px 0 0;font-size:14px;letter-spacing:.18em;color:var(--im)}
+.inv .sp-go{margin-top:26px;position:relative;font:inherit;font-weight:600;font-size:16px;padding:16px 32px;border-radius:999px;border:0;background:var(--ia);color:var(--ion,#fff);cursor:pointer;box-shadow:0 10px 28px -10px rgba(0,0,0,.35)}
+.inv .sp-go::after{content:"";position:absolute;inset:-6px;border-radius:999px;border:1px solid var(--ia);opacity:0;animation:sp-ring 2.4s ease-out infinite}
+@keyframes sp-ring{0%{transform:scale(.96);opacity:.7}100%{transform:scale(1.18);opacity:0}}
+.inv .sp-mu{margin:4px 0 0;font-size:13px;color:var(--im)}
+.inv .sp.out{opacity:0;visibility:hidden}
+.inv .sp-x{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:14px;z-index:41;width:42px;height:42px;border-radius:50%;border:1px solid var(--il,rgba(0,0,0,.14));background:var(--ic,#fff);color:var(--if);font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.inv .sp-x[hidden]{display:none}
+.sp-wait{overflow:hidden}
+.sp-wait .inv .cv>*,.sp-wait .inv .cv .hc>*{animation-play-state:paused!important}
+@media (prefers-reduced-motion:reduce){.inv .sp-go::after,.inv .sp-in{animation:none}.inv .sp{transition:none}}
