@@ -1,6 +1,6 @@
 // Toigo — host page: guest answers, edit link, delete.
-import { session, renderLogin, onAuthChange, syncInvites, userLine } from "/assets/auth.js?v=mw86mvaz";
-import { titleOf, esc } from "/assets/invite-core.js?v=mw86mvaz";
+import { session, renderLogin, onAuthChange, syncInvites, userLine } from "/assets/auth.js?v=mw86xbrx";
+import { titleOf, esc } from "/assets/invite-core.js?v=mw86xbrx";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -38,7 +38,7 @@ async function load(slug, key) {
 
   const d = res.data, g = res.guests, invitees = res.invitees || [];
   // Invitations made before preview cards existed get theirs the first time the owner opens this page.
-  if (!res.og && !window.__ogTried) { window.__ogTried = 1; import("/assets/og-card.js?v=mw86mvaz").then(m => m.makeOgCard(d, slug, key, id => `/media/${id}`)).catch(() => {}); }
+  if (!res.og && !window.__ogTried) { window.__ogTried = 1; import("/assets/og-card.js?v=mw86xbrx").then(m => m.makeOgCard(d, slug, key, id => `/media/${id}`)).catch(() => {}); }
   const answerOf = id => g.find(x => x.guest_id === id);
   const title = titleOf(d, d.lang);
   document.getElementById("mh1").textContent = title;
@@ -49,6 +49,7 @@ async function load(slug, key) {
   const people = yes.reduce((a, x) => a + (x.guests || 1), 0);
   const link = `${location.origin}/i/${slug}`;
   const share = `https://wa.me/?text=${encodeURIComponent(`${S.share_text}\n${title}\n\n${link}`)}`;
+  const tgShare = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(`${S.share_text}\n${title}`)}`;
 
   app.innerHTML = `
   <div class="copyrow" style="margin-bottom:16px"><input id="m-link" type="text" readonly value="${esc(link)}" aria-label="${S.link}"><button type="button" class="btn btn-p btn-sm" data-copy="#m-link" data-done="${S.copied}">${S.copy}</button></div>
@@ -56,6 +57,7 @@ async function load(slug, key) {
     <a class="btn btn-g btn-sm" href="${esc(link)}" target="_blank" rel="noopener">${S.open}</a>
     <a class="btn btn-g btn-sm" href="${CFG.create}#edit=${slug}.${key}">${S.edit}</a>
     <a class="btn btn-gold btn-sm" href="${share}" target="_blank" rel="noopener">${S.wa}</a>
+    <a class="btn btn-g btn-sm" href="${tgShare}" target="_blank" rel="noopener">${S.tg}</a>
     <button type="button" class="btn btn-g btn-sm" id="refresh">${S.refresh}</button>
     ${g.length ? `<button type="button" class="btn btn-g btn-sm" id="csv">${S.csv}</button>` : ""}
   </div>
