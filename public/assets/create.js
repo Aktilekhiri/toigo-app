@@ -1,7 +1,7 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mwaa5wty";
-import { session, authHeaders, renderLogin, onAuthChange, userLine, syncInvites } from "/assets/auth.js?v=mwaa5wty";
-import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mwaa5wty";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mwaa8y45";
+import { session, authHeaders, renderLogin, onAuthChange, userLine, syncInvites } from "/assets/auth.js?v=mwaa8y45";
+import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mwaa8y45";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -207,7 +207,7 @@ form.addEventListener("submit", async e => {
     btn.textContent = S.update;
     done(slug, key);
     // Preview card for WhatsApp/Telegram, drawn from this cover (in the background; the link works without it).
-    import("/assets/og-card.js?v=mwaa5wty").then(m => m.makeOgCard(clean(d), slug, key, photoUrl)).catch(() => {});
+    import("/assets/og-card.js?v=mwaa8y45").then(m => m.makeOgCard(clean(d), slug, key, photoUrl)).catch(() => {});
   } catch { msg.textContent = S.net; }
   finally { btn.disabled = false; if (btn.textContent === S.saving) btn.textContent = label; }
 });
@@ -226,6 +226,7 @@ function done(slug, key) {
       <a class="btn btn-g btn-sm" href="https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(msgText)}" target="_blank" rel="noopener">${S.tg}</a>
       <a class="btn btn-g btn-sm" href="${esc(link)}" target="_blank" rel="noopener">${S.open}</a>
     </div>
+    <div class="named"><b>${S.named_h}</b><p>${S.named_p}</p><a class="btn btn-gold btn-sm" href="${esc(`${location.origin}${CFG.manage}?to=inv#${slug}.${key}`)}">${S.named_btn}</a></div>
     <div class="warn"><b>${S.manage_h}.</b> ${S.manage_warn}</div>
     <div class="copyrow"><input id="out-manage" type="text" readonly value="${esc(manage)}" aria-label="${S.manage_h}"><button type="button" class="btn btn-g btn-sm" data-copy="#out-manage" data-done="${S.copied}">${S.copy}</button></div>
     <a class="btn btn-p btn-sm" style="align-self:flex-start" href="${esc(manage)}">${S.manage_open}</a>`;

@@ -1,6 +1,6 @@
 // Toigo — host page: guest answers, edit link, delete.
-import { session, renderLogin, onAuthChange, syncInvites, userLine } from "/assets/auth.js?v=mwaa5wty";
-import { titleOf, esc } from "/assets/invite-core.js?v=mwaa5wty";
+import { session, renderLogin, onAuthChange, syncInvites, userLine } from "/assets/auth.js?v=mwaa8y45";
+import { titleOf, esc } from "/assets/invite-core.js?v=mwaa8y45";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -38,7 +38,7 @@ async function load(slug, key) {
 
   const d = res.data, g = res.guests, invitees = res.invitees || [];
   // Invitations made before preview cards existed get theirs the first time the owner opens this page.
-  if (!res.og && !window.__ogTried) { window.__ogTried = 1; import("/assets/og-card.js?v=mwaa5wty").then(m => m.makeOgCard(d, slug, key, id => `/media/${id}`)).catch(() => {}); }
+  if (!res.og && !window.__ogTried) { window.__ogTried = 1; import("/assets/og-card.js?v=mwaa8y45").then(m => m.makeOgCard(d, slug, key, id => `/media/${id}`)).catch(() => {}); }
   const answerOf = id => g.find(x => x.guest_id === id);
   const title = titleOf(d, d.lang);
   document.getElementById("mh1").textContent = title;
@@ -89,6 +89,11 @@ async function load(slug, key) {
   </tbody></table>` : `<p class="empty">${S.no_answers}</p>`}</div>
   <div style="margin-top:40px" id="danger"><button type="button" class="btn btn-g btn-sm" id="delinv" style="color:var(--no)">${S.del_inv}</button></div>`;
 
+  // Came from "Make named invitations" right after creating: jump to that section.
+  if (new URLSearchParams(location.search).get("to") === "inv") {
+    history.replaceState(null, "", location.pathname + location.hash);
+    const h = document.getElementById("inv-h"); if (h) { h.scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => document.getElementById("inv-add").focus({ preventScroll: true }), 600); }
+  }
   document.getElementById("refresh").onclick = () => load(slug, key);
   const post = body => fetch(`/api/invitations/${slug}`, { method: "POST", headers: { "content-type": "application/json", "x-edit-key": key }, body: JSON.stringify(body) }).catch(() => null);
   document.getElementById("inv-add-btn").onclick = async e => {

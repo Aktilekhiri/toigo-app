@@ -38,7 +38,7 @@ export async function onRequestGet({ request, env, params, waitUntil }) {
   const spType = d.type === "custom" && d.title ? d.title : (TYPES[d.type] ? TYPES[d.type][ky ? "ky" : "ru"] : "");
   const spNames = d.n2 ? `${esc(d.n1)}<span class="sp-amp">&amp;</span>${esc(d.n2)}` : esc(d.n1);
   const splash = `<div class="sp" role="dialog" aria-modal="true" aria-label="${esc(title)}">
-  <div class="sp-in">${guest ? `<p class="sp-g">${ky ? "Урматтуу" : "Дорогой гость"} ${esc(guest.name)}!</p>` : ""}
+  <div class="sp-in">${guest ? `<p class="sp-g">${ky ? `Урматтуу ${esc(guest.name)}!` : `${esc(guest.name)}, приглашаем вас!`}</p>` : ""}
     <p class="sp-ey">${esc(spType)}</p>
     <p class="sp-nm">${spNames}</p>
     ${d.date ? `<p class="sp-dt">${esc(longDate(d.date, lang))}</p>` : ""}
