@@ -1,7 +1,7 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mw878xqj";
-import { session, authHeaders, renderLogin, onAuthChange, userLine, syncInvites } from "/assets/auth.js?v=mw878xqj";
-import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mw878xqj";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mwaa5wty";
+import { session, authHeaders, renderLogin, onAuthChange, userLine, syncInvites } from "/assets/auth.js?v=mwaa5wty";
+import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mwaa5wty";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -11,7 +11,7 @@ const form = $("#form"), preview = $("#preview");
 const RU_DEFAULTS = {
   lang: "ru", hosts: "Семья Асановых", venue: "Тойкана «Шумкар»", addr: "Бишкек, проспект Чүй, 150",
   msg: "Дорогие родные и друзья! Мы хотим разделить с вами самый важный день нашей жизни.",
-  prog: "17:00 — Встреча гостей\n18:00 — Никах\n19:00 — Начало тоя\n23:00 — Завершение"
+  prog: "17:00 — Встреча гостей\n18:00 — Встреча молодожёнов\n20:00 — Свадебный торт\n23:00 — Завершение"
 };
 const store = {
   get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
@@ -207,7 +207,7 @@ form.addEventListener("submit", async e => {
     btn.textContent = S.update;
     done(slug, key);
     // Preview card for WhatsApp/Telegram, drawn from this cover (in the background; the link works without it).
-    import("/assets/og-card.js?v=mw878xqj").then(m => m.makeOgCard(clean(d), slug, key, photoUrl)).catch(() => {});
+    import("/assets/og-card.js?v=mwaa5wty").then(m => m.makeOgCard(clean(d), slug, key, photoUrl)).catch(() => {});
   } catch { msg.textContent = S.net; }
   finally { btn.disabled = false; if (btn.textContent === S.saving) btn.textContent = label; }
 });

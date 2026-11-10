@@ -1,6 +1,6 @@
 // Toigo — host page: guest answers, edit link, delete.
-import { session, renderLogin, onAuthChange, syncInvites, userLine } from "/assets/auth.js?v=mw878xqj";
-import { titleOf, esc } from "/assets/invite-core.js?v=mw878xqj";
+import { session, renderLogin, onAuthChange, syncInvites, userLine } from "/assets/auth.js?v=mwaa5wty";
+import { titleOf, esc } from "/assets/invite-core.js?v=mwaa5wty";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -38,7 +38,7 @@ async function load(slug, key) {
 
   const d = res.data, g = res.guests, invitees = res.invitees || [];
   // Invitations made before preview cards existed get theirs the first time the owner opens this page.
-  if (!res.og && !window.__ogTried) { window.__ogTried = 1; import("/assets/og-card.js?v=mw878xqj").then(m => m.makeOgCard(d, slug, key, id => `/media/${id}`)).catch(() => {}); }
+  if (!res.og && !window.__ogTried) { window.__ogTried = 1; import("/assets/og-card.js?v=mwaa5wty").then(m => m.makeOgCard(d, slug, key, id => `/media/${id}`)).catch(() => {}); }
   const answerOf = id => g.find(x => x.guest_id === id);
   const title = titleOf(d, d.lang);
   document.getElementById("mh1").textContent = title;
