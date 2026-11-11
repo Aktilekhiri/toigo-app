@@ -202,8 +202,19 @@ export const TRACKS = [
   { id: "jaljalym", file: "toi-ordo-jaljalym", ky: "Жалжалым (Ордо)", ru: "Жалжалым (Ордо)" },
   { id: "tush", file: "toi-ordo-tush", ky: "Туш (Ордо)", ru: "Туш (Ордо)" },
   { id: "daanyshman", file: "toi-ordo-daanyshman", ky: "Даанышман (Ордо)", ru: "Даанышман (Ордо)" },
-  { id: "mairam", file: "toi-ordo-mairam", ky: "Майрам (Ордо)", ru: "Майрам (Ордо)" }
+  { id: "mairam", file: "toi-ordo-mairam", ky: "Майрам (Ордо)", ru: "Майрам (Ордо)" },
+  // Pixabay Content License (commercial use, no attribution required)
+  { id: "invitation", file: "px-invitation", ky: "Назик пианино", ru: "Нежное пианино" },
+  { id: "piano", file: "px-piano", ky: "Романтикалык пианино", ru: "Романтичное пианино" },
+  { id: "waltz", file: "px-waltz", ky: "Скрипка вальсы", ru: "Скрипичный вальс" },
+  { id: "cello", file: "px-cello", ky: "Пианино жана виолончель", ru: "Пианино и виолончель" },
+  { id: "strings", file: "px-strings", ky: "Салтанаттуу оркестр", ru: "Торжественный оркестр" },
+  { id: "pianostrings", file: "px-pianostrings", ky: "Пианино жана кылдар", ru: "Пианино и струнные" },
+  { id: "garden", file: "px-garden", ky: "Заманбап үйлөнүү той", ru: "Современная свадебная" },
+  { id: "steppe", file: "px-steppe", ky: "Талаа руху", ru: "Дух степи" }
 ];
+// Music that suits a design; the constructor picks it when the design is chosen, unless the person chose music themselves.
+export const TPL_TRACK = { altyn: "waltz", ordo: "steppe", akkagaz: "invitation", gulzar: "piano", khan: "strings", arka: "garden", anarkyz: "cello", fiesta: "garden", wcblue: "piano", zhyldyz: "pianostrings" };
 export const trackFile = id => (TRACKS.find(t => t.id === id) || TRACKS[0]).file;
 
 export function clean(input) {

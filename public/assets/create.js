@@ -1,12 +1,13 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mwc8btay";
-import { session, authHeaders, renderLogin, onAuthChange, userLine, syncInvites } from "/assets/auth.js?v=mwc8btay";
-import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mwc8btay";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, TPL_TRACK, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mwclvb1t";
+import { session, authHeaders, renderLogin, onAuthChange, userLine, syncInvites } from "/assets/auth.js?v=mwclvb1t";
+import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mwclvb1t";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
 const $ = s => document.querySelector(s);
 const form = $("#form"), preview = $("#preview");
+let trackPicked = false; // the person chose music themselves
 
 const RU_DEFAULTS = {
   lang: "ru", hosts: "Семья Асановых", venue: "Тойкана «Шумкар»", addr: "Бишкек, проспект Чүй, 150",
@@ -53,6 +54,7 @@ async function init() {
       const r = await fetch(`/api/invitations/${edit.slug}`, { headers: { "x-edit-key": edit.key } });
       if (!r.ok) throw 0;
       d = clean((await r.json()).data);
+      trackPicked = true; // keep the music this invitation already has
     } catch { $("#form-msg").textContent = S.load_fail; edit = null; }
   } else {
     const draft = store.get("toigo-draft-" + LANG);
@@ -60,7 +62,8 @@ async function init() {
     const qt = params.get("type"), qp = params.get("tpl"), qtpl = TPL.find(t => t.id === qp);
     if (TYPES[qt]) applyType(qt);
     else if (qtpl && !qtpl.types.includes(d.type)) applyType(qtpl.types[0]);
-    if (qtpl && qtpl.types.includes(d.type)) d.tpl = qp;
+    if (draft && draft.track && draft.track !== "komuz") trackPicked = true;
+    if (qtpl && qtpl.types.includes(d.type)) { d.tpl = qp; if (!trackPicked && TPL_TRACK[qp]) d.track = TPL_TRACK[qp]; }
     d = clean(d);
   }
   fill(); render();
@@ -130,11 +133,16 @@ form.addEventListener("input", e => {
 form.addEventListener("change", e => {
   const t = e.target;
   if (t.name === "type") { applyType(t.value); fill(); changed(); }
-  else if (t.name === "tpl") { d.tpl = t.value; changed(); }
+  else if (t.name === "tpl") {
+    d.tpl = t.value;
+    // suggest the design's music until the person picks a track themselves
+    if (!trackPicked && TPL_TRACK[d.tpl]) { d.track = TPL_TRACK[d.tpl]; form.elements.track.value = d.track; setTrack(trackFile(d.track)); }
+    changed();
+  }
   else if (t.name === "lang") { d.lang = t.value; applyType(d.type); fill(); changed(); }
   else if (t.name === "fx") { d.fx = t.checked; changed(); }
   else if (t.name === "music") { d.music = t.checked; $("#w-track").hidden = !d.music; if (!d.music) stopMusic(); changed(); }
-  else if (t.name === "track") { d.track = t.value; setTrack(trackFile(d.track)); changed(); }
+  else if (t.name === "track") { trackPicked = true; d.track = t.value; setTrack(trackFile(d.track)); changed(); }
 });
 
 // ---------- photos ----------
@@ -207,7 +215,7 @@ form.addEventListener("submit", async e => {
     btn.textContent = S.update;
     done(slug, key);
     // Preview card for WhatsApp/Telegram, drawn from this cover (in the background; the link works without it).
-    import("/assets/og-card.js?v=mwc8btay").then(m => m.makeOgCard(clean(d), slug, key, photoUrl)).catch(() => {});
+    import("/assets/og-card.js?v=mwclvb1t").then(m => m.makeOgCard(clean(d), slug, key, photoUrl)).catch(() => {});
   } catch { msg.textContent = S.net; }
   finally { btn.disabled = false; if (btn.textContent === S.saving) btn.textContent = label; }
 });
