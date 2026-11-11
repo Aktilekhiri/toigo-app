@@ -208,3 +208,10 @@
   - Сессия подписывается `SESSION_SECRET` (если не задан — `TG_SECRET`).
 - **Цены:** месяц 150 сом, год 500 сом, индивидуальное 400 сом. Бесплатного первого приглашения больше нет.
 - **Новые категории:** Үй той (`uy`), Шерине (`sherine`), Башка той / Своё событие (`custom`, человек сам пишет название в поле `title`, оно показывается вместо вида тоя). Страницы `/toi/uy-toi/`, `/toi/sherine/`, `/toi/bashka-toi/`.
+
+## Ноябрь 2026: коллекция из 10 новых дизайнов
+- Дизайны (id → направление): `altyn` Luxury Wedding, `ordo` Kyrgyz National, `akkagaz` Minimalist, `gulzar` Floral, `khan` Royal, `arka` Modern Wedding, `anarkyz` Kyz Uzatuu, `fiesta` Birthday, `wcblue` Akvarel, `zhyldyz` Premium Dark.
+- Фоны сгенерированы (Figma AI, файл «Toigo — 10 new invitation backgrounds»), лежат в `public/img/ph/nx-<id>.webp` и `-s.webp` (миниатюры). Подключены как фото-шаблоны в `public/assets/invite-photo.js` (структура обложки — `case` с классом `.cv.nx`), стили — в конце `public/assets/invite.css`.
+- Новые шрифты с ө ү ң (cyrillic-ext): Forum, Prata, Bad Script, Montserrat — `public/assets/fonts.css`.
+- Эффекты под дизайн (золотые искры, лепестки граната и т.д.): `TPL_FX` в `invite-core.js` + ключи `x-*` в `FX` (`invite-live.js`).
+- Карточки превью `public/img/og-<id>.png` делаются скриптом `tools/og-premium.cjs` (список дизайнов в нём).
