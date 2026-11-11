@@ -2,7 +2,9 @@
 // Some keep their photo as a backdrop and show the customer's photo in a frame ("inset"),
 // others let the customer's photo replace the cover photo ("replace").
 
-export const PHOTO_IDS = ["ivorygold", "bloom", "mountain", "lens", "akjol", "emnight", "nur", "blush", "muras", "wclake", "wcpeony", "jailoo"];
+export const PHOTO_IDS = ["ivorygold", "bloom", "mountain", "lens", "akjol", "emnight", "nur", "blush", "muras", "wclake", "wcpeony", "jailoo",
+  // 2026-11 collection
+  "altyn", "ordo", "akkagaz", "gulzar", "khan", "arka", "anarkyz", "fiesta", "wcblue", "zhyldyz"];
 
 export const PHOTO_TPL = [
   { id: "ivorygold", types: ["uylonuu", "kyz", "maarake"], name: { ky: "Ivory & Gold", ru: "Ivory & Gold" },
@@ -29,12 +31,36 @@ export const PHOTO_TPL = [
     desc: { ky: "Пиондор, анар гүлдөрү жана бордо-кызгылт түстөр.", ru: "Пионы, цветы граната и бордово-розовые тона." } },
   { id: "jailoo", types: ["sunnot", "tushoo", "maarake", "tuulgan"], name: { ky: "Акварель · Жайлоо", ru: "Акварель · Жайлоо" },
     desc: { ky: "Жайлоо, боз үйлөр, жылкылар жана талаа гүлдөрү.", ru: "Жайлоо, юрты, лошади и полевые цветы." } }
+  ,
+  // ---------- 2026-11 collection: ten designs on Toigo's own generated artwork ----------
+  { id: "altyn", types: ["uylonuu", "maarake"], name: { ky: "Алтын Сарай", ru: "Алтын Сарай" },
+    desc: { ky: "Шампань жибек, алтын рамка жана ак орхидеялар. Люкс үйлөнүү той.", ru: "Шампань-шёлк, золотая рамка и белые орхидеи. Люкс-свадьба." } },
+  { id: "ordo", types: ["uylonuu", "kyz", "sunnot", "tushoo", "maarake"], name: { ky: "Ордо", ru: "Ордо" },
+    desc: { ky: "Ак кийиз жана кызыл шырдак оюму — улуттук стиль заманбап түрдө.", ru: "Белый войлок и красный орнамент шырдака — национальный стиль по-современному." } },
+  { id: "akkagaz", types: ["uylonuu", "maarake", "tuulgan"], name: { ky: "Ак кагаз", ru: "Ак кагаз" },
+    desc: { ky: "Кол менен жасалган кагаз, бир тал пампас жана таза типографика.", ru: "Бумага ручной работы, веточка пампаса и чистая типографика." } },
+  { id: "gulzar", types: ["uylonuu", "kyz", "tuulgan"], name: { ky: "Гүлзар", ru: "Гүлзар" },
+    desc: { ky: "Пиондор, ак розалар жана эвкалипт назик кызгылт фондо.", ru: "Пионы, кремовые розы и эвкалипт на нежно-розовом фоне." } },
+  { id: "khan", types: ["uylonuu", "kyz", "maarake"], name: { ky: "Хан Сарай", ru: "Хан Сарай" },
+    desc: { ky: "Бордо баркыт, алтын барокко рамка жана шам жарыгы.", ru: "Бордовый бархат, золотая барочная рама и свет свечи." } },
+  { id: "arka", types: ["uylonuu", "maarake", "tuulgan"], name: { ky: "Арка", ru: "Арка" },
+    desc: { ky: "Заманбап европалык стиль: шалфей түстүү арка, күн нуру жана ак розалар.", ru: "Современная европейская эстетика: арка цвета шалфея, солнце и белые розы." } },
+  { id: "anarkyz", types: ["kyz"], name: { ky: "Анар кыз", ru: "Анар кыз" },
+    desc: { ky: "Ак жибек жоолук, анар жана күмүш шуру — кыз узатууга.", ru: "Белый шёлк, гранаты и серебряные украшения — для кыз узатуу." } },
+  { id: "fiesta", types: ["tuulgan", "tushoo"], name: { ky: "Фиеста", ru: "Фиеста" },
+    desc: { ky: "Түстүү шарлар, конфетти жана шаңдуу маанай. Туулган күнгө.", ru: "Яркие шары, конфетти и праздничное настроение. Для дня рождения." } },
+  { id: "wcblue", types: ["uylonuu", "kyz", "tuulgan", "maarake"], name: { ky: "Акварель · Көгүлтүр", ru: "Акварель · Голубой сад" },
+    desc: { ky: "Акварель гортензия, лаванда жана эвкалипт көк-сирень түстөрдө.", ru: "Акварельные гортензии, лаванда и эвкалипт в голубо-сиреневых тонах." } },
+  { id: "zhyldyz", types: ["uylonuu", "tuulgan", "maarake"], name: { ky: "Жылдыз", ru: "Жылдыз" },
+    desc: { ky: "Кара фон, алтын жарыктар жана учкундар. Кечки салтанатка.", ru: "Чёрный фон, золотые огни и искры. Для вечернего торжества." } }
 ];
 
-const IMG = { ivorygold: "floral-ivory", bloom: "botanical", mountain: "issykkul", lens: "bride", akjol: "kyz", emnight: "emerald", nur: "nikah", blush: "birthday", muras: "heritage", wclake: "wc-lake", wcpeony: "wc-peony", jailoo: "wc-jailoo" };
+const IMG = { ivorygold: "floral-ivory", bloom: "botanical", mountain: "issykkul", lens: "bride", akjol: "kyz", emnight: "emerald", nur: "nikah", blush: "birthday", muras: "heritage", wclake: "wc-lake", wcpeony: "wc-peony", jailoo: "wc-jailoo",
+  altyn: "nx-altyn", ordo: "nx-ordo", akkagaz: "nx-akkagaz", gulzar: "nx-gulzar", khan: "nx-khan", arka: "nx-arka", anarkyz: "nx-anarkyz", fiesta: "nx-fiesta", wcblue: "nx-wcblue", zhyldyz: "nx-zhyldyz" };
 const REPLACE = new Set(["lens", "akjol", "nur"]);
 
-export const PHOTO_THEME = { ivorygold: "#F6F1E6", bloom: "#DDE3D3", mountain: "#E9D7C2", lens: "#FFFFFF", akjol: "#3F1219", emnight: "#0F2A22", nur: "#F7F3EA", blush: "#F6EDE7", muras: "#F3EDE1", wclake: "#FBF8F1", wcpeony: "#FBF8F2", jailoo: "#F4F6EC" };
+export const PHOTO_THEME = { ivorygold: "#F6F1E6", bloom: "#DDE3D3", mountain: "#E9D7C2", lens: "#FFFFFF", akjol: "#3F1219", emnight: "#0F2A22", nur: "#F7F3EA", blush: "#F6EDE7", muras: "#F3EDE1", wclake: "#FBF8F1", wcpeony: "#FBF8F2", jailoo: "#F4F6EC",
+  altyn: "#F4EDE0", ordo: "#EFE7DA", akkagaz: "#E7E3DC", gulzar: "#F7E4E1", khan: "#3B0A12", arka: "#B7BCAB", anarkyz: "#F7F3EE", fiesta: "#FCD9C6", wcblue: "#FAFAF8", zhyldyz: "#06080F" };
 export const PHOTO_SWATCH = Object.fromEntries(PHOTO_IDS.map(id => [id, `center/cover url(/img/ph/${IMG[id]}-s.webp)`]));
 export const photoOg = id => `/img/ph/${IMG[id]}.webp`;
 
@@ -42,7 +68,8 @@ const LEAF = '<svg viewBox="0 0 120 22" aria-hidden="true"><path d="M4 14C40 2 8
 const RULE = '<svg viewBox="0 0 160 12" aria-hidden="true"><path d="M0 6h68M92 6h68" stroke="currentColor" stroke-width=".8"/><path d="M80 1l5 5-5 5-5-5z" fill="none" stroke="currentColor"/></svg>';
 const KYAL = '<svg viewBox="0 0 168 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1">' + Array.from({ length: 7 }, (_, i) => `<path d="M${i * 24 + 2} 8l10-6 10 6-10 6z"/>`).join("") + '</g></svg>';
 const SPRIG = '<img src="/img/ph/wc-sprig.webp" alt="" loading="lazy" decoding="async">';
-const ORN = { ivorygold: RULE, bloom: LEAF, mountain: RULE, lens: "", akjol: KYAL, emnight: RULE, nur: LEAF, blush: LEAF, muras: KYAL, wclake: SPRIG, wcpeony: SPRIG, jailoo: SPRIG };
+const ORN = { ivorygold: RULE, bloom: LEAF, mountain: RULE, lens: "", akjol: KYAL, emnight: RULE, nur: LEAF, blush: LEAF, muras: KYAL, wclake: SPRIG, wcpeony: SPRIG, jailoo: SPRIG,
+  altyn: RULE, ordo: KYAL, akkagaz: "", gulzar: LEAF, khan: RULE, arka: "", anarkyz: LEAF, fiesta: "", wcblue: LEAF, zhyldyz: RULE };
 
 export function photoOrn(tpl) {
   return tpl === "lens" ? '<span class="orn orn-lens" aria-hidden="true"></span>' : `<span class="orn orn-${tpl}" aria-hidden="true">${ORN[tpl]}</span>`;
@@ -77,6 +104,17 @@ export function photoCover(d, h, mini) {
       <div class="ey">${ey}</div>${nm}<div class="dt"><span>${dot}</span></div><div class="sub">${when}</div></div>${cue}</div>`;
     case "muras": return `<div class="${cls}"><div class="art">${bg}</div><div class="hc">${inset}
       <div class="ey">${ey}</div>${nm}<span class="orn-i">${KYAL}</span><div class="dt">${longD}</div><div class="sub">${when}</div></div>${cue}</div>`;
+    // 2026-11 collection: one structure, each design styled in invite.css (.cv.nx)
+    case "altyn": case "khan": case "zhyldyz": return `<div class="${cls} nx"><div class="art">${bg}</div><div class="hc">${inset}
+      <div class="ey">${ey}</div>${nm}<span class="orn-i">${RULE}</span><div class="dt">${dot}</div><div class="sub">${when}</div></div>${cue}</div>`;
+    case "ordo": return `<div class="${cls} nx"><div class="art">${bg}</div><div class="hc">${inset}
+      <div class="ey">${ey}</div>${nm}<span class="orn-i">${KYAL}</span>${p ? `<div class="dbox"><span>${p.dd}</span><span>${esc(mon)}</span><span>${p.y}</span></div>` : ""}<div class="sub">${when}</div></div>${cue}</div>`;
+    case "akkagaz": case "arka": return `<div class="${cls} nx"><div class="art">${bg}</div><div class="hc">${inset}
+      <div class="ey">${ey}</div>${nm}<span class="ln" aria-hidden="true"></span><div class="dt">${dot}</div><div class="sub">${when}</div></div>${cue}</div>`;
+    case "gulzar": case "anarkyz": case "wcblue": return `<div class="${cls} nx"><div class="art">${bg}</div><div class="hc">${inset}
+      <div class="ey">${ey}</div>${nm}<span class="orn-i">${LEAF}</span><div class="dt">${longD}</div><div class="sub">${when}</div></div>${cue}</div>`;
+    case "fiesta": return `<div class="${cls} nx"><div class="art">${bg}</div><div class="hc">${inset}
+      <div class="ey">${ey}</div>${nm}<div class="dt"><span>${dot}</span></div><div class="sub">${when}</div></div>${cue}</div>`;
     case "wclake": case "wcpeony": case "jailoo": return `<div class="${cls} wc"><div class="art">${bg}</div><div class="hc">${inset}
       <div class="ey">${ey}</div>${nm}<div class="dt">${longD}</div><div class="sub">${when}</div></div>${cue}</div>`;
   }

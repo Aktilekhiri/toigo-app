@@ -80,7 +80,15 @@ const FX = {
   tuulgan: { n: 34, kinds: ["confetti"], colors: ["#FF6B8B", "#FFC94A", "#4CC9F0", "#7BD389", "#B794F6"], dir: 1 },
   uy:      { n: 24, kinds: ["spark"], colors: ["#E2BE77", "#FFF0C8", "#C99A4B"], dir: -1 },
   sherine: { n: 26, kinds: ["star"], colors: ["#F2C46B", "#FFE3A3", "#FFFFFF"], dir: 1 },
-  custom:  { n: 24, kinds: ["spark", "petal"], colors: ["#E2BE77", "#F6B3C2", "#FFF0C8"], dir: 1 }
+  custom:  { n: 24, kinds: ["spark", "petal"], colors: ["#E2BE77", "#F6B3C2", "#FFF0C8"], dir: 1 },
+  // design-specific effects (2026-11 collection)
+  "x-gold":   { n: 30, kinds: ["spark"], colors: ["#E2BE77", "#FFF0C8", "#C99A4B"], dir: -1 },
+  "x-rose":   { n: 22, kinds: ["petal"], colors: ["#F2B8C0", "#F8D3D8", "#FFFFFF", "#E9A0AC"], dir: 1 },
+  "x-pom":    { n: 20, kinds: ["petal"], colors: ["#B3202E", "#D94A55", "#FFFFFF", "#F3D6D6"], dir: 1 },
+  "x-lilac":  { n: 22, kinds: ["petal"], colors: ["#A9B6E3", "#C9C2EA", "#FFFFFF", "#8E9FD6"], dir: 1 },
+  "x-paper":  { n: 14, kinds: ["petal"], colors: ["#FFFFFF", "#EFE9DF", "#D9D2C4"], dir: 1 },
+  "x-olive":  { n: 16, kinds: ["petal"], colors: ["#A7B08F", "#C8CDB4", "#FFFFFF"], dir: 1 },
+  "x-party":  { n: 34, kinds: ["confetti"], colors: ["#FF6B8B", "#FFC94A", "#4CC9F0", "#7BD389", "#B794F6"], dir: 1 }
 };
 const REDUCE = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const fxList = new Set();

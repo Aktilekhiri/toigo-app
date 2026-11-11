@@ -1,6 +1,6 @@
 // Toigo — draws the link-preview card (1200×630) from the invitation's real cover and uploads it.
 // WhatsApp/Telegram then show the couple's names and date instead of a bare link.
-import { coverHTML, invClass } from "/assets/invite-core.js?v=mwaa8y45";
+import { coverHTML, invClass } from "/assets/invite-core.js?v=mwc8btay";
 
 const W = 1200, H = 630, CW = 440;
 

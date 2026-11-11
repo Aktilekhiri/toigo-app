@@ -42,8 +42,8 @@ export const TPL = [
 
 // Designs offered for the newer toi types; every design also fits a custom event.
 const EXTRA_TYPES = {
-  uy: ["muras", "ivorygold", "bloom", "jailoo", "heritage", "akkalpak", "jibek", "wclake", "mountain", "shyrdak", "silk", "garden"],
-  sherine: ["emnight", "noir", "golden", "jailoo", "shyrdak", "muras", "alatoo", "nomad", "pop", "akjol", "lens"]
+  uy: ["ordo", "akkagaz", "arka", "muras", "ivorygold", "bloom", "jailoo", "heritage", "akkalpak", "jibek", "wclake", "mountain", "shyrdak", "silk", "garden"],
+  sherine: ["zhyldyz", "khan", "ordo", "emnight", "noir", "golden", "jailoo", "shyrdak", "muras", "alatoo", "nomad", "pop", "akjol", "lens"]
 };
 TPL.forEach(t => {
   t.types = [...new Set([...t.types, ...Object.keys(EXTRA_TYPES).filter(k => EXTRA_TYPES[k].includes(t.id)), "custom"])];
@@ -291,6 +291,8 @@ function names(d) {
 
 // ---------- templates v2: each has its own cover composition ----------
 export const NEW_TPL = new Set(["ivory","anarp","emerald","steps","golden","pop","heritage","botanical","midnight","editorial"]);
+// Falling/rising effect that suits a design better than the default for its toi type.
+const TPL_FX = { altyn: "x-gold", khan: "x-gold", zhyldyz: "x-gold", ordo: "x-gold", gulzar: "x-rose", anarkyz: "x-pom", wcblue: "x-lilac", akkagaz: "x-paper", arka: "x-olive", fiesta: "x-party" };
 export const invClass = (tpl, type) => `inv t-${tpl}${NEW_TPL.has(tpl) ? " nw" : PREM.has(tpl) ? " nw pr" : ""} ty-${type || "uylonuu"}`;
 
 const ruYears = n => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? "год" : a >= 2 && a <= 4 && (b < 12 || b > 14) ? "года" : "лет"; };
@@ -409,7 +411,7 @@ export function renderInvitation(d, opts = {}) {
   const waNum = phone.replace(/\D/g, "");
   const guest = opts.guest || null;
   const dear = { ky: "Урматтуу", ru: "", both: "Урматтуу" }[d.lang] || "";
-  return `<div class="${invClass(d.tpl, d.type)}" data-mode="${opts.mode || "preview"}" data-slug="${esc(opts.slug || "")}" data-lang="${d.lang}"${d.fx !== false ? ` data-fx="${d.type}"` : ""}${guest ? ` data-guest="${esc(guest.code)}"` : ""}>
+  return `<div class="${invClass(d.tpl, d.type)}" data-mode="${opts.mode || "preview"}" data-slug="${esc(opts.slug || "")}" data-lang="${d.lang}"${d.fx !== false ? ` data-fx="${TPL_FX[d.tpl] || d.type}"` : ""}${guest ? ` data-guest="${esc(guest.code)}"` : ""}>
   ${d.music ? `<button type="button" class="mus" data-act="music" data-track="${trackFile(d.track)}" aria-pressed="false" aria-label="${T.P("music")}">${NOTE}</button>` : ""}
   ${coverHTML(d, { photoUrl })}
   <section class="blk">${orn(d.tpl)}${guest ? `<p class="to">${dear ? `<span>${dear}</span>` : ""}<b>${esc(guest.name)}${d.lang === "ru" ? "," : "!"}</b></p>` : ""}<h2>${T.TT(d.type, "inv")}</h2>${d.msg ? `<p class="msg">${esc(d.msg)}</p>` : ""}

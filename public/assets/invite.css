@@ -872,3 +872,235 @@
 .sp-wait{overflow:hidden}
 .sp-wait .inv .cv>*,.sp-wait .inv .cv .hc>*{animation-play-state:paused!important}
 @media (prefers-reduced-motion:reduce){.inv .sp-go::after,.inv .sp-in{animation:none}.inv .sp{transition:none}}
+
+/* =====================================================================
+   2026-11 collection — ten designs on Toigo's own generated artwork
+   Fonts with Kyrgyz letters (ө ү ң): Forum, Prata, Bad Script, Montserrat
+   ===================================================================== */
+.inv.pr .cv.nx>.hc{gap:12px;max-width:330px}
+.inv.pr .cv.nx .nm{line-height:1.02;overflow-wrap:break-word;max-width:100%}
+.inv.pr .cv.nx .amp{display:block}
+.inv.pr .cv.nx .ln{display:block;width:44px;height:1px;background:var(--ha)}
+.inv.pr .orn-akkagaz,.inv.pr .orn-arka,.inv.pr .orn-fiesta{display:none}
+.inv.pr :is(.orn-altyn,.orn-khan,.orn-zhyldyz,.orn-ordo){width:150px;height:14px}
+.inv.pr :is(.orn-gulzar,.orn-anarkyz,.orn-wcblue){width:120px;height:22px}
+.inv.pr :is(.t-altyn,.t-ordo,.t-akkagaz,.t-gulzar,.t-arka,.t-anarkyz,.t-fiesta,.t-wcblue) .blk{border-top:0;margin:0 14px 14px;padding:54px 24px 48px;background:var(--ic);position:relative}
+.inv.pr :is(.t-altyn,.t-ordo,.t-akkagaz,.t-gulzar,.t-arka,.t-anarkyz,.t-fiesta,.t-wcblue) .blk:first-of-type{margin-top:14px}
+.inv.pr:is(.t-altyn,.t-ordo,.t-akkagaz,.t-gulzar,.t-arka,.t-anarkyz,.t-fiesta,.t-wcblue,.t-khan,.t-zhyldyz) .gal img{border-radius:6px}
+
+/* ---------- N1 · Алтын Сарай (Luxury Wedding) ---------- */
+.inv.pr.t-altyn{--ib:#F4EDE0;--if:#3B3022;--ia:#A3803E;--ion:#FFFFFF;--im:#76684F;--il:rgba(163,128,62,.32);--ic:#FFFDF8;--fd:"Forum",Georgia,serif;--hf:#3B3022;--ha:#A3803E;--hm:#6E6048}
+.inv.pr.t-altyn .cv{background:#F1E9DA}
+.inv.pr.t-altyn .ey{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:20px;letter-spacing:.04em;text-transform:none}
+.inv.pr.t-altyn .nm,.inv.pr.t-altyn .fin-n{text-transform:uppercase;letter-spacing:.08em;font-weight:400;background:linear-gradient(100deg,#7A5A20 0%,#C9A55A 32%,#8C6A2B 52%,#DEC27E 74%,#7A5A20 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.inv.pr.t-altyn .nm{font-size:min(clamp(38px,11.5vw,56px),calc(100cqi / var(--nl) / .72))}
+.inv.pr.t-altyn .amp{font-family:"Bad Script",cursive;text-transform:none;font-size:.62em;margin:6px 0 2px;color:#A3803E;-webkit-text-fill-color:#A3803E;letter-spacing:0}
+.inv.pr.t-altyn .dt{font-family:"Prata",Georgia,serif;font-size:18px;letter-spacing:.32em;color:var(--hf)}
+.inv.pr.t-altyn .blk::before{content:"";position:absolute;inset:9px;border:1px solid var(--il);pointer-events:none}
+.inv.pr.t-altyn .blk h2{font-family:"Forum",Georgia,serif;text-transform:uppercase;letter-spacing:.12em;font-size:24px;font-weight:400}
+.inv.pr.t-altyn .cd div{border-radius:0;background:#F7F1E6;border-color:transparent}
+.inv.pr.t-altyn .cd b{font-family:"Prata",Georgia,serif;font-weight:400;font-size:28px;color:var(--ia)}
+.inv.pr.t-altyn .vn{font-family:"Forum",Georgia,serif;font-size:26px;letter-spacing:.06em}
+.inv.pr.t-altyn .ib{border-radius:0;letter-spacing:.12em}
+.inv.pr.t-altyn .fin-bg::after{background:radial-gradient(60% 40% at 50% 50%,rgba(244,237,224,.85),rgba(244,237,224,.2))}
+.inv.pr.t-altyn .fin-k,.inv.pr.t-altyn .fin-d,.inv.pr.t-altyn .fin-o{color:#8C6A2B}
+.inv.pr.t-altyn .fin-o{width:150px;height:14px}
+.inv.pr.t-altyn .ft{background:#EFE6D5}
+
+/* ---------- N2 · Ордо (Kyrgyz National) ---------- */
+.inv.pr.t-ordo{--ib:#EFE7DA;--if:#3A1E16;--ia:#9B2C1F;--ion:#FFFFFF;--im:#6E5446;--il:rgba(155,44,31,.25);--ic:#F8F3EA;--fd:"Yeseva One",Georgia,serif;--hf:#3A1E16;--ha:#9B2C1F;--hm:#6E5446}
+.inv.pr.t-ordo .cv{background:#EDE4D5}
+.inv.pr.t-ordo .ey{font-family:"Montserrat",system-ui,sans-serif;font-weight:600;font-size:12px;letter-spacing:.34em}
+.inv.pr.t-ordo .nm{color:#9B2C1F;font-size:min(clamp(42px,13vw,62px),calc(100cqi / var(--nl) / .58))}
+.inv.pr.t-ordo .amp{font-size:.5em;margin:4px 0;color:#B8893B}
+.inv.pr.t-ordo .orn-i{color:#B8893B}
+.inv.pr.t-ordo .dbox{display:flex;align-items:stretch;border:1px solid rgba(155,44,31,.45);font-family:"Montserrat",system-ui,sans-serif;font-weight:600;color:#3A1E16}
+.inv.pr.t-ordo .dbox span{padding:8px 14px;font-size:14px;letter-spacing:.18em;text-transform:uppercase}
+.inv.pr.t-ordo .dbox span:nth-child(2){border-left:1px solid rgba(155,44,31,.45);border-right:1px solid rgba(155,44,31,.45)}
+.inv.pr.t-ordo .dbox span:first-child{font-family:"Yeseva One",Georgia,serif;font-size:20px;letter-spacing:0;padding-top:5px;padding-bottom:5px;color:#9B2C1F}
+.inv.pr.t-ordo .blk{border:1px solid var(--il)!important;border-radius:2px}
+.inv.pr.t-ordo .blk h2{font-size:30px;color:#9B2C1F}
+.inv.pr.t-ordo .cd div{border-radius:0;background:#F1E8DA;border-color:rgba(155,44,31,.2)}
+.inv.pr.t-ordo .cd b{font-family:"Yeseva One",Georgia,serif;font-weight:400;color:#9B2C1F}
+.inv.pr.t-ordo .vn{font-size:24px;color:#3A1E16}
+.inv.pr.t-ordo .ib{border-radius:2px;letter-spacing:.08em}
+.inv.pr.t-ordo .fin-bg::after{background:rgba(239,231,218,.15)}
+.inv.pr.t-ordo .fin-k,.inv.pr.t-ordo .fin-d{color:#6E5446}
+.inv.pr.t-ordo .fin-n{color:#9B2C1F}
+.inv.pr.t-ordo .fin-o{color:#B8893B;width:150px;height:14px}
+.inv.pr.t-ordo .ft{background:#E6DCCB}
+
+/* ---------- N3 · Ак кагаз (Minimalist) ---------- */
+.inv.pr.t-akkagaz{--ib:#ECE8E1;--if:#1E1E1C;--ia:#1E1E1C;--ion:#FFFFFF;--im:#6F6B65;--il:rgba(30,30,28,.14);--ic:#FFFFFF;--fd:"Prata",Georgia,serif;--hf:#1E1E1C;--ha:#8A847A;--hm:#6F6B65}
+.inv.pr.t-akkagaz .cv{background:#E7E3DC;padding-top:clamp(150px,24svh,220px)}
+.inv.pr.t-akkagaz .cv>.hc{max-width:270px;gap:14px}
+.inv.pr.t-akkagaz .ey{font-family:"Montserrat",system-ui,sans-serif;font-weight:500;font-size:11px;letter-spacing:.42em;color:#8A847A}
+.inv.pr.t-akkagaz .nm{font-weight:400;font-size:min(clamp(40px,12.5vw,58px),calc(100cqi / var(--nl) / .6))}
+.inv.pr.t-akkagaz .amp{font-size:.42em;margin:8px 0;color:#8A847A}
+.inv.pr.t-akkagaz .dt{font-family:"Montserrat",system-ui,sans-serif;font-weight:500;font-size:14px;letter-spacing:.4em;color:var(--hf)}
+.inv.pr.t-akkagaz .sub{font-family:"Montserrat",system-ui,sans-serif;font-size:13px}
+.inv.pr.t-akkagaz .blk{box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.inv.pr.t-akkagaz .blk h2{font-weight:400;font-size:30px}
+.inv.pr.t-akkagaz .cd div{border-radius:0;background:#F7F5F1;border-color:transparent}
+.inv.pr.t-akkagaz .cd b{font-family:"Prata",Georgia,serif;font-weight:400;font-size:28px}
+.inv.pr.t-akkagaz .vn{font-size:24px}
+.inv.pr.t-akkagaz .ib{border-radius:0;letter-spacing:.14em;font-family:"Montserrat",system-ui,sans-serif}
+.inv.pr.t-akkagaz .fin-ph{padding-top:120px;justify-content:flex-start}
+.inv.pr.t-akkagaz .fin-bg::after{background:rgba(255,255,255,.1)}
+.inv.pr.t-akkagaz .fin-k,.inv.pr.t-akkagaz .fin-d{color:#6F6B65}
+.inv.pr.t-akkagaz .fin-n{font-weight:400}
+.inv.pr.t-akkagaz .ft{background:#E3DED6}
+.mini .inv.pr.t-akkagaz .cv{padding-top:110px}
+
+/* ---------- N4 · Гүлзар (Floral) ---------- */
+.inv.pr.t-gulzar{--ib:#F8E7E3;--if:#5A3138;--ia:#B0606C;--ion:#FFFFFF;--im:#856068;--il:rgba(176,96,108,.22);--ic:#FFFBFA;--fd:"Cormorant Garamond",Georgia,serif;--hf:#5A3138;--ha:#B0606C;--hm:#7E5B62}
+.inv.pr.t-gulzar .cv{background:#F7E4E1;padding-top:clamp(200px,30svh,280px)}
+.inv.pr.t-gulzar .ey{letter-spacing:.32em}
+.inv.pr.t-gulzar .nm,.inv.pr.t-gulzar .fin-n{font-family:"Bad Script",cursive;font-weight:400;color:#7A3B47}
+.inv.pr.t-gulzar .nm{font-size:min(clamp(44px,13.5vw,64px),calc(100cqi / var(--nl) / .5));line-height:1.15}
+.inv.pr.t-gulzar .amp{font-size:.5em;margin:0;color:#B0606C}
+.inv.pr.t-gulzar .dt{font-style:italic;font-weight:600;font-size:22px;color:var(--ha)}
+.inv.pr.t-gulzar .blk{border-radius:22px}
+.inv.pr.t-gulzar .blk h2{font-style:italic;font-weight:500;font-size:34px}
+.inv.pr.t-gulzar .cd div{border-radius:16px;background:#FBEFEC;border-color:transparent}
+.inv.pr.t-gulzar .cd b{font-family:var(--fd);font-weight:600;font-size:30px;color:var(--ia)}
+.inv.pr.t-gulzar .vn{font-style:italic;font-size:28px;font-weight:600}
+.inv.pr.t-gulzar .ib{border-radius:99px}
+.inv.pr.t-gulzar .fin-ph{justify-content:center;padding-top:150px}
+.inv.pr.t-gulzar .fin-bg::after{background:radial-gradient(60% 34% at 50% 55%,rgba(248,231,227,.92),rgba(248,231,227,0))}
+.inv.pr.t-gulzar .fin-k,.inv.pr.t-gulzar .fin-d,.inv.pr.t-gulzar .fin-o{color:#B0606C}
+.inv.pr.t-gulzar .ft{background:#F3DCD7}
+.mini .inv.pr.t-gulzar .cv{padding-top:130px}
+
+/* ---------- N5 · Хан Сарай (Royal) ---------- */
+.inv.pr.t-khan{--ib:#2C070D;--if:#F6E9D2;--ia:#D3AA5E;--ion:#2C070D;--im:#D4BFA6;--il:rgba(211,170,94,.3);--ic:rgba(255,255,255,.04);--fd:"Forum",Georgia,serif;--hf:#F6E9D2;--ha:#D9B46A;--hm:#D4BFA6}
+.inv.pr.t-khan .cv{background:#3B0A12;padding:110px 44px 100px}
+.inv.pr.t-khan .art::after{background:radial-gradient(60% 40% at 50% 48%,rgba(40,5,10,.55),rgba(40,5,10,0))}
+.inv.pr.t-khan .cv>.hc{max-width:270px}
+.inv.pr.t-khan .ey{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:20px;letter-spacing:.06em;text-transform:none}
+.inv.pr.t-khan .nm,.inv.pr.t-khan .fin-n{text-transform:uppercase;letter-spacing:.06em;font-weight:400;color:#F2DDB0;text-shadow:0 0 22px rgba(217,180,106,.35)}
+.inv.pr.t-khan .nm{font-size:min(clamp(36px,11vw,54px),calc(100cqi / var(--nl) / .72))}
+.inv.pr.t-khan .amp{font-family:"Bad Script",cursive;text-transform:none;font-size:.6em;color:var(--ha);margin:4px 0}
+.inv.pr.t-khan .dt{font-family:"Prata",Georgia,serif;font-size:17px;letter-spacing:.3em;color:var(--ha)}
+.inv.pr.t-khan .pin{box-shadow:0 0 0 4px #3B0A12,0 0 0 5px var(--ha),0 14px 30px -14px rgba(0,0,0,.7)}
+.inv.pr.t-khan .blk{border-top:0;margin:0 14px 14px;padding:54px 24px;border:1px solid var(--il);background:linear-gradient(rgba(255,255,255,.03),rgba(255,255,255,0))}
+.inv.pr.t-khan .blk:first-of-type{margin-top:14px}
+.inv.pr.t-khan .blk h2{text-transform:uppercase;letter-spacing:.12em;font-size:24px;font-weight:400;color:#F2DDB0}
+.inv.pr.t-khan .cd div{border-radius:0;border-color:var(--il);background:transparent}
+.inv.pr.t-khan .cd b{font-family:"Prata",Georgia,serif;font-weight:400;font-size:28px;color:var(--ia)}
+.inv.pr.t-khan .vn{font-size:26px;letter-spacing:.06em;color:#F2DDB0}
+.inv.pr.t-khan .ib{border-radius:0;letter-spacing:.12em}
+.inv.pr.t-khan .fin-bg::after{background:radial-gradient(60% 40% at 50% 48%,rgba(40,5,10,.7),rgba(40,5,10,.1))}
+.inv.pr.t-khan .fin-k,.inv.pr.t-khan .fin-d,.inv.pr.t-khan .fin-o{color:var(--ha)}
+.inv.pr.t-khan .fin-o{width:150px;height:14px}
+.inv.pr.t-khan .ft{background:#22050A}
+.mini .inv.pr.t-khan .cv{padding:80px 40px 60px}
+
+/* ---------- N6 · Арка (Modern Wedding) ---------- */
+.inv.pr.t-arka{--ib:#E9EAE3;--if:#2F332B;--ia:#4F5C44;--ion:#FFFFFF;--im:#5A6054;--il:rgba(94,107,82,.22);--ic:#F7F7F3;--fd:"Prata",Georgia,serif;--hf:#1F231C;--ha:#46523C;--hm:#3E443A}
+.inv.pr.t-arka .cv{background:#B7BCAB;justify-content:flex-start;padding:clamp(150px,22svh,210px) 30px 80px}
+.inv.pr.t-arka .art::after{background:radial-gradient(36% 30% at 50% 38%,rgba(236,237,230,.6),rgba(236,237,230,0))}
+.inv.pr.t-arka .cv>.hc{max-width:230px}
+.inv.pr.t-arka .ey{font-family:"Montserrat",system-ui,sans-serif;font-weight:600;font-size:11px;letter-spacing:.4em}
+.inv.pr.t-arka .nm{font-weight:400;font-size:min(clamp(36px,11vw,52px),calc(100cqi / var(--nl) / .6))}
+.inv.pr.t-arka .amp{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:.55em;margin:6px 0;color:var(--ha)}
+.inv.pr.t-arka .dt{font-family:"Montserrat",system-ui,sans-serif;font-weight:500;font-size:13px;letter-spacing:.38em}
+.inv.pr.t-arka .sub{font-family:"Montserrat",system-ui,sans-serif;font-size:12px}
+.inv.pr.t-arka .blk{border-radius:160px 160px 0 0;padding-top:72px}
+.inv.pr.t-arka .blk h2{font-weight:400;font-size:28px}
+.inv.pr.t-arka .cd div{border-radius:0;background:#EEEFE9;border-color:transparent}
+.inv.pr.t-arka .cd b{font-family:"Prata",Georgia,serif;font-weight:400;font-size:28px;color:var(--ia)}
+.inv.pr.t-arka .vn{font-size:24px}
+.inv.pr.t-arka .ib{border-radius:99px;font-family:"Montserrat",system-ui,sans-serif;letter-spacing:.1em}
+.inv.pr.t-arka .fin-ph{justify-content:flex-start;padding-top:170px}
+.inv.pr.t-arka .fin-bg::after{background:radial-gradient(36% 30% at 52% 36%,rgba(233,234,227,.7),rgba(233,234,227,0))}
+.inv.pr.t-arka .fin-k,.inv.pr.t-arka .fin-d{color:#4D5844}
+.inv.pr.t-arka .fin-n{font-weight:400}
+.inv.pr.t-arka .ft{background:#DFE1D7}
+.mini .inv.pr.t-arka .cv{padding-top:120px}
+
+/* ---------- N7 · Анар кыз (Kyz Uzatuu) ---------- */
+.inv.pr.t-anarkyz{--ib:#F7F3EE;--if:#4B141B;--ia:#A3232F;--ion:#FFFFFF;--im:#7B5D5E;--il:rgba(163,35,47,.2);--ic:#FFFFFF;--fd:"Cormorant Garamond",Georgia,serif;--hf:#4B141B;--ha:#A3232F;--hm:#7B5D5E}
+.inv.pr.t-anarkyz .cv{background:#F5F0EA}
+.inv.pr.t-anarkyz .art::after{background:radial-gradient(50% 30% at 50% 50%,rgba(250,247,243,.7),rgba(250,247,243,0))}
+.inv.pr.t-anarkyz .ey{font-family:"Forum",Georgia,serif;font-size:14px;letter-spacing:.36em}
+.inv.pr.t-anarkyz .nm,.inv.pr.t-anarkyz .fin-n{font-style:italic;font-weight:500;color:#7E1A25}
+.inv.pr.t-anarkyz .nm{font-size:min(clamp(48px,15vw,70px),calc(100cqi / var(--nl) / .5))}
+.inv.pr.t-anarkyz .amp{font-family:"Bad Script",cursive;font-style:normal;font-size:.48em;color:var(--ia)}
+.inv.pr.t-anarkyz .dt{font-family:"Forum",Georgia,serif;font-size:20px;letter-spacing:.12em;color:var(--hf)}
+.inv.pr.t-anarkyz .pin{box-shadow:0 0 0 5px #fff,0 0 0 6px #B5B5B5,0 14px 30px -14px rgba(0,0,0,.35)}
+.inv.pr.t-anarkyz .blk{border-radius:4px;box-shadow:0 18px 40px -30px rgba(75,20,27,.35)}
+.inv.pr.t-anarkyz .blk::before{content:"";position:absolute;inset:8px;border:1px solid var(--il);pointer-events:none}
+.inv.pr.t-anarkyz .blk h2{font-style:italic;font-weight:500;font-size:34px}
+.inv.pr.t-anarkyz .cd div{border-radius:2px;background:#FAF5F2;border-color:transparent}
+.inv.pr.t-anarkyz .cd b{font-family:"Forum",Georgia,serif;font-weight:400;font-size:30px;color:var(--ia)}
+.inv.pr.t-anarkyz .vn{font-style:italic;font-size:28px;font-weight:600}
+.inv.pr.t-anarkyz .ib{border-radius:2px;letter-spacing:.08em}
+.inv.pr.t-anarkyz .fin-bg::after{background:radial-gradient(55% 34% at 50% 50%,rgba(250,247,243,.92),rgba(250,247,243,.1))}
+.inv.pr.t-anarkyz .fin-k,.inv.pr.t-anarkyz .fin-d,.inv.pr.t-anarkyz .fin-o{color:#A3232F}
+.inv.pr.t-anarkyz .ft{background:#F0E9E1}
+
+/* ---------- N8 · Фиеста (Birthday) ---------- */
+.inv.pr.t-fiesta{--ib:#FCE3D6;--if:#3B2A4A;--ia:#E8615A;--ion:#FFFFFF;--im:#6E5A72;--il:rgba(232,97,90,.22);--ic:#FFFFFF;--fd:"Montserrat",system-ui,sans-serif;--hf:#3B2A4A;--ha:#E8615A;--hm:#6E5A72}
+.inv.pr.t-fiesta .cv{background:#FCD9C6;padding-top:clamp(150px,22svh,210px)}
+.inv.pr.t-fiesta .ey{font-weight:600;font-size:13px;letter-spacing:.26em;color:#8C5AC8}
+.inv.pr.t-fiesta .nm,.inv.pr.t-fiesta .fin-n{font-weight:600;letter-spacing:-.01em;color:#3B2A4A}
+.inv.pr.t-fiesta .nm{font-size:min(clamp(42px,13vw,64px),calc(100cqi / var(--nl) / .66))}
+.inv.pr.t-fiesta .amp{font-family:"Bad Script",cursive;font-weight:400;font-size:.55em;color:var(--ia)}
+.inv.pr.t-fiesta .dt span{display:inline-block;border-radius:99px;padding:10px 20px;background:#fff;box-shadow:0 10px 24px -14px rgba(59,42,74,.35);font-weight:600;font-size:16px;letter-spacing:.16em;color:var(--ia)}
+.inv.pr.t-fiesta .sub{font-weight:500}
+.inv.pr.t-fiesta .blk{border-radius:28px}
+.inv.pr.t-fiesta .blk h2{font-weight:600;font-size:26px;letter-spacing:-.01em}
+.inv.pr.t-fiesta .cd div{border-radius:18px;background:#FFF1EA;border-color:transparent}
+.inv.pr.t-fiesta .cd b{font-family:var(--fd);font-weight:600;font-size:28px;color:var(--ia)}
+.inv.pr.t-fiesta .vn{font-weight:600;font-size:22px}
+.inv.pr.t-fiesta .ib{border-radius:99px}
+.inv.pr.t-fiesta .fin-ph{justify-content:center;padding-top:120px}
+.inv.pr.t-fiesta .fin-bg::after{background:radial-gradient(55% 32% at 50% 52%,rgba(252,227,214,.95),rgba(252,227,214,0))}
+.inv.pr.t-fiesta .fin-k,.inv.pr.t-fiesta .fin-d{color:#8C5AC8}
+.inv.pr.t-fiesta .ft{background:#F9D3C0}
+.mini .inv.pr.t-fiesta .cv{padding-top:100px}
+
+/* ---------- N9 · Акварель · Көгүлтүр (Watercolor) ---------- */
+.inv.pr.t-wcblue{--ib:#F7F7F4;--if:#28385E;--ia:#5468A8;--ion:#FFFFFF;--im:#5D6680;--il:rgba(84,104,168,.2);--ic:#FFFFFF;--fd:"Cormorant Garamond",Georgia,serif;--hf:#28385E;--ha:#7A69B0;--hm:#5D6680}
+.inv.pr.t-wcblue .cv{background:#FAFAF8}
+.inv.pr.t-wcblue .art::after{background:radial-gradient(50% 32% at 50% 50%,rgba(250,250,248,.8),rgba(250,250,248,0))}
+.inv.pr.t-wcblue .ey{letter-spacing:.32em}
+.inv.pr.t-wcblue .nm,.inv.pr.t-wcblue .fin-n{font-style:italic;font-weight:500;color:#28385E}
+.inv.pr.t-wcblue .nm{font-size:min(clamp(46px,14vw,68px),calc(100cqi / var(--nl) / .5))}
+.inv.pr.t-wcblue .amp{font-family:"Bad Script",cursive;font-style:normal;font-size:.45em;color:var(--ha)}
+.inv.pr.t-wcblue .dt{font-style:italic;font-weight:600;font-size:22px;color:var(--ia)}
+.inv.pr.t-wcblue .pin{box-shadow:0 0 0 5px #fff,0 0 0 6px var(--il),0 14px 30px -16px rgba(0,0,0,.3)}
+.inv.pr.t-wcblue .blk{border-radius:6px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 18px 40px -30px rgba(40,56,94,.35)}
+.inv.pr.t-wcblue .blk::before{content:"";position:absolute;inset:8px;border:1px solid var(--il);border-radius:3px;pointer-events:none}
+.inv.pr.t-wcblue .blk h2{font-style:italic;font-weight:500;font-size:36px}
+.inv.pr.t-wcblue .cd div{border-radius:14px;background:#F2F3F8;border-color:transparent}
+.inv.pr.t-wcblue .cd b{font-family:var(--fd);font-weight:600;font-size:30px;color:var(--ia)}
+.inv.pr.t-wcblue .vn{font-style:italic;font-size:28px;font-weight:600}
+.inv.pr.t-wcblue .ib{border-radius:99px}
+.inv.pr.t-wcblue .fin-bg::after{background:radial-gradient(55% 32% at 50% 50%,rgba(250,250,248,.93),rgba(250,250,248,0))}
+.inv.pr.t-wcblue .fin-k,.inv.pr.t-wcblue .fin-d,.inv.pr.t-wcblue .fin-o{color:var(--ia)}
+.inv.pr.t-wcblue .ft{background:#EFF0F4}
+
+/* ---------- N10 · Жылдыз (Premium Dark) ---------- */
+.inv.pr.t-zhyldyz{--ib:#07090F;--if:#F3E7CC;--ia:#E2B967;--ion:#07090F;--im:#B9AE97;--il:rgba(226,185,103,.24);--ic:rgba(255,255,255,.035);--fd:"Forum",Georgia,serif;--hf:#FFF4DC;--ha:#E2B967;--hm:#C8BCA2}
+.inv.pr.t-zhyldyz .cv{background:#06080F}
+.inv.pr.t-zhyldyz .art::after{background:radial-gradient(55% 34% at 50% 50%,rgba(6,8,15,.55),rgba(6,8,15,0))}
+.inv.pr.t-zhyldyz .ey{font-family:"Montserrat",system-ui,sans-serif;font-weight:500;font-size:11px;letter-spacing:.44em}
+.inv.pr.t-zhyldyz .nm,.inv.pr.t-zhyldyz .fin-n{text-transform:uppercase;letter-spacing:.07em;font-weight:400;background:linear-gradient(180deg,#FFF6DE 0%,#F1D493 55%,#C9973F 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 18px rgba(226,185,103,.35))}
+.inv.pr.t-zhyldyz .nm{font-size:min(clamp(38px,11.5vw,56px),calc(100cqi / var(--nl) / .72))}
+.inv.pr.t-zhyldyz .amp{font-family:"Bad Script",cursive;text-transform:none;font-size:.6em;margin:4px 0;color:#E2B967;-webkit-text-fill-color:#E2B967;letter-spacing:0}
+.inv.pr.t-zhyldyz .dt{font-family:"Montserrat",system-ui,sans-serif;font-weight:500;font-size:14px;letter-spacing:.42em;color:var(--ha)}
+.inv.pr.t-zhyldyz .pin{box-shadow:0 0 0 4px #07090F,0 0 0 5px var(--ha),0 0 40px rgba(226,185,103,.35)}
+.inv.pr.t-zhyldyz .blk{border-top:0;margin:0 14px 14px;padding:54px 24px;border:1px solid var(--il);border-radius:14px;background:radial-gradient(120% 80% at 50% 0%,rgba(226,185,103,.08),rgba(255,255,255,0))}
+.inv.pr.t-zhyldyz .blk:first-of-type{margin-top:14px}
+.inv.pr.t-zhyldyz .blk h2{text-transform:uppercase;letter-spacing:.14em;font-size:22px;font-weight:400;color:#F1D493}
+.inv.pr.t-zhyldyz .cd div{border-radius:12px;border-color:var(--il);background:rgba(255,255,255,.02)}
+.inv.pr.t-zhyldyz .cd b{font-family:"Montserrat",system-ui,sans-serif;font-weight:500;font-size:26px;color:var(--ia)}
+.inv.pr.t-zhyldyz .vn{font-size:26px;letter-spacing:.06em;color:#FFF4DC}
+.inv.pr.t-zhyldyz .ib{border-radius:99px;letter-spacing:.12em}
+.inv.pr.t-zhyldyz .fin-bg::after{background:radial-gradient(55% 34% at 50% 50%,rgba(6,8,15,.7),rgba(6,8,15,.1))}
+.inv.pr.t-zhyldyz .fin-k,.inv.pr.t-zhyldyz .fin-d,.inv.pr.t-zhyldyz .fin-o{color:var(--ha)}
+.inv.pr.t-zhyldyz .fin-o{width:150px;height:14px}
+.inv.pr.t-zhyldyz .ft{background:#04060B}
+@media (prefers-reduced-motion:reduce){.inv.pr.t-zhyldyz .nm{filter:none}}
