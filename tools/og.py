@@ -53,7 +53,7 @@ def site_og(lang):
     big = Font("yeseva-one", 54)
     big.draw(d, (80, 250), l1, ink); big.draw(d, (80, 318), l2, gold)
     Font("rubik", 20).draw(d, (82, 430), sub, mut)
-    Font("rubik", 24, "500").draw(d, (82, 520), "toigo.app   ·   KG · RU   ·   " + ("айына 150 сом" if lang == "ky" else "150 сом в месяц"), ink)
+    Font("rubik", 24, "500").draw(d, (82, 520), "toigo.app   ·   KG · RU   ·   " + ("айына 200 сом" if lang == "ky" else "200 сом в месяц"), ink)
     # phone card on the right
     px, py, pw, ph = 860, 70, 270, 520
     d.rounded_rectangle([px, py, px + pw, py + ph], 38, fill="#0E1318")

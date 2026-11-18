@@ -118,7 +118,7 @@ function priceBlock(lang) {
       <ul>${P.list.map(x => `<li>${x.replace("{n}", TPL.length)}</li>`).join("")}</ul>
       <a class="btn btn-gold" href="${u(lang, "/create/")}#buy">${P.buy}</a></div>
   </div>
-  <a class="prc-custom" href="${u(lang, "/custom/")}"><i class="prc-tag">${lang === "ru" ? "Под ключ" : "Даяр кылып беребиз"}</i><span><b>${C[lang].custom.cta}</b>${C[lang].custom.ctaP}</span><em><strong>400 сом</strong><u>${C[lang].custom.ctaBtn} →</u></em></a>
+  <a class="prc-custom" href="${u(lang, "/custom/")}"><i class="prc-tag">${lang === "ru" ? "Под ключ" : "Даяр кылып беребиз"}</i><span><b>${C[lang].custom.cta}</b>${C[lang].custom.ctaP}</span><em><strong>500 сом</strong><u>${C[lang].custom.ctaBtn} →</u></em></a>
 </div></section>`;
 }
 
@@ -225,7 +225,7 @@ function homePage(lang) {
     { "@context": "https://schema.org", "@type": "WebSite", name: "Тойго", url: O + "/", inLanguage: ["ky", "ru"] },
     { "@context": "https://schema.org", "@type": "Organization", name: "Тойго", url: O + "/", logo: O + "/icon-512.png" },
     { "@context": "https://schema.org", "@type": "WebApplication", name: "Тойго", url: O + u(lang, "/create/"), applicationCategory: "LifestyleApplication", operatingSystem: "Any",
-      inLanguage: lang, description: H.desc, offers: [{ "@type": "Offer", name: C[lang].price.per, price: "150", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].price.year, price: "500", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].custom.k, price: "400", priceCurrency: "KGS" }] },
+      inLanguage: lang, description: H.desc, offers: [{ "@type": "Offer", name: C[lang].price.per, price: "200", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].price.year, price: "700", priceCurrency: "KGS" }, { "@type": "Offer", name: C[lang].custom.k, price: "500", priceCurrency: "KGS" }] },
     faqLd(C[lang].faq)
   ];
   const cat = id => CATS.find(c => c.id === id);
@@ -329,7 +329,7 @@ function payPanel(lang) {
       <p class="hint">${S.pay_how}</p>
       <p class="pay-msg" id="pay-msg" aria-live="polite"></p>
       <div class="pay-keybox" id="pay-keybox" hidden><span>${S.pay_keyl}</span> <code class="keyout" id="pay-keyval"></code><p class="hint" id="pay-keynote"></p></div>
-      <p class="hint">${C[lang].custom.cta} <a href="${u(lang, "/custom/")}">${C[lang].custom.ctaBtn} — 400 сом</a></p>
+      <p class="hint">${C[lang].custom.cta} <a href="${u(lang, "/custom/")}">${C[lang].custom.ctaBtn} — 500 сом</a></p>
       <details class="pay-key"><summary>${S.pay_have}</summary>
         <div class="copyrow"><input id="pay-key" type="text" maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="${S.pay_key_ph}" aria-label="${S.pay_have}"><button type="button" class="btn btn-p btn-sm" id="pay-act">${S.pay_act}</button></div>
       </details>

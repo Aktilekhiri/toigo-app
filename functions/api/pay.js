@@ -1,4 +1,4 @@
-// Toigo — paid access: first invitation free, then a subscription: 100 som / 30 days or 500 som / 365 days (key on 3 devices).
+// Toigo — paid access: a subscription: 200 som / 30 days or 700 som / 365 days (key on 3 devices).
 // Payment is automatic through Finik (QR in any Kyrgyz bank app), the same account as diamond.kg and clip4k.app:
 // the site creates a payment, the person pays on the Finik page, Finik sends a signed webhook and the key
 // is issued (or extended) by itself. Lifetime keys sold earlier keep working without a date.
@@ -21,9 +21,9 @@ import { finikReady, createFinikPayment, readFinikWebhook, PAY_MIN } from "./fin
 import { userFromRequest, attachKey, ensureAuth } from "./auth.js";
 
 export const FREE = 1;          // free invitations per device
-export const PLANS = { month: { price: 150, days: 30 }, year: { price: 500, days: 365 } };
+export const PLANS = { month: { price: 200, days: 30 }, year: { price: 700, days: 365 } };
 // Individual invitation: we design and fill in the invitation for the client (1–3 days); includes a month of subscription.
-export const CUSTOM = { price: 400, days: 30 };
+export const CUSTOM = { price: 500, days: 30 };
 const CUSTOM_FILES = 5, CUSTOM_FILE_MAX = 4 << 20;
 export const PRICE = PLANS.month.price;   // cheapest plan, shown when access is refused
 export const DAYS = PLANS.month.days;     // default days for /newkey
@@ -291,7 +291,7 @@ export async function handle(request, env, url) {
     return json({ id, token, url: r.url });
   }
 
-  // Individual invitation: brief + up to 5 photos, then Finik payment of 400 som (includes a month of subscription)
+  // Individual invitation: brief + up to 5 photos, then Finik payment of 500 som (includes a month of subscription)
   if (p === "/api/custom" && request.method === "POST") {
     if (!finikReady(env)) return json({ error: "notready" }, 503);
     const user = await userFromRequest(request, env);
