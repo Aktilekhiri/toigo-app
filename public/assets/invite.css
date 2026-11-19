@@ -884,8 +884,8 @@
 .inv.pr .orn-akkagaz,.inv.pr .orn-arka,.inv.pr .orn-fiesta{display:none}
 .inv.pr :is(.orn-altyn,.orn-khan,.orn-zhyldyz,.orn-ordo){width:150px;height:14px}
 .inv.pr :is(.orn-gulzar,.orn-anarkyz,.orn-wcblue){width:120px;height:22px}
-.inv.pr :is(.t-altyn,.t-ordo,.t-akkagaz,.t-gulzar,.t-arka,.t-anarkyz,.t-fiesta,.t-wcblue) .blk{border-top:0;margin:0 14px 14px;padding:54px 24px 48px;background:var(--ic);position:relative}
-.inv.pr :is(.t-altyn,.t-ordo,.t-akkagaz,.t-gulzar,.t-arka,.t-anarkyz,.t-fiesta,.t-wcblue) .blk:first-of-type{margin-top:14px}
+.inv.pr:is(.t-altyn,.t-ordo,.t-akkagaz,.t-gulzar,.t-arka,.t-anarkyz,.t-fiesta,.t-wcblue) .blk{border-top:0;margin:0 14px 14px;padding:54px 24px 48px;background:var(--ic);position:relative}
+.inv.pr:is(.t-altyn,.t-ordo,.t-akkagaz,.t-gulzar,.t-arka,.t-anarkyz,.t-fiesta,.t-wcblue) .blk:first-of-type{margin-top:14px}
 .inv.pr:is(.t-altyn,.t-ordo,.t-akkagaz,.t-gulzar,.t-arka,.t-anarkyz,.t-fiesta,.t-wcblue,.t-khan,.t-zhyldyz) .gal img{border-radius:6px}
 
 /* ---------- N1 · Алтын Сарай (Luxury Wedding) ---------- */
