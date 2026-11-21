@@ -2,6 +2,7 @@
 // Used in the browser (constructor preview) and on the server (/i/:slug).
 // Pure functions only: no DOM access here.
 import { PREM, PREM_TPL, premCover, premOrn, premFinale } from "./invite-premium.js";
+import { ART_TPL, artCover, renderArt } from "./invite-art.js";
 
 export const TYPES = {
   uylonuu: { ky: "Үйлөнүү той", ru: "Свадьба", names: "pair" },
@@ -21,6 +22,7 @@ export const OPEN_TYPES = ["custom"];
 export const isPair = t => !!(TYPES[t] && TYPES[t].names === "pair");
 
 export const TPL = [
+  ART_TPL,
   ...PREM_TPL,
   { id: "ivory",     name: { ky: "Ivory Elegance", ru: "Ivory Elegance" }, desc: { ky: "Сүт түсү, шампань сызыктары жана нафис гүл бутактары.", ru: "Молочный фон, тонкие линии шампань и деликатные цветочные веточки." }, types: ["uylonuu","kyz"] },
   { id: "anarp",     name: { ky: "Анар Premium", ru: "Анар Premium" }, desc: { ky: "Анар түсү, порошок жана роза-алтын рамка. Кыз узатуу үчүн.", ru: "Гранатовый фон, пудра и рамка из розового золота. Для кыз узатуу." }, types: ["kyz"] },
@@ -214,7 +216,7 @@ export const TRACKS = [
   { id: "steppe", file: "px-steppe", ky: "Талаа руху", ru: "Дух степи" }
 ];
 // Music that suits a design; the constructor picks it when the design is chosen, unless the person chose music themselves.
-export const TPL_TRACK = { altyn: "waltz", ordo: "steppe", akkagaz: "invitation", gulzar: "piano", khan: "strings", arka: "garden", anarkyz: "cello", fiesta: "garden", wcblue: "piano", zhyldyz: "pianostrings" };
+export const TPL_TRACK = { altyn: "waltz", ordo: "steppe", akkagaz: "invitation", gulzar: "piano", khan: "strings", arka: "garden", anarkyz: "cello", fiesta: "garden", wcblue: "piano", zhyldyz: "pianostrings", art: "pianostrings" };
 export const trackFile = id => (TRACKS.find(t => t.id === id) || TRACKS[0]).file;
 
 export function clean(input) {
@@ -232,6 +234,7 @@ export function clean(input) {
   d.venue = str(i.venue, 120); d.addr = str(i.addr, 200); d.hall = str(i.hall, 80);
   { const a = parseInt(i.age, 10); d.age = a >= 1 && a <= 120 ? a : ""; }
   d.msg = str(i.msg, 1200); d.dress = str(i.dress, 200);
+  d.story = str(i.story, 900);
   d.prog = str(i.prog, 1500).split("\n").slice(0, 20).join("\n");
   d.phone = str(i.phone, 24).replace(/[^\d+]/g, "");
   d.music = i.music !== false;
@@ -303,8 +306,8 @@ function names(d) {
 // ---------- templates v2: each has its own cover composition ----------
 export const NEW_TPL = new Set(["ivory","anarp","emerald","steps","golden","pop","heritage","botanical","midnight","editorial"]);
 // Falling/rising effect that suits a design better than the default for its toi type.
-const TPL_FX = { altyn: "x-gold", khan: "x-gold", zhyldyz: "x-gold", ordo: "x-gold", gulzar: "x-rose", anarkyz: "x-pom", wcblue: "x-lilac", akkagaz: "x-paper", arka: "x-olive", fiesta: "x-party" };
-export const invClass = (tpl, type) => `inv t-${tpl}${NEW_TPL.has(tpl) ? " nw" : PREM.has(tpl) ? " nw pr" : ""} ty-${type || "uylonuu"}`;
+const TPL_FX = { altyn: "x-gold", khan: "x-gold", zhyldyz: "x-gold", ordo: "x-gold", gulzar: "x-rose", anarkyz: "x-pom", wcblue: "x-lilac", akkagaz: "x-paper", arka: "x-olive", fiesta: "x-party", art: "x-none" };
+export const invClass = (tpl, type) => `inv t-${tpl}${tpl === "art" ? " ed" : NEW_TPL.has(tpl) ? " nw" : PREM.has(tpl) ? " nw pr" : ""} ty-${type || "uylonuu"}`;
 
 const ruYears = n => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? "год" : a >= 2 && a <= 4 && (b < 12 || b > 14) ? "года" : "лет"; };
 function ageWord(n, lang) { return lang === "ru" ? ruYears(n) : lang === "both" ? `жаш / ${ruYears(n)}` : "жаш"; }
@@ -383,6 +386,7 @@ function premHelpers(d, T) {
 
 export function coverHTML(d, opts = {}) {
   const T = mk(d.lang), mini = !!opts.mini;
+  if (d.tpl === "art") return artCover(d, premHelpers(d, T), opts);
   if (NEW_TPL.has(d.tpl)) return coverNew(d, T, opts);
   if (PREM.has(d.tpl)) return premCover(d, premHelpers(d, T), opts);
   return `<div class="cv">${decor(d.tpl, mini)}
@@ -422,8 +426,20 @@ export function renderInvitation(d, opts = {}) {
   const waNum = phone.replace(/\D/g, "");
   const guest = opts.guest || null;
   const dear = { ky: "Урматтуу", ru: "", both: "Урматтуу" }[d.lang] || "";
-  return `<div class="${invClass(d.tpl, d.type)}" data-mode="${opts.mode || "preview"}" data-slug="${esc(opts.slug || "")}" data-lang="${d.lang}"${d.fx !== false ? ` data-fx="${TPL_FX[d.tpl] || d.type}"` : ""}${guest ? ` data-guest="${esc(guest.code)}"` : ""}>
-  ${d.music ? `<button type="button" class="mus" data-act="music" data-track="${trackFile(d.track)}" aria-pressed="false" aria-label="${T.P("music")}">${NOTE}</button>` : ""}
+  const head = `<div class="${invClass(d.tpl, d.type)}" data-mode="${opts.mode || "preview"}" data-slug="${esc(opts.slug || "")}" data-lang="${d.lang}"${d.fx !== false ? ` data-fx="${TPL_FX[d.tpl] || d.type}"` : ""}${guest ? ` data-guest="${esc(guest.code)}"` : ""}>
+  ${d.music ? `<button type="button" class="mus" data-act="music" data-track="${trackFile(d.track)}" aria-pressed="false" aria-label="${T.P("music")}">${NOTE}</button>` : ""}`;
+  const rsvpInner = `    <form class="rsvp" data-pf="${pf}" novalidate>
+      <label for="${pf}-rn">${T.P("rn")}</label><input type="text" id="${pf}-rn" name="name" autocomplete="name" maxlength="60" required${guest ? ` value="${esc(guest.name.slice(0, 60))}"` : ""}>
+      <div class="yn" role="radiogroup"><label><input type="radio" name="att" id="${pf}-y" value="1" checked><span>${T.P("yes")}</span></label><label><input type="radio" name="att" id="${pf}-n" value="0"><span>${T.P("no")}</span></label></div>
+      <div class="cntw"><label for="${pf}-rc">${T.P("cnt")}</label><input type="number" id="${pf}-rc" name="guests" min="1" max="20" value="1" inputmode="numeric"></div>
+      <label for="${pf}-rt">${T.P("note")}</label><textarea id="${pf}-rt" name="note" maxlength="300"></textarea>
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="err" aria-live="polite" data-err="${esc(T.P("err"))}" data-fail="${esc(T.P("fail"))}" data-preview="${esc(T.P("preview"))}"></div>
+      <button class="ib f" type="submit">${T.P("send")}</button>
+    </form>
+    <div class="thx" hidden>${T.L("thx")}</div>`;
+  if (d.tpl === "art") return renderArt(d, opts, { T, h: premHelpers(d, T), esc, pr, ts, q, phone, waNum, guest, dear, photoUrl, head, rsvpInner, seat: seatLine(d, guest, T) });
+  return `${head}
   ${coverHTML(d, { photoUrl })}
   <section class="blk">${orn(d.tpl)}${guest ? `<p class="to">${dear ? `<span>${dear}</span>` : ""}<b>${esc(guest.name)}${d.lang === "ru" ? "," : "!"}</b></p>` : ""}<h2>${T.TT(d.type, "inv")}</h2>${d.msg ? `<p class="msg">${esc(d.msg)}</p>` : ""}
     ${d.hosts ? `<div class="hosts">${T.P("hosts")}<b>${esc(d.hosts)}</b></div>` : ""}</section>
@@ -436,16 +452,7 @@ export function renderInvitation(d, opts = {}) {
   ${d.dress ? `<section class="blk"><h2>${T.L("dress")}</h2><p class="msg">${esc(d.dress)}</p></section>` : ""}
   ${d.photos && d.photos.length ? `<section class="blk"><h2>${T.L("gal")}</h2><div class="gal">${d.photos.map(p => `<img src="${esc(photoUrl(p))}" alt="" loading="lazy" decoding="async" data-act="zoom">`).join("")}</div></section>` : ""}
   <section class="blk"><h2>${T.L("rsvp")}</h2>${d.dl ? `<div class="sub">${T.deadline(d.dl)}</div>` : ""}
-    <form class="rsvp" data-pf="${pf}" novalidate>
-      <label for="${pf}-rn">${T.P("rn")}</label><input type="text" id="${pf}-rn" name="name" autocomplete="name" maxlength="60" required${guest ? ` value="${esc(guest.name.slice(0, 60))}"` : ""}>
-      <div class="yn" role="radiogroup"><label><input type="radio" name="att" id="${pf}-y" value="1" checked><span>${T.P("yes")}</span></label><label><input type="radio" name="att" id="${pf}-n" value="0"><span>${T.P("no")}</span></label></div>
-      <div class="cntw"><label for="${pf}-rc">${T.P("cnt")}</label><input type="number" id="${pf}-rc" name="guests" min="1" max="20" value="1" inputmode="numeric"></div>
-      <label for="${pf}-rt">${T.P("note")}</label><textarea id="${pf}-rt" name="note" maxlength="300"></textarea>
-      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <div class="err" aria-live="polite" data-err="${esc(T.P("err"))}" data-fail="${esc(T.P("fail"))}" data-preview="${esc(T.P("preview"))}"></div>
-      <button class="ib f" type="submit">${T.P("send")}</button>
-    </form>
-    <div class="thx" hidden>${T.L("thx")}</div>
+${rsvpInner}
   </section>
   ${phone ? `<section class="blk"><h2>${T.L("contact")}</h2><div class="row2"><a class="ib f" href="https://wa.me/${waNum}" target="_blank" rel="noopener">WhatsApp</a><a class="ib" href="tel:${esc(phone)}">${T.P("call")}</a></div><div class="sub">${esc(phone)}</div></section>` : ""}
   ${PREM.has(d.tpl) ? premFinale(d, premHelpers(d, T)) : ""}

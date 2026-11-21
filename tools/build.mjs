@@ -373,6 +373,7 @@ function createPage(lang) {
       ${f("hall", S.l_hall, `<input id="f-hall" name="hall" type="text" maxlength="80" autocomplete="off" placeholder="${S.ph_hall}">`, "w", S.h_hall)}
     </fieldset>
     <fieldset><legend>${S.lg4}</legend>
+      ${f("story", S.l_story, `<textarea id="f-story" name="story" maxlength="900" rows="4" placeholder="${S.ph_story}"></textarea>`, "w", S.h_story)}
       ${f("msg", S.l_msg, `<textarea id="f-msg" name="msg" maxlength="1200" rows="5"></textarea><div class="ready" role="group" aria-label="${S.l_ready}"><span>${S.l_ready}</span><button type="button" class="chip-btn" data-ready="0">1</button><button type="button" class="chip-btn" data-ready="1">2</button><button type="button" class="chip-btn" data-ready="2">3</button></div>`, "w")}
       ${f("prog", S.l_prog, `<textarea id="f-prog" name="prog" maxlength="1500" rows="5"></textarea>`, "w", S.h_prog)}
       ${f("dress", S.l_dress, `<input id="f-dress" name="dress" type="text" maxlength="200" autocomplete="off">`, "w", S.h_opt)}

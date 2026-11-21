@@ -24,9 +24,9 @@ export const PREM_TPL = [
 
 // Swatches for the design picker in the constructor.
 export const PREM_SWATCH = { silk: "linear-gradient(135deg,#FFFCF7,#E3CFA8)", nomad: "linear-gradient(#0C1626,#2A3B5E)", garden: "linear-gradient(135deg,#46695A,#16271F)",
-  kjibek: "radial-gradient(circle at 50% 40%,#8B344B,#4C1323)", aurora: "linear-gradient(135deg,#FBF7F3,#E7C9C7)", noir: "linear-gradient(135deg,#101411 45%,#1E5546)", ...PHOTO_SWATCH };
+  kjibek: "radial-gradient(circle at 50% 40%,#8B344B,#4C1323)", aurora: "linear-gradient(135deg,#FBF7F3,#E7C9C7)", noir: "linear-gradient(135deg,#101411 45%,#1E5546)", art: "center/cover url(/img/art/cover-s.webp)", ...PHOTO_SWATCH };
 
-export const PREM_THEME = { silk: "#F7F3EB", nomad: "#142238", garden: "#243D32", kjibek: "#651D32", aurora: "#FBF7F3", noir: "#101411", ...PHOTO_THEME };
+export const PREM_THEME = { silk: "#F7F3EB", nomad: "#142238", garden: "#243D32", kjibek: "#651D32", aurora: "#FBF7F3", noir: "#101411", art: "#2B211B", ...PHOTO_THEME };
 
 // deterministic pseudo-random, so server and browser draw identical art
 function rng(seed) { let x = seed; return () => (x = (x * 9301 + 49297) % 233280) / 233280; }

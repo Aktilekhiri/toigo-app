@@ -1,7 +1,7 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, TPL_TRACK, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mwn6ssdx";
-import { session, authHeaders, renderLogin, onAuthChange, userLine, syncInvites } from "/assets/auth.js?v=mwn6ssdx";
-import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mwn6ssdx";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, TPL_TRACK, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mwqe3kh5";
+import { session, authHeaders, renderLogin, onAuthChange, userLine, syncInvites } from "/assets/auth.js?v=mwqe3kh5";
+import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mwqe3kh5";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -70,7 +70,7 @@ async function init() {
 }
 
 // ---------- form <-> data ----------
-const TEXT = ["title", "n1", "n2", "hosts", "date", "time", "venue", "addr", "hall", "age", "msg", "prog", "dress", "dl", "phone"];
+const TEXT = ["title", "story", "n1", "n2", "hosts", "date", "time", "venue", "addr", "hall", "age", "msg", "prog", "dress", "dl", "phone"];
 function fill() {
   form.elements.type.value = d.type;
   const tpl = form.querySelector(`input[name=tpl][value="${d.tpl}"]`); if (tpl) tpl.checked = true;
@@ -96,6 +96,7 @@ function names() {
   tplFilter();
   const map = { pair: S.n_pair, kyz: S.n_kyz, child: S.n_child, jub: S.n_jub, bday: S.n_bday, host: S.n_host };
   $("#w-title").hidden = d.type !== "custom";
+  $("#w-story").hidden = d.tpl !== "art";
   const pair = isPair(d.type);
   $("#lab-n1").textContent = map[TYPES[d.type].names];
   $("#w-n2").hidden = !pair;
@@ -135,6 +136,7 @@ form.addEventListener("change", e => {
   if (t.name === "type") { applyType(t.value); fill(); changed(); }
   else if (t.name === "tpl") {
     d.tpl = t.value;
+    $("#w-story").hidden = d.tpl !== "art";
     // suggest the design's music until the person picks a track themselves
     if (!trackPicked && TPL_TRACK[d.tpl]) { d.track = TPL_TRACK[d.tpl]; form.elements.track.value = d.track; setTrack(trackFile(d.track)); }
     changed();
@@ -215,7 +217,7 @@ form.addEventListener("submit", async e => {
     btn.textContent = S.update;
     done(slug, key);
     // Preview card for WhatsApp/Telegram, drawn from this cover (in the background; the link works without it).
-    import("/assets/og-card.js?v=mwn6ssdx").then(m => m.makeOgCard(clean(d), slug, key, photoUrl)).catch(() => {});
+    import("/assets/og-card.js?v=mwqe3kh5").then(m => m.makeOgCard(clean(d), slug, key, photoUrl)).catch(() => {});
   } catch { msg.textContent = S.net; }
   finally { btn.disabled = false; if (btn.textContent === S.saving) btn.textContent = label; }
 });
