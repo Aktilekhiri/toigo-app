@@ -5,6 +5,7 @@ import { TYPES, TPL, TRACKS, DEFAULTS, TYPE_TEXT, coverHTML, renderInvitation, i
 import { C, UI, CATS, SUPPORT } from "./content.mjs";
 import { ILLUS } from "./illus.mjs";
 import { PREM_SWATCH } from "../public/assets/invite-premium.js";
+import { LEGAL } from "./legal.mjs";
 
 const OUT = "public";
 const LASTMOD = new Date().toISOString().slice(0, 10);
@@ -142,7 +143,7 @@ function footer(lang) {
   <div class="cols">
     <div><a class="brand" href="${u(lang, "/")}">${HORN}Тойго</a><p style="margin-top:12px;max-width:36ch">${F.tag}</p></div>
     <div><h3>${F.types}</h3><ul>${CATS.map(c => `<li><a href="${u(lang, `/toi/${c.path}/`)}">${TYPES[c.id][lang]}</a></li>`).join("")}</ul></div>
-    <div><h3>${F.site}</h3><ul><li><a href="${u(lang, "/create/")}">${N.create}</a></li><li><a href="${u(lang, "/manage/")}">${N.mine}</a></li><li><a href="${u(lang, "/custom/")}">${N.custom}</a></li><li><a href="${TG_URL}" target="_blank" rel="noopener">${N.tg}</a></li><li><a href="${u(lang, "/")}#faq">${N.faq}</a></li><li><a href="${u(lang, "/")}#price">${N.support}</a></li><li><a href="${u(lang, "/privacy/")}">${F.privacy}</a></li></ul></div>
+    <div><h3>${F.site}</h3><ul><li><a href="${u(lang, "/create/")}">${N.create}</a></li><li><a href="${u(lang, "/manage/")}">${N.mine}</a></li><li><a href="${u(lang, "/custom/")}">${N.custom}</a></li><li><a href="${TG_URL}" target="_blank" rel="noopener">${N.tg}</a></li><li><a href="${u(lang, "/")}#faq">${N.faq}</a></li><li><a href="${u(lang, "/")}#price">${N.support}</a></li><li><a href="${u(lang, "/offer/")}">${lang === "ru" ? "Оферта" : "Оферта"}</a></li><li><a href="${u(lang, "/refund/")}">${lang === "ru" ? "Возврат" : "Акча кайтаруу"}</a></li><li><a href="${u(lang, "/contacts/")}">${lang === "ru" ? "Контакты и реквизиты" : "Байланыш жана реквизиттер"}</a></li><li><a href="${u(lang, "/privacy/")}">${F.privacy}</a></li></ul></div>
   </div>
   <div class="copy"><span>© ${new Date().getFullYear()} Тойго. ${F.rights}</span><span><a href="/" lang="ky">Кыргызча</a> · <a href="/ru/" lang="ru">Русский</a></span></div>
 </div></footer>
@@ -326,7 +327,7 @@ function payPanel(lang) {
       <div class="plans" role="radiogroup" aria-label="${S.pay_h}">${Object.entries(S.plans).map(([id, [n, pr, per, note]], i) => `<label class="plan"><input type="radio" name="plan" value="${id}" data-price="${pr}"${i === 0 ? " checked" : ""}><span><em>${n}</em><b>${pr}</b><small>${per}</small>${note ? `<i>${note}</i>` : ""}</span></label>`).join("")}</div>
       <ul class="pay-list">${S.pay_list.map(x => `<li>${x}</li>`).join("")}</ul>
       <button type="button" class="btn btn-gold" id="pay-go">${S.pay_go}</button>
-      <p class="hint">${S.pay_how}</p>
+      <p class="hint">${S.pay_how} ${LEGAL[lang].consent}</p>
       <p class="pay-msg" id="pay-msg" aria-live="polite"></p>
       <div class="pay-keybox" id="pay-keybox" hidden><span>${S.pay_keyl}</span> <code class="keyout" id="pay-keyval"></code><p class="hint" id="pay-keynote"></p></div>
       <p class="hint">${C[lang].custom.cta} <a href="${u(lang, "/custom/")}">${C[lang].custom.ctaBtn} — 500 сом</a></p>
@@ -465,7 +466,7 @@ function customPage(lang) {
     <p class="hint cu-note">${K.note}</p>
     <div class="acc login" id="c-login" hidden></div>
     <div class="submit-row"><button class="btn btn-gold" type="submit" id="c-send">${K.btn}</button><span class="form-msg" id="c-msg" aria-live="polite"></span></div>
-    <p class="hint">${K.how}</p>
+    <p class="hint">${K.how} ${LEGAL[lang].consent}</p>
   </form>
   <div class="pay cu-done" id="c-done" hidden><p class="pay-msg" id="c-dmsg"></p><div class="pay-keybox" id="c-keybox" hidden><span>${K.keyl}</span> <code class="keyout" id="c-key"></code><p class="hint">${K.keyh}</p></div></div>
 </div></section>
@@ -482,9 +483,24 @@ function privacyPage(lang) {
 <section class="page-h"><div class="wrap">
   <h1>${K.h1}</h1>
   <p class="crumbs">${K.updated}: ${LASTMOD}</p>
-  <div class="prose">${K.items.map(i => `<h2 style="font-size:24px;margin-top:14px">${i[0]}</h2><p>${i[1]}</p>`).join("")}</div>
+  <div class="prose">${[...K.items, [lang === "ru" ? "Оператор данных" : "Маалымат оператору", LEGAL[lang].req]].map(i => `<h2 style="font-size:24px;margin-top:14px">${i[0]}</h2><p>${i[1]}</p>`).join("")}</div>
 </div></section>`;
   write(u(lang, p), page(lang, { title: K.title, desc: K.items[0][1], path: alt[lang], alt, noSupport: true }, body));
+}
+
+// Offer, refunds, contacts: same layout as the privacy page; text in tools/legal.mjs.
+function legalPage(lang, key) {
+  const K = LEGAL[lang][key];
+  const p = `/${key}/`, alt = { ky: p, ru: "/ru" + p };
+  if (lang === "ky") PAGES.push({ ky: alt.ky, ru: alt.ru, freq: "yearly", prio: "0.3" });
+  const body = `
+<section class="page-h"><div class="wrap">
+  <h1>${K.h1}</h1>
+  <p class="crumbs">${C[lang].privacy.updated}: ${LASTMOD}</p>
+  <div class="prose legal">${K.items.map(i => `${i[0] ? `<h2 style="font-size:24px;margin-top:14px">${i[0]}</h2>` : ""}${/^<ul>/.test(i[1]) ? i[1] : `<p>${i[1]}</p>`}`).join("")}</div>
+</div></section>`;
+  const desc = K.items[0][1].replace(/<[^>]+>/g, "").slice(0, 160);
+  write(u(lang, p), page(lang, { title: K.title, desc, path: alt[lang], alt, noSupport: true }, body));
 }
 
 function notFound() {
@@ -506,6 +522,7 @@ for (const lang of ["ky", "ru"]) {
   TPL.forEach(t => demoPage(lang, t));
   customPage(lang);
   privacyPage(lang);
+  ["offer", "refund", "contacts"].forEach(k => legalPage(lang, k));
 }
 notFound();
 
