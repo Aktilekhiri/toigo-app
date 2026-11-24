@@ -1,7 +1,7 @@
 // Toigo — invitation constructor.
-import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, TPL_TRACK, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mwuqgy26";
-import { session, authHeaders, renderLogin, onAuthChange, userLine, syncInvites } from "/assets/auth.js?v=mwuqgy26";
-import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mwuqgy26";
+import { DEFAULTS, TYPES, TYPE_TEXT, TPL, TRACKS, TPL_TRACK, trackFile, isPair, clean, renderInvitation, titleOf, esc } from "/assets/invite-core.js?v=mwuvatz6";
+import { session, authHeaders, renderLogin, onAuthChange, userLine, syncInvites } from "/assets/auth.js?v=mwuvatz6";
+import { startLive, tick, stopMusic, setTrack } from "/assets/invite-live.js?v=mwuvatz6";
 
 const CFG = JSON.parse(document.getElementById("i18n").textContent);
 const S = CFG.ui, LANG = CFG.lang;
@@ -71,7 +71,15 @@ async function init() {
 
 // ---------- form <-> data ----------
 const TEXT = ["title", "story", "n1", "n2", "hosts", "date", "time", "venue", "addr", "hall", "age", "msg", "prog", "dress", "dl", "phone"];
-function fill() {
+
+// "Our story" for The Art of Toi, a poem for Ак шөкүлө; hidden for other designs.
+function storyField() {
+  const w = $("#w-story"), poem = d.tpl === "shokulo";
+  w.hidden = d.tpl !== "art" && !poem;
+  w.querySelector("label").textContent = poem ? S.l_poem : S.l_story;
+  w.querySelector("textarea").placeholder = poem ? S.ph_poem : S.ph_story;
+  const h = w.querySelector(".hint"); if (h) h.textContent = poem ? S.h_poem : S.h_story;
+}function fill() {
   form.elements.type.value = d.type;
   const tpl = form.querySelector(`input[name=tpl][value="${d.tpl}"]`); if (tpl) tpl.checked = true;
   const lg = form.querySelector(`input[name=lang][value="${d.lang}"]`); if (lg) lg.checked = true;
@@ -96,7 +104,7 @@ function names() {
   tplFilter();
   const map = { pair: S.n_pair, kyz: S.n_kyz, child: S.n_child, jub: S.n_jub, bday: S.n_bday, host: S.n_host };
   $("#w-title").hidden = d.type !== "custom";
-  $("#w-story").hidden = d.tpl !== "art";
+  storyField();
   const pair = isPair(d.type);
   $("#lab-n1").textContent = map[TYPES[d.type].names];
   $("#w-n2").hidden = !pair;
@@ -136,7 +144,7 @@ form.addEventListener("change", e => {
   if (t.name === "type") { applyType(t.value); fill(); changed(); }
   else if (t.name === "tpl") {
     d.tpl = t.value;
-    $("#w-story").hidden = d.tpl !== "art";
+    storyField();
     // suggest the design's music until the person picks a track themselves
     if (!trackPicked && TPL_TRACK[d.tpl]) { d.track = TPL_TRACK[d.tpl]; form.elements.track.value = d.track; setTrack(trackFile(d.track)); }
     changed();
@@ -217,7 +225,7 @@ form.addEventListener("submit", async e => {
     btn.textContent = S.update;
     done(slug, key);
     // Preview card for WhatsApp/Telegram, drawn from this cover (in the background; the link works without it).
-    import("/assets/og-card.js?v=mwuqgy26").then(m => m.makeOgCard(clean(d), slug, key, photoUrl)).catch(() => {});
+    import("/assets/og-card.js?v=mwuvatz6").then(m => m.makeOgCard(clean(d), slug, key, photoUrl)).catch(() => {});
   } catch { msg.textContent = S.net; }
   finally { btn.disabled = false; if (btn.textContent === S.saving) btn.textContent = label; }
 });

@@ -3,6 +3,7 @@
 // Pure functions only: no DOM access here.
 import { PREM, PREM_TPL, premCover, premOrn, premFinale } from "./invite-premium.js";
 import { ART_TPL, artCover, renderArt } from "./invite-art.js";
+import { SATIN_TPL, satinCover, renderSatin } from "./invite-satin.js";
 
 export const TYPES = {
   uylonuu: { ky: "Үйлөнүү той", ru: "Свадьба", names: "pair" },
@@ -22,6 +23,7 @@ export const OPEN_TYPES = ["custom"];
 export const isPair = t => !!(TYPES[t] && TYPES[t].names === "pair");
 
 export const TPL = [
+  SATIN_TPL,
   ART_TPL,
   ...PREM_TPL,
   { id: "ivory",     name: { ky: "Ivory Elegance", ru: "Ivory Elegance" }, desc: { ky: "Сүт түсү, шампань сызыктары жана нафис гүл бутактары.", ru: "Молочный фон, тонкие линии шампань и деликатные цветочные веточки." }, types: ["uylonuu","kyz"] },
@@ -205,6 +207,7 @@ export const TRACKS = [
   { id: "tush", file: "toi-ordo-tush", ky: "Туш (Ордо)", ru: "Туш (Ордо)" },
   { id: "daanyshman", file: "toi-ordo-daanyshman", ky: "Даанышман (Ордо)", ru: "Даанышман (Ордо)" },
   { id: "mairam", file: "toi-ordo-mairam", ky: "Майрам (Ордо)", ru: "Майрам (Ордо)" },
+  { id: "kyzuzatuu", file: "toi-kyzuzatuu", ky: "Кыз узатуу ыры", ru: "Песня на кыз узатуу" },
   // Pixabay Content License (commercial use, no attribution required)
   { id: "invitation", file: "px-invitation", ky: "Назик пианино", ru: "Нежное пианино" },
   { id: "piano", file: "px-piano", ky: "Романтикалык пианино", ru: "Романтичное пианино" },
@@ -216,7 +219,7 @@ export const TRACKS = [
   { id: "steppe", file: "px-steppe", ky: "Талаа руху", ru: "Дух степи" }
 ];
 // Music that suits a design; the constructor picks it when the design is chosen, unless the person chose music themselves.
-export const TPL_TRACK = { altyn: "waltz", ordo: "steppe", akkagaz: "invitation", gulzar: "piano", khan: "strings", arka: "garden", anarkyz: "cello", fiesta: "garden", wcblue: "piano", zhyldyz: "pianostrings", art: "pianostrings" };
+export const TPL_TRACK = { altyn: "waltz", ordo: "steppe", akkagaz: "invitation", gulzar: "piano", khan: "strings", arka: "garden", anarkyz: "cello", fiesta: "garden", wcblue: "piano", zhyldyz: "pianostrings", art: "pianostrings", shokulo: "kyzuzatuu" };
 export const trackFile = id => (TRACKS.find(t => t.id === id) || TRACKS[0]).file;
 
 export function clean(input) {
@@ -306,8 +309,8 @@ function names(d) {
 // ---------- templates v2: each has its own cover composition ----------
 export const NEW_TPL = new Set(["ivory","anarp","emerald","steps","golden","pop","heritage","botanical","midnight","editorial"]);
 // Falling/rising effect that suits a design better than the default for its toi type.
-const TPL_FX = { altyn: "x-gold", khan: "x-gold", zhyldyz: "x-gold", ordo: "x-gold", gulzar: "x-rose", anarkyz: "x-pom", wcblue: "x-lilac", akkagaz: "x-paper", arka: "x-olive", fiesta: "x-party", art: "x-none" };
-export const invClass = (tpl, type) => `inv t-${tpl}${tpl === "art" ? " ed" : NEW_TPL.has(tpl) ? " nw" : PREM.has(tpl) ? " nw pr" : ""} ty-${type || "uylonuu"}`;
+const TPL_FX = { altyn: "x-gold", khan: "x-gold", zhyldyz: "x-gold", ordo: "x-gold", gulzar: "x-rose", anarkyz: "x-pom", wcblue: "x-lilac", akkagaz: "x-paper", arka: "x-olive", fiesta: "x-party", art: "x-none", shokulo: "x-none" };
+export const invClass = (tpl, type) => `inv t-${tpl}${tpl === "art" ? " ed" : tpl === "shokulo" ? " st" : NEW_TPL.has(tpl) ? " nw" : PREM.has(tpl) ? " nw pr" : ""} ty-${type || "uylonuu"}`;
 
 const ruYears = n => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? "год" : a >= 2 && a <= 4 && (b < 12 || b > 14) ? "года" : "лет"; };
 function ageWord(n, lang) { return lang === "ru" ? ruYears(n) : lang === "both" ? `жаш / ${ruYears(n)}` : "жаш"; }
@@ -387,6 +390,7 @@ function premHelpers(d, T) {
 export function coverHTML(d, opts = {}) {
   const T = mk(d.lang), mini = !!opts.mini;
   if (d.tpl === "art") return artCover(d, premHelpers(d, T), opts);
+  if (d.tpl === "shokulo") return satinCover(d, premHelpers(d, T), opts);
   if (NEW_TPL.has(d.tpl)) return coverNew(d, T, opts);
   if (PREM.has(d.tpl)) return premCover(d, premHelpers(d, T), opts);
   return `<div class="cv">${decor(d.tpl, mini)}
@@ -439,6 +443,7 @@ export function renderInvitation(d, opts = {}) {
     </form>
     <div class="thx" hidden>${T.L("thx")}</div>`;
   if (d.tpl === "art") return renderArt(d, opts, { T, h: premHelpers(d, T), esc, pr, ts, q, phone, waNum, guest, dear, photoUrl, head, rsvpInner, seat: seatLine(d, guest, T) });
+  if (d.tpl === "shokulo") return renderSatin(d, opts, { T, h: premHelpers(d, T), esc, pr, ts, q, phone, waNum, guest, dear, photoUrl, head, rsvpInner, seat: seatLine(d, guest, T) });
   return `${head}
   ${coverHTML(d, { photoUrl })}
   <section class="blk">${orn(d.tpl)}${guest ? `<p class="to">${dear ? `<span>${dear}</span>` : ""}<b>${esc(guest.name)}${d.lang === "ru" ? "," : "!"}</b></p>` : ""}<h2>${T.TT(d.type, "inv")}</h2>${d.msg ? `<p class="msg">${esc(d.msg)}</p>` : ""}

@@ -1227,3 +1227,91 @@
 .mini .inv.ed .ed-top{left:16px;right:16px;top:20px}
 .mini .inv.ed .ed-nm{font-size:42px}
 .mini .inv.ed .ed-dt b{font-size:32px}
+/* =====================================================================
+   Ак шөкүлө — kyz uzatuu told as full-screen scenes (.inv.st), like stories
+   Palette: ivory #F7F1E8 · champagne #E9DCC6 · burgundy #7B2D2D
+   ===================================================================== */
+.inv.st{--ib:#F7F1E8;--if:#5B2222;--ia:#7B2D2D;--ion:#FFF8F0;--im:#7A5A4E;--il:rgba(123,45,45,.2);--ic:rgba(255,252,246,.78);--fd:"Cormorant Garamond",Georgia,serif;--fb:"Cormorant Garamond",Georgia,serif;--fs:"Bad Script","Cormorant Garamond",cursive;font-size:18px;font-weight:600;color:var(--if);background:var(--ib)}
+html:has(body.inv-page .inv.st){scroll-snap-type:y proximity}
+.inv.st .st-sc{position:relative;min-height:min(720px,100svh);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:72px 26px 56px;overflow:hidden;isolation:isolate;text-align:center;scroll-snap-align:start}
+.inv-page .inv.st .st-sc{min-height:100svh}
+.inv.st .st-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;display:block}
+.inv.st .st-in{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;max-width:400px}
+.inv.st .st-scr{font-family:var(--fs);font-weight:400;color:var(--ia);letter-spacing:0;text-transform:none}
+.inv.st .st-big{font-size:clamp(46px,15vw,68px);line-height:1.1;margin:0;overflow-wrap:anywhere}
+.inv.st .st-h{font-size:clamp(30px,9vw,40px);line-height:1.15;margin:0}
+.inv.st .st-h span{display:block;font-family:var(--fd);font-weight:600;font-size:15px;letter-spacing:.24em;text-transform:uppercase;color:var(--im)}
+.inv.st .ey,.inv.st .st-k{font-family:"Forum",var(--fd);font-weight:400;font-size:15px;letter-spacing:.28em;text-transform:uppercase;color:var(--ia);margin:0}
+.inv.st .st-k{font-family:var(--fd);font-weight:700;font-size:19px;letter-spacing:.02em;text-transform:none;margin-top:6px}
+.inv.st .st-txt{margin:0;font-size:20px;line-height:1.45}
+.inv.st .st-txt .st-scr{display:block;font-size:42px;line-height:1.25;margin:6px 0}
+.inv.st .st-msg{margin:4px 0 0;font-style:italic;font-weight:500;color:var(--im);line-height:1.5}
+.inv.st .st-div{width:200px;height:22px;color:var(--ia);margin:10px auto;flex:none}
+.inv.st .st-div .f,.inv.st .st-med .f{fill:currentColor}
+.inv.st .st-dot{font-size:17px;letter-spacing:.2em;color:var(--im)}
+.inv.st .alt{color:var(--im)}
+/* cover: the shokulo photo, name on a soft ivory fade */
+.inv.st .st-cv{justify-content:flex-end;padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))}
+.inv.st .st-cv::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(247,241,232,0) 46%,rgba(247,241,232,.82) 72%,#F7F1E8 100%)}
+.inv.st .st-cv .st-bg{animation:st-zoom 16s ease-out both}
+.inv.st .st-cv .hc{gap:6px}
+.inv.st .st-cv .hc>*{animation:inv-rise 1.2s cubic-bezier(.2,.7,.2,1) both}
+.inv.st .st-cv .hc>:nth-child(2){animation-delay:.25s}.inv.st .st-cv .hc>:nth-child(3){animation-delay:.45s}
+.inv.st .st-cue{position:absolute;bottom:calc(22px + env(safe-area-inset-bottom,0px));left:50%;width:1px;height:34px;background:var(--ia);opacity:.6;transform-origin:top;animation:st-cue 2.2s ease-in-out infinite}
+@keyframes st-zoom{from{transform:scale(1.1)}to{transform:none}}
+@keyframes st-cue{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+/* poem on satin, in a light column like a silk ribbon */
+.inv.st .st-card{background:rgba(255,252,246,.55);border-left:1px solid rgba(123,45,45,.12);border-right:1px solid rgba(123,45,45,.12);padding:40px 20px;margin:-24px 0;box-shadow:0 0 60px rgba(255,252,246,.6)}
+.inv.st .st-card p{margin:0;font-style:italic;font-weight:600;font-size:21px;line-height:1.55;color:#6A2A2A}
+/* "dear guests": gift photo on top, text on ivory, two medallions at the sides */
+.inv.st .st-inv{justify-content:flex-end}
+.inv.st .st-inv::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(247,241,232,0) 30%,rgba(247,241,232,.9) 52%,#F7F1E8 70%)}
+.inv.st .st-med{position:absolute;top:50%;width:86px;height:86px;color:var(--ia);opacity:.85;z-index:-1}
+.inv.st .st-med.l{left:-46px}.inv.st .st-med.r{right:-46px}
+.inv.st .st-inv{padding-left:44px;padding-right:44px}
+/* date and place over the flower hall */
+.inv.st .st-det::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse 80% 45% at 50% 50%,rgba(255,252,246,.72),rgba(255,252,246,0))}
+.inv.st .st-date{display:flex;align-items:center;gap:10px;font-size:clamp(40px,13vw,54px);font-weight:600;line-height:1;color:var(--ia);font-variant-numeric:lining-nums}
+.inv.st .st-date i{width:2px;height:.85em;background:currentColor;opacity:.8}
+.inv.st .st-time{font-size:30px;color:var(--ia)}
+.inv.st .st-wd{font-size:17px;color:var(--im);margin-top:-8px}
+.inv.st .st-vn{margin:0;font-size:24px;font-weight:700}
+.inv.st .st-ad{margin:0;font-size:19px;line-height:1.4}
+.inv.st .hall{font-size:17px}
+.inv.st .ib{font:600 16px var(--fb);background:rgba(255,252,246,.6)}
+.inv.st .ib.f{background:var(--ia)}
+.inv.st .cd{margin-top:4px}
+.inv.st .cd b{font-weight:600;color:var(--ia);font-size:26px}
+.inv.st .cd span{font-size:14px}
+/* programme */
+.inv.st .st-tl{list-style:none;margin:0;padding:0;width:100%;display:flex;flex-direction:column;gap:2px}
+.inv.st .st-tl li{display:grid;grid-template-columns:70px 1fr;gap:14px;text-align:left;padding:10px 0;border-bottom:1px solid var(--il);font-size:19px}
+.inv.st .st-tl time{color:var(--ia);font-weight:700;text-align:right}
+.inv.st .gal{max-width:400px}
+/* RSVP */
+.inv.st .st-form{width:100%;background:var(--ic);border:1px solid var(--il);border-radius:18px;padding:20px 18px}
+.inv.st .rsvp label{font-size:16px}
+.inv.st .rsvp input,.inv.st .rsvp textarea{font:500 17px var(--fb)}
+.inv.st .thx{font-size:20px}
+/* hosts over the bride, on a frosted ivory band */
+.inv.st .st-fin{justify-content:flex-end;padding-bottom:calc(56px + env(safe-area-inset-bottom,0px))}
+.inv.st .st-fin .st-in{background:rgba(247,241,232,.78);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border-radius:22px;padding:24px 16px;gap:6px}
+.inv.st .st-fin .st-txt{font-size:19px}
+.inv.st .st-hosts{font-size:clamp(36px,11vw,52px)}
+.inv.st .st-fin .st-div{margin:2px auto}
+.inv.st .mus{background:rgba(255,252,246,.7);border-color:var(--il);color:var(--ia)}
+.inv.st .to{margin:0}
+.inv.st .ft{background:#F7F1E8}
+/* the opening screen in this design's colours */
+.inv.st .sp{background:#F7F1E8 url(/img/st/satin.webp) center/cover}
+.inv.st .sp-nm{font-family:var(--fs);color:var(--ia)}
+@supports (animation-timeline:view()){
+  .inv-page .inv.st .st-sc:not(.st-cv) .st-in>*{animation:st-in linear both;animation-timeline:view();animation-range:entry 0% entry 100%}
+  .inv-page .inv.st .st-sc:not(.st-cv) .st-bg{animation:st-pan linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+}
+@keyframes st-in{from{opacity:0;transform:translateY(24px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+@keyframes st-pan{from{transform:scale(1.1) translateY(-2%)}to{transform:scale(1) translateY(2%)}}
+@media (prefers-reduced-motion:reduce){.inv.st *{animation:none!important}}
+.mini .inv.st .st-cv{min-height:425px;padding:0 14px 26px}
+.mini .inv.st .st-big{font-size:44px}
+.mini .inv.st .ey{font-size:12px}
