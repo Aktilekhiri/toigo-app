@@ -4,7 +4,7 @@ const REQ_RU = "ИП Казиев Актилек Кубанычбекович, �
 const REQ_KY = "ЖИ Казиев Актилек Кубанычбекович, Чүй облусу, Ысык-Ата району, Кант шаары. ИНН 20812200400202, ОКПО 35417374. ЖИ катары каттоо күбөлүгү № 008-2026-169-1532, 04.11.2026, Ысык-Ата району боюнча МСК. Салык режими: бирдиктүү салык.";
 const TG = '<a href="https://t.me/AktilekKaziev" target="_blank" rel="noopener">@AktilekKaziev</a>';
 const CH = '<a href="https://t.me/toigoapp" target="_blank" rel="noopener">t.me/toigoapp</a>';
-const MAIL = '<a href="mailto:aktilek123z@gmail.com">aktilek123z@gmail.com</a>';
+const MAIL = '<a href="mailto:kazievaktilek41@gmail.com">kazievaktilek41@gmail.com</a>';
 const ul = a => `<ul>${a.map(x => `<li>${x}</li>`).join("")}</ul>`;
 const link = (lang, p, t) => `<a href="${lang === "ru" ? "/ru" + p : p}">${t}</a>`;
 
