@@ -169,7 +169,7 @@ function cards(lang, list, typeHint) {
     const type = typeHint && t.types.includes(typeHint) ? typeHint : t.types[0];
     const d = sampleData(t.id, type, lang);
     return `<article class="card" data-types="${t.types.join(" ")}">
-      <a class="mini" href="${u(lang, `/demo/${t.id}/`)}" aria-label="${esc(t.name[lang])}: ${K.view}"><div class="${invClass(t.id, d.type)}">${coverHTML(d, { mini: true }).replace(/<h1 class="nm"/, '<div class="nm"').replace(/<\/h1>/, "</div>")}</div></a>
+      <a class="mini" href="${u(lang, `/demo/${t.id}/`)}" aria-label="${esc(t.name[lang])}: ${K.view}"><div class="${invClass(t.id, d.type)}">${coverHTML(d, { mini: true }).replace(/<h1 class="nm/, '<div class="nm').replace(/<\/h1>/, "</div>")}</div></a>
       <div class="card-b">
         <h3>${t.name[lang]}</h3>
         <p>${t.desc[lang]}</p>
@@ -243,7 +243,7 @@ function homePage(lang) {
   </div>
   <div class="stage" aria-hidden="true">
     <div class="arch arch-ph">${PH("hero", "", 1408, 768, "", false)}</div>
-    <div class="phone"><div class="scr" id="heroPhone" data-inv="${esc(JSON.stringify(hero))}"><div class="${invClass(hero.tpl, hero.type)}">${coverHTML(hero, { mini: true }).replace(/<h1 class="nm"/, '<p class="nm"').replace(/<\/h1>/, "</p>")}</div></div></div>
+    <div class="phone"><div class="scr" id="heroPhone" data-inv="${esc(JSON.stringify(hero))}"><div class="${invClass(hero.tpl, hero.type)}">${coverHTML(hero, { mini: true }).replace(/<h1 class="nm/, '<p class="nm').replace(/<\/h1>/, "</p>")}</div></div></div>
   </div>
 </div></section>
 

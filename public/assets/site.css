@@ -102,7 +102,16 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* catalog */
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
 @media (max-width:960px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:560px){.grid{grid-template-columns:minmax(0,1fr)}}
+/* phones: two small covers per row; the cover is a real invitation drawn at full size and shrunk by half */
+@media (max-width:560px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .grid .mini{zoom:.5;height:500px;border-bottom-width:2px}
+  .grid .mini>.inv,.grid .mini>.inv>.cv{height:100%;min-height:100%!important}
+  .grid .card-b{padding:10px 10px 12px;gap:8px}
+  .grid .card-b h3{font-size:16px;line-height:1.2}
+  .grid .card-b p,.grid .tags,.grid .card-acts .btn-g{display:none}
+  .grid .card-acts .btn{width:100%;justify-content:center;padding-left:6px;padding-right:6px;font-size:13px;white-space:nowrap}
+}
 .card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:border-color .2s,transform .2s}
 .card:hover{border-color:#CFCDC6;transform:translateY(-2px)}
 .mini{display:block;text-decoration:none;color:inherit;height:340px;overflow:hidden;position:relative;border-bottom:1px solid var(--line)}
